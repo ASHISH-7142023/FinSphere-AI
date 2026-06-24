@@ -3,10 +3,13 @@ import parser from "@typescript-eslint/parser";
 
 export default [
   {
-    files: ["src/**/*.ts"],
+    ignores: [".next/**", "node_modules/**"]
+  },
+  {
+    files: ["src/**/*.{ts,tsx}", "tests/**/*.ts"],
     languageOptions: {
       parser,
-      parserOptions: { project: "./tsconfig.json" }
+      parserOptions: { project: "./tsconfig.typecheck.json" }
     },
     plugins: { "@typescript-eslint": tseslint },
     rules: {

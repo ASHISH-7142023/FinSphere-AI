@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Activity,
@@ -11,12 +11,12 @@ import {
   LogOut,
   PiggyBank,
   Plus,
-  Search,
   ShieldCheck,
   Target,
   TrendingUp,
   Wallet
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -224,7 +224,7 @@ function AuthScreen({ onSession }: { onSession: (session: Session) => void }) {
 }
 
 function Dashboard({ summary, expenses }: { summary: DashboardSummary | null; expenses: Expense[] }) {
-  const kpis = [
+  const kpis: Array<[string, number, LucideIcon]> = [
     ["Total Income", summary?.totalIncome ?? 0, Wallet],
     ["Total Expenses", summary?.totalExpenses ?? 0, CreditCard],
     ["Savings", summary?.savings ?? 0, PiggyBank],
