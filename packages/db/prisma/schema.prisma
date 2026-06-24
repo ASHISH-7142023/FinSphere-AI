@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ExpenseCategory {
+  Food
+  Travel
+  Shopping
+  Bills
+  Entertainment
+  Education
+  Health
+  Other
+}
+
+enum InvestmentType {
+  Stock
+  MutualFund
+  SIP
+  Gold
+  Crypto
+  Other
+}
+
+model User {
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  passwordHash     String
+  monthlyIncome    Decimal           @default(150000)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  expenses         Expense[]
+  budgets          Budget[]
+  goals            Goal[]
+  investments      Investment[]
+  creditProfile    CreditProfile?
+  financialHealth  FinancialHealth?
+}
+
+model Expense {
+  id          String          @id @default(uuid())
+  userId      String
+  amount      Decimal
+  category    ExpenseCategory
+  description String
+  date        DateTime
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([userId, category])
+}
+
+model Budget {
+  id          String          @id @default(uuid())
+  userId      String
+  category    ExpenseCategory
+  limitAmount Decimal
+  month       String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category, month])
+}
+
+model Goal {
+  id            String   @id @default(uuid())
+  userId        String
+  title         String
+  targetAmount  Decimal
+  currentAmount Decimal
+  targetDate    DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Investment {
+  id             String         @id @default(uuid())
+  userId         String
+  assetType      InvestmentType
+  name           String
+  investedAmount Decimal
+  currentValue   Decimal
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CreditProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  utilization    Decimal
+  paymentHistory Decimal
+  creditAge      Decimal
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FinancialHealth {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  score     Int
+  grade     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
