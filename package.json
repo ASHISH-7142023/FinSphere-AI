@@ -3,19 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "frontend",
+    "backend"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w @finsphere/api\" \"npm run dev -w @finsphere/web\"",
-    "build": "npm run build -w @finsphere/shared && npm run build -w @finsphere/api && npm run build -w @finsphere/web",
-    "lint": "npm run lint -w @finsphere/web && npm run lint -w @finsphere/api",
-    "typecheck": "npm run typecheck -w @finsphere/shared && npm run typecheck -w @finsphere/api && npm run typecheck -w @finsphere/web",
-    "test": "npm run test -w @finsphere/shared && npm run test -w @finsphere/api",
-    "test:e2e": "npm run test:e2e -w @finsphere/web",
-    "db:generate": "npm run db:generate -w @finsphere/db",
-    "db:migrate": "npm run db:migrate -w @finsphere/db",
-    "db:seed": "npm run db:seed -w @finsphere/db"
+    "dev": "concurrently \"npm run dev --workspace=finsphere-backend\" \"npm run dev --workspace=finsphere-frontend\"",
+    "build": "npm run build --workspace=finsphere-backend && npm run build --workspace=finsphere-frontend",
+    "lint": "npm run lint --workspace=finsphere-frontend && npm run lint --workspace=finsphere-backend",
+    "typecheck": "npm run typecheck --workspace=finsphere-backend && npm run typecheck --workspace=finsphere-frontend",
+    "test": "npm run test --workspace=finsphere-backend",
+    "test:e2e": "npm run test:e2e --workspace=finsphere-frontend",
+    "db:generate": "npm run db:generate --workspace=finsphere-backend",
+    "db:migrate": "npm run db:migrate --workspace=finsphere-backend",
+    "db:seed": "npm run db:seed --workspace=finsphere-backend"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
