@@ -4,7 +4,7 @@ export function signToken(userId) {
     return jwt.sign({ sub: userId }, process.env.JWT_SECRET ?? fallbackSecret, { expiresIn: "7d" });
 }
 export function authMiddleware(store) {
-    return (req, res, next) => {
+    return async (req, res, next) => {
         const header = req.headers.authorization;
         const token = header?.startsWith("Bearer ") ? header.slice(7) : undefined;
         if (!token) {
@@ -14,7 +14,7 @@ export function authMiddleware(store) {
         try {
             const payload = jwt.verify(token, process.env.JWT_SECRET ?? fallbackSecret);
             const userId = typeof payload === "object" && "sub" in payload ? String(payload.sub) : "";
-            const user = store.users.find((item) => item.id === userId);
+            const user = await store.getUserById(userId);
             if (!user) {
                 res.status(401).json({ message: "Invalid token" });
                 return;
