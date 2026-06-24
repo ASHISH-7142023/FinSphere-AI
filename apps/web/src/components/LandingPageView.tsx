@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Session } from "@/lib/api";
 import { apiRequest } from "@/lib/api";
 import ThreeJsHeroVisual from "./ThreeJsHeroVisual";
 
 export default function LandingPageView({ onSession }: { onSession: (session: Session) => void }) {
+  const router = useRouter();
   const [authModal, setAuthModal] = useState<"login" | "register" | "forgot" | "verify" | "reset" | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -108,7 +110,7 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
         </nav>
         <div className="flex items-center gap-4">
           <button 
-            onClick={() => setAuthModal("login")}
+            onClick={() => router.push("/login")}
             className="px-4 py-1.5 rounded-lg border border-white/10 text-xs font-semibold text-white hover:bg-white/5 transition-colors"
           >
             Log In
