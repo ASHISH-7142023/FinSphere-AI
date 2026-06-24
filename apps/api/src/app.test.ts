@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import request from "supertest";
 import { createApp } from "./app.js";
+import { InMemoryStore } from "./store-inmemory.js";
 
 async function login() {
-  const app = createApp();
+  const store = new InMemoryStore();
+  const app = createApp(store);
   const response = await request(app).post("/api/auth/login").send({ email: "demo@finsphere.ai", password: "Demo@12345" });
   return { app, token: response.body.token as string };
 }
@@ -17,7 +19,8 @@ describe("auth", () => {
   });
 
   it("rejects protected routes without token", async () => {
-    const app = createApp();
+    const store = new InMemoryStore();
+    const app = createApp(store);
     const response = await request(app).get("/api/dashboard/summary");
     expect(response.status).toBe(401);
   });
