@@ -1,52 +1,60 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Activity,
-  BarChart3,
-  CreditCard,
-  Flag,
-  LayoutDashboard,
-  LogOut,
-  PiggyBank,
-  Plus,
-  ShieldCheck,
-  Target,
-  TrendingUp,
-  Wallet
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from "recharts";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Budget, DashboardSummary, Expense, Goal, Investment } from "@finsphere/shared";
 import { EXPENSE_CATEGORIES, INVESTMENT_TYPES } from "@finsphere/shared";
 import { apiRequest, type Session } from "@/lib/api";
-import { currency, pct } from "@/lib/utils";
-import { Button, Card, GhostButton, Input, Select } from "@/components/ui";
+import { currency } from "@/lib/utils";
 
-type View = "dashboard" | "expenses" | "budgets" | "goals" | "investments" | "credit" | "reports";
+import AIAdvisorView from "@/components/AIAdvisorView";
+import UtilitiesHubView from "@/components/UtilitiesHubView";
+import MerchantKhataView from "@/components/MerchantKhataView";
+import RewardsOffersView from "@/components/RewardsOffersView";
+import SIPSetupView from "@/components/SIPSetupView";
+import InsuranceHubView from "@/components/InsuranceHubView";
+import DemoPlayerView from "@/components/DemoPlayerView";
+import LandingPageView from "@/components/LandingPageView";
+import ExpensesView from "@/components/ExpensesView";
+import BudgetsView from "@/components/BudgetsView";
+import GoalsView from "@/components/GoalsView";
+import InvestmentsView from "@/components/InvestmentsView";
+import CreditView from "@/components/CreditView";
+import ReportsView from "@/components/ReportsView";
 
-const nav = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "expenses", label: "Expenses", icon: Wallet },
-  { id: "budgets", label: "Budgets", icon: PiggyBank },
-  { id: "goals", label: "Goals", icon: Target },
-  { id: "investments", label: "Investments", icon: TrendingUp },
-  { id: "credit", label: "Credit", icon: CreditCard },
-  { id: "reports", label: "Reports", icon: BarChart3 }
-] satisfies Array<{ id: View; label: string; icon: typeof LayoutDashboard }>;
+type View =
+  | "dashboard"
+  | "expenses"
+  | "budgets"
+  | "goals"
+  | "investments"
+  | "credit"
+  | "reports"
+  | "ai-advisor"
+  | "utilities"
+  | "merchant-khata"
+  | "rewards"
+  | "sip-setup"
+  | "insurance"
+  | "demo";
+
+const navItems = [
+  { id: "dashboard", label: "Dashboard", icon: "dashboard" },
+  { id: "ai-advisor", label: "AI Advisor Chat", icon: "smart_toy" },
+  { id: "utilities", label: "Utilities Hub", icon: "account_balance_wallet" },
+  { id: "expenses", label: "Expenses", icon: "payments" },
+  { id: "budgets", label: "Budgets", icon: "piggy_bank" },
+  { id: "goals", label: "Goals", icon: "target" },
+  { id: "investments", label: "Investments", icon: "trending_up" },
+  { id: "sip-setup", label: "SIP Setup", icon: "toll" },
+  { id: "credit", label: "Credit Engine", icon: "credit_card" },
+  { id: "insurance", label: "Insurance Hub", icon: "shield" },
+  { id: "merchant-khata", label: "Merchant Khata", icon: "receipt_long" },
+  { id: "rewards", label: "Rewards & Offers", icon: "military_tech" },
+  { id: "reports", label: "Reports", icon: "bar_chart_4_bars" },
+  { id: "demo", label: "Product Demo", icon: "play_circle" }
+] as const;
+
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null);
@@ -58,8 +66,13 @@ export default function Home() {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [alerts, setAlerts] = useState<Array<{ category: string; overBy: number }>>([]);
   const [report, setReport] = useState<{ totalIncome: number; totalExpenses: number; categoryAnalysis: Array<{ category: string; amount: number; count: number }> } | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  
+  // Modal states for creating/editing resources
+  const [activeModal, setActiveModal] = useState<"expense" | "budget" | "goal" | "investment" | null>(null);
+  const [utilityTab, setUtilityTab] = useState<"mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" | "upi-qr">("mobile");
+
 
   useEffect(() => {
     const raw = localStorage.getItem("finsphere.session");
@@ -98,338 +111,940 @@ export default function Home() {
   }
 
   if (!session) {
-    return <AuthScreen onSession={(next) => {
-      localStorage.setItem("finsphere.session", JSON.stringify(next));
-      setSession(next);
-    }} />;
+    return (
+      <LandingPageView
+        onSession={(next) => {
+          localStorage.setItem("finsphere.session", JSON.stringify(next));
+          setSession(next);
+        }}
+      />
+    );
   }
 
+  const handleCreateExpense = async (data: Record<string, any>) => {
+    await apiRequest("/expenses", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: Number(data.amount),
+        category: data.category,
+        description: data.description,
+        date: data.date
+      })
+    }, session.token);
+    await refreshAll();
+  };
+
+  const handleCreateBudget = async (data: Record<string, any>) => {
+    await apiRequest("/budgets", {
+      method: "POST",
+      body: JSON.stringify({
+        category: data.category,
+        limitAmount: Number(data.limitAmount),
+        month: data.month
+      })
+    }, session.token);
+    await refreshAll();
+  };
+
+  const handleCreateGoal = async (data: Record<string, any>) => {
+    await apiRequest("/goals", {
+      method: "POST",
+      body: JSON.stringify({
+        title: data.title,
+        targetAmount: Number(data.targetAmount),
+        currentAmount: Number(data.currentAmount),
+        targetDate: data.targetDate
+      })
+    }, session.token);
+    await refreshAll();
+  };
+
+  const handleCreateInvestment = async (data: Record<string, any>) => {
+    await apiRequest("/investments", {
+      method: "POST",
+      body: JSON.stringify({
+        assetType: data.assetType,
+        name: data.name,
+        investedAmount: Number(data.investedAmount),
+        currentValue: Number(data.currentValue)
+      })
+    }, session.token);
+    await refreshAll();
+  };
+
   return (
-    <main className="min-h-screen">
-      <aside className="fixed left-0 top-0 hidden h-screen w-72 border-r border-white/10 bg-surface/55 p-6 backdrop-blur-xl lg:block">
-        <div className="mb-10">
-          <div className="font-heading text-2xl font-bold text-primary">FinSphere AI</div>
-          <div className="mt-2 flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-on-surface-variant">
-            <span className="h-2 w-2 rounded-full bg-primary" /> MVP Demo
+    <main className="min-h-screen bg-background text-on-background selection:bg-primary/30">
+      
+      {/* Background Decor */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="glow-orb top-[-10%] left-[-5%] bg-primary"></div>
+        <div className="glow-orb bottom-[-10%] right-[-5%] bg-secondary-container"></div>
+      </div>
+
+      {/* Side Navigation Bar */}
+      <aside className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 w-64 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] custom-scrollbar">
+        <div className="mb-10 px-2">
+          <span className="font-headline-md text-headline-md font-bold text-primary tracking-tight">FinSphere AI</span>
+          <div className="mt-2 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+            <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Elite Tier</span>
           </div>
         </div>
-        <nav className="space-y-2">
-          {nav.map((item) => {
-            const Icon = item.icon;
+        
+        <nav className="flex-1 space-y-2">
+          {navItems.map((item) => {
+            const isActive = view === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => setView(item.id)}
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${view === item.id ? "bg-primary text-[#003828]" : "text-on-surface-variant hover:bg-white/5 hover:text-on-surface"}`}
+                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all ${
+                  isActive
+                    ? "bg-primary-container text-on-primary-container font-bold shadow-lg shadow-primary/10 scale-[0.98]"
+                    : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
+                }`}
               >
-                <Icon size={18} /> {item.label}
+                <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
+                  {item.icon}
+                </span>
+                <span className="font-label-md text-label-md">{item.label}</span>
               </button>
             );
           })}
         </nav>
-        <Card className="mt-8">
-          <div className="text-xs uppercase tracking-[0.2em] text-on-surface-variant">Health Grade</div>
-          <div className="mt-2 text-3xl font-bold text-primary">{summary?.financialHealthGrade ?? "..."}</div>
-          <div className="mt-1 text-sm text-on-surface-variant">Score {summary?.financialHealthScore ?? 0}/100</div>
-        </Card>
+
+        <div className="mt-auto pt-6 border-t border-white/5">
+          <div className="glass-card rounded-2xl p-4 mb-4">
+            <p className="font-label-sm text-label-sm text-on-surface-variant mb-2">Upgrade for AI Tax Loss Harvesting</p>
+            <button className="w-full bg-primary text-on-primary font-bold py-2 px-4 rounded-lg text-label-md hover:brightness-110 transition-all">
+              Upgrade to Pro
+            </button>
+          </div>
+          <div className="flex items-center justify-between px-2 gap-2">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <img
+                className="w-10 h-10 rounded-full border border-primary/30 object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDANrDSLSqhksq2wFTC8UUBGOja8l9SMFRs6AuQQqbBww3YAb9OdV9rrom0LXD1S8O6Gvdq1sR3XYuVaLwO57bs7JGyeF6Wr5EmB5Y8CFCKLtxt8-81C31q3yRJF3d3xl7Z-jh4KS2ZGKx6Bte6cffYNbev3hTX3bU_vYtkj0eYmX639ovs6itTHUX8wPId022TnPb5xhVBC68Ro7ruC9ERZeS5Bon2Tx5nmWHf-Ts3SCwO5cdzEfBeHKSoOAxEKRglzvdB0I7SDW-G"
+                alt="Profile Avatar"
+              />
+              <div className="overflow-hidden">
+                <p className="font-label-md text-label-md text-on-surface truncate font-semibold">{session.user.name}</p>
+                <p className="text-[10px] text-on-surface-variant truncate">ID: #{session.user.id.substring(0, 6)}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                localStorage.removeItem("finsphere.session");
+                setSession(null);
+              }}
+              title="Logout"
+              className="text-on-surface-variant hover:text-error transition-colors p-1.5 hover:bg-white/5 rounded-lg flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined text-[20px]">logout</span>
+            </button>
+          </div>
+        </div>
       </aside>
 
-      <section className="lg:ml-72">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-white/10 bg-surface/55 px-4 py-4 backdrop-blur-xl md:px-8">
-          <div>
-            <div className="font-heading text-xl font-bold md:text-2xl">{nav.find((item) => item.id === view)?.label}</div>
-            <div className="text-sm text-on-surface-variant">Welcome back, {session.user.name}</div>
+      {/* Main Container */}
+      <section className="lg:ml-64 min-h-screen relative z-10 flex flex-col">
+        
+        {/* TopNavBar */}
+        <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25">
+          <div className="flex items-center gap-4 flex-1">
+            <div className="relative w-full max-w-md hidden md:block">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+              <input
+                className="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50"
+                placeholder="Search financial assets..."
+                type="text"
+              />
+            </div>
+            <span className="lg:hidden font-headline-md text-headline-md font-bold text-primary">FS AI</span>
           </div>
-          <div className="flex items-center gap-2">
-            <GhostButton onClick={() => void refreshAll()} disabled={loading}><Activity size={16} /> Refresh</GhostButton>
-            <GhostButton onClick={() => {
-              localStorage.removeItem("finsphere.session");
-              setSession(null);
-            }}><LogOut size={16} /></GhostButton>
+          
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 text-on-surface-variant">
+              <button className="hover:text-primary transition-colors flex items-center justify-center p-1 rounded-full relative">
+                <span className="material-symbols-outlined">notifications</span>
+                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+              </button>
+              <button className="hover:text-primary transition-colors flex items-center justify-center p-1 rounded-full">
+                <span className="material-symbols-outlined">account_balance_wallet</span>
+              </button>
+            </div>
+            <div className="w-px h-6 bg-white/10 mx-2 hidden sm:block"></div>
+            <div className="flex items-center gap-3">
+              <div className="text-right hidden sm:block">
+                <p className="font-label-sm text-label-sm text-on-surface font-semibold">Balance Verified</p>
+                <p className="text-[10px] text-primary">Level 9 Trader</p>
+              </div>
+              <img
+                className="w-8 h-8 rounded-full border border-primary/20 object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVI8nxjFxE2iDtGjxxFTmCV0pJnLVgfzB3BxKnh1Q1miH_JIFBqYxAT7G5AF2NyqbHGkOXHp8zNeNBjFpq9QXCTxB9WRQSYB6y-cNtwV721JDEMH3R-rESaIyR8WOQ0AO1WIUEz1NyDDwbmjrLbmjoHqs8hw90KQgt56U0uT-_dLdcP-9K-5tf9T9kYTEiqVNIfPhKSd7jk1FtAljQz2UTriL-UiOA7d4RcCWqDNDPzd1XBHAKIlcMU_XJ_xZLcPYcex7jNvdzgCVq"
+                alt="Status Badge"
+              />
+              <button
+                onClick={() => {
+                  localStorage.removeItem("finsphere.session");
+                  setSession(null);
+                }}
+                className="lg:hidden text-on-surface-variant hover:text-error transition-colors p-1"
+              >
+                <span className="material-symbols-outlined">logout</span>
+              </button>
+            </div>
           </div>
         </header>
-        <div className="flex gap-2 overflow-x-auto border-b border-white/10 px-4 py-3 lg:hidden">
-          {nav.map((item) => <GhostButton key={item.id} onClick={() => setView(item.id)} className={view === item.id ? "border-primary text-primary" : ""}>{item.label}</GhostButton>)}
+
+        {/* Mobile View Toggle Bar */}
+        <div className="flex gap-2 overflow-x-auto border-b border-white/10 px-4 py-3 mt-16 lg:hidden no-scrollbar bg-surface-container-low/80 backdrop-blur-md sticky top-16 z-40">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setView(item.id)}
+              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold border border-white/10 ${
+                view === item.id
+                  ? "bg-primary text-background border-primary"
+                  : "bg-white/5 text-on-surface-variant"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
-        {error ? <div className="mx-4 mt-4 rounded-xl border border-danger/40 bg-danger/10 p-3 text-sm text-danger md:mx-8">{error}</div> : null}
-        <div className="p-4 md:p-8">
-          {view === "dashboard" && <Dashboard summary={summary} expenses={expenses} />}
-          {view === "expenses" && <Expenses token={session.token} expenses={expenses} refresh={refreshAll} />}
-          {view === "budgets" && <Budgets token={session.token} budgets={budgets} alerts={alerts} refresh={refreshAll} />}
-          {view === "goals" && <Goals token={session.token} goals={goals} refresh={refreshAll} />}
-          {view === "investments" && <Investments token={session.token} investments={investments} refresh={refreshAll} />}
-          {view === "credit" && <Credit token={session.token} />}
-          {view === "reports" && <Reports report={report} summary={summary} />}
-        </div>
+
+        {/* Main Canvas Body */}
+        <section className="flex-1 pt-6 pb-20 lg:pt-20 px-4 md:px-8 max-w-7xl w-full mx-auto space-y-8 overflow-y-auto">
+          {error && (
+            <div className="rounded-xl border border-danger/40 bg-danger/10 p-4 text-sm text-danger flex items-center justify-between">
+              <span>{error}</span>
+              <button onClick={() => setError("")} className="material-symbols-outlined text-sm hover:opacity-80">close</button>
+            </div>
+          )}
+
+          {view === "dashboard" && (
+            <DashboardView
+              summary={summary}
+              expenses={expenses}
+              onAddExpense={() => setActiveModal("expense")}
+              onInvestNow={() => setActiveModal("investment")}
+              onGoalProgress={() => setView("goals")}
+              onNavigate={setView}
+              onNavigateToUtility={(tab) => {
+                setUtilityTab(tab);
+                setView("utilities");
+              }}
+            />
+          )}
+
+          {view === "expenses" && (
+            <ExpensesView
+              expenses={expenses}
+              summary={summary}
+              onOpenAddModal={() => setActiveModal("expense")}
+            />
+          )}
+
+          {view === "budgets" && (
+            <BudgetsView
+              budgets={budgets}
+              expenses={expenses}
+              alerts={alerts}
+              onOpenAddModal={() => setActiveModal("budget")}
+              onApplyOptimization={async () => {
+                // Mock applying optimal budget limits
+                if (budgets.length > 0) {
+                  const targetBudget = budgets[0];
+                  if (!targetBudget) return;
+                  await apiRequest(`/budgets`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                      category: targetBudget.category,
+                      limitAmount: Math.max(1000, targetBudget.limitAmount - 2000),
+                      month: targetBudget.month
+                    })
+                  }, session.token);
+                  await refreshAll();
+                }
+              }}
+            />
+          )}
+
+          {view === "goals" && (
+            <GoalsView
+              goals={goals}
+              onOpenAddModal={() => setActiveModal("goal")}
+            />
+          )}
+
+          {view === "investments" && (
+            <InvestmentsView
+              investments={investments}
+              onOpenAddModal={() => setActiveModal("investment")}
+            />
+          )}
+
+          {view === "credit" && (
+            <CreditView token={session.token} />
+          )}
+
+          {view === "reports" && (
+            <ReportsView
+              report={report}
+              summary={summary}
+            />
+          )}
+
+          {view === "ai-advisor" && (
+            <AIAdvisorView />
+          )}
+
+          {view === "utilities" && (
+            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} />
+          )}
+
+          {view === "merchant-khata" && (
+            <MerchantKhataView />
+          )}
+
+          {view === "rewards" && (
+            <RewardsOffersView />
+          )}
+
+          {view === "sip-setup" && (
+            <SIPSetupView />
+          )}
+
+          {view === "insurance" && (
+            <InsuranceHubView />
+          )}
+
+          {view === "demo" && (
+            <DemoPlayerView />
+          )}
+        </section>
+
+        {/* Mobile FAB */}
+        <button
+          onClick={() => setActiveModal("expense")}
+          className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-background rounded-full shadow-2xl flex items-center justify-center z-[70] hover:scale-110 active:scale-95 transition-all lg:hidden"
+        >
+          <span className="material-symbols-outlined text-2xl font-bold">add</span>
+        </button>
       </section>
+
+      {/* Modals Container */}
+      <AnimatePresence>
+        {activeModal === "expense" && (
+          <ModalTemplate title="Add Expense" onClose={() => setActiveModal(null)}>
+            <ModalForm onSubmit={handleCreateExpense} onClose={() => setActiveModal(null)}>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Amount (₹)</label>
+                <input
+                  type="number"
+                  name="amount"
+                  placeholder="₹1,250"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Category</label>
+                <select name="category" className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]">
+                  {EXPENSE_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Description</label>
+                <input
+                  type="text"
+                  name="description"
+                  placeholder="e.g. Zomato Dinner, Electricity Bill"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  defaultValue={new Date().toISOString().split("T")[0]}
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white"
+                  required
+                />
+              </div>
+            </ModalForm>
+          </ModalTemplate>
+        )}
+
+        {activeModal === "budget" && (
+          <ModalTemplate title="Set Budget" onClose={() => setActiveModal(null)}>
+            <ModalForm onSubmit={handleCreateBudget} onClose={() => setActiveModal(null)}>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Category</label>
+                <select name="category" className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]">
+                  {EXPENSE_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Limit Amount (₹)</label>
+                <input
+                  type="number"
+                  name="limitAmount"
+                  placeholder="₹15,000"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Month (YYYY-MM)</label>
+                <input
+                  type="text"
+                  name="month"
+                  placeholder="e.g. 2026-06"
+                  defaultValue={new Date().toISOString().slice(0, 7)}
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+            </ModalForm>
+          </ModalTemplate>
+        )}
+
+        {activeModal === "goal" && (
+          <ModalTemplate title="Create Savings Goal" onClose={() => setActiveModal(null)}>
+            <ModalForm onSubmit={handleCreateGoal} onClose={() => setActiveModal(null)}>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Goal Name</label>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="e.g. Tesla Roadster, Emergency Fund"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Target Amount (₹)</label>
+                <input
+                  type="number"
+                  name="targetAmount"
+                  placeholder="₹1,20,000"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Initial Savings (₹)</label>
+                <input
+                  type="number"
+                  name="currentAmount"
+                  placeholder="₹5,000"
+                  defaultValue="0"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Target Date</label>
+                <input
+                  type="date"
+                  name="targetDate"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white"
+                  required
+                />
+              </div>
+            </ModalForm>
+          </ModalTemplate>
+        )}
+
+        {activeModal === "investment" && (
+          <ModalTemplate title="Add Investment" onClose={() => setActiveModal(null)}>
+            <ModalForm onSubmit={handleCreateInvestment} onClose={() => setActiveModal(null)}>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Asset Type</label>
+                <select name="assetType" className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]">
+                  {INVESTMENT_TYPES.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Asset Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="e.g. Apple (AAPL), HDFC Mutual Fund"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Invested Amount (₹)</label>
+                <input
+                  type="number"
+                  name="investedAmount"
+                  placeholder="₹10,000"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Current Market Value (₹)</label>
+                <input
+                  type="number"
+                  name="currentValue"
+                  placeholder="₹12,450"
+                  className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
+                  required
+                />
+              </div>
+            </ModalForm>
+          </ModalTemplate>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
 
-function AuthScreen({ onSession }: { onSession: (session: Session) => void }) {
-  const [mode, setMode] = useState<"login" | "register">("login");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+/* Modal Helper Components */
+function ModalTemplate({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-0"
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="glass-panel w-full max-w-lg overflow-hidden rounded-3xl p-6 md:p-8 z-10 relative conic-border"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-headline-md text-headline-md text-white font-bold">{title}</h3>
+          <button onClick={onClose} className="text-on-surface-variant hover:text-white transition-colors flex items-center justify-center p-1 hover:bg-white/5 rounded-full">
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
 
-  async function submit(formData: FormData) {
+function ModalForm({ onSubmit, onClose, children }: { onSubmit: (data: Record<string, any>) => Promise<void>; onClose: () => void; children: React.ReactNode }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setBusy(true);
+    setError("");
     try {
-      const payload = Object.fromEntries(formData.entries());
-      const session = await apiRequest<Session>(mode === "login" ? "/auth/login" : "/auth/register", {
-        method: "POST",
-        body: JSON.stringify(payload)
-      });
-      onSession(session);
+      const formData = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formData.entries());
+      await onSubmit(data);
+      onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Authentication failed");
+      setError(err instanceof Error ? err.message : "Action failed");
     } finally {
       setBusy(false);
     }
-  }
+  };
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-[1.4fr_1fr]">
-      <section className="relative hidden overflow-hidden p-12 lg:block">
-        <div className="absolute inset-0 bg-[url('/hero-finsphere.png')] bg-cover bg-center opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/30 to-background" />
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="relative z-10 flex h-full max-w-2xl flex-col justify-center">
-          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm text-primary">
-            <ShieldCheck size={16} /> Secure personal finance command center
-          </div>
-          <h1 className="font-heading text-6xl font-bold leading-tight">Experience the <span className="text-primary">future</span> of finance.</h1>
-          <p className="mt-5 max-w-xl text-lg leading-8 text-on-surface-variant">Track spending, budgets, savings goals, investments, credit strength, and financial health from one premium AI-ready workspace.</p>
-        </motion.div>
-      </section>
-      <section className="flex items-center justify-center p-5">
-        <Card className="w-full max-w-md">
-          <div className="mb-8">
-            <div className="font-heading text-3xl font-bold text-primary">FinSphere AI</div>
-            <p className="mt-2 text-on-surface-variant">{mode === "login" ? "Login to the seeded MVP account." : "Create a local demo account."}</p>
-          </div>
-          <form action={submit} className="space-y-4">
-            {mode === "register" ? <Input name="name" placeholder="Full name" defaultValue="Ashish Demo" required /> : null}
-            <Input name="email" type="email" placeholder="Email" defaultValue={mode === "login" ? "demo@finsphere.ai" : ""} required />
-            <Input name="password" type="password" placeholder="Password" defaultValue={mode === "login" ? "Demo@12345" : ""} required />
-            {mode === "register" ? <Input name="monthlyIncome" type="number" placeholder="Monthly income" defaultValue="150000" required /> : null}
-            {error ? <p className="text-sm text-danger">{error}</p> : null}
-            <Button disabled={busy} className="w-full">{busy ? "Please wait..." : mode === "login" ? "Login" : "Register"}</Button>
-          </form>
-          <button className="mt-5 text-sm text-primary" onClick={() => setMode(mode === "login" ? "register" : "login")}>
-            {mode === "login" ? "Create a new account" : "Use existing demo login"}
-          </button>
-        </Card>
-      </section>
-    </main>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && <p className="text-xs text-danger">{error}</p>}
+      {children}
+      <div className="flex gap-4 pt-4">
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex-1 py-3.5 rounded-xl bg-white/5 text-on-surface-variant hover:text-white transition-colors font-semibold"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={busy}
+          className="flex-1 btn-emerald-gradient py-3.5 rounded-xl text-on-primary font-bold flex items-center justify-center gap-2"
+        >
+          {busy ? "Saving..." : <>Save <span className="material-symbols-outlined text-[18px]">check</span></>}
+        </button>
+      </div>
+    </form>
   );
 }
 
-function Dashboard({ summary, expenses }: { summary: DashboardSummary | null; expenses: Expense[] }) {
-  const kpis: Array<[string, number, LucideIcon]> = [
-    ["Total Income", summary?.totalIncome ?? 0, Wallet],
-    ["Total Expenses", summary?.totalExpenses ?? 0, CreditCard],
-    ["Savings", summary?.savings ?? 0, PiggyBank],
-    ["Portfolio", summary?.portfolioValue ?? 0, TrendingUp]
+
+
+/* Redesigned Dashboard View Component */
+function DashboardView({
+  summary,
+  expenses,
+  onAddExpense,
+  onInvestNow,
+  onGoalProgress,
+  onNavigate,
+  onNavigateToUtility
+}: {
+  summary: DashboardSummary | null;
+  expenses: Expense[];
+  onAddExpense: () => void;
+  onInvestNow: () => void;
+  onGoalProgress: () => void;
+  onNavigate: (view: View) => void;
+  onNavigateToUtility: (tab: "mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" | "upi-qr") => void;
+}) {
+  const aggregatedNetWorth = (summary?.totalIncome ?? 0) - (summary?.totalExpenses ?? 0) + (summary?.portfolioValue ?? 0);
+  
+  // Custom Sparkline coordinate generation based on trendData
+  const trendData = summary?.monthlyTrend || [
+    { month: "Jan", income: 150000, expenses: 105000, savings: 45000 },
+    { month: "Feb", income: 150000, expenses: 95000, savings: 55000 },
+    { month: "Mar", income: 150000, expenses: 110000, savings: 40000 },
+    { month: "Apr", income: 150000, expenses: 115000, savings: 35000 },
+    { month: "May", income: 150000, expenses: 98000, savings: 52000 },
+    { month: "Jun", income: 150000, expenses: 102000, savings: 48000 }
   ];
+
+  const maxVal = Math.max(...trendData.map((d) => Math.max(d.expenses, d.savings, 1)));
+  const pointsActual = trendData
+    .map((d, i) => {
+      const x = (i / (trendData.length - 1)) * 900 + 50;
+      const y = 220 - (d.expenses / maxVal) * 150;
+      return `${x},${y}`;
+    })
+    .join(" ");
+  const areaPoints = `50,250 ${pointsActual} 950,250 Z`;
+
+  // Financial Health gauge stroke calculation
+  const score = summary?.financialHealthScore ?? 88;
+  const strokeOffset = 251.2 - (251.2 * score) / 100;
+
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {kpis.map(([label, value, Icon]) => (
-          <Card key={String(label)}>
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-on-surface-variant">{label as string}</div>
-              <Icon className="text-primary" size={20} />
+    <div className="grid grid-cols-12 gap-6">
+      
+      {/* Welcome Header */}
+      <div className="col-span-12 mb-4">
+        <h1 className="font-headline-lg text-4xl text-on-surface font-extrabold tracking-tight">Financial Overview</h1>
+        <p className="text-on-surface-variant text-base mt-1">
+          Welcome back, your portfolio has outperformed the market by <span className="text-primary font-bold">+1.4%</span> today.
+        </p>
+      </div>
+
+      {/* KPI Row */}
+      <div className="col-span-12 md:col-span-6 xl:col-span-3">
+        <div className="glass-card p-6 rounded-2xl relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/10 transition-all"></div>
+          <p className="text-on-surface-variant font-label-md text-xs uppercase tracking-wider mb-2 font-medium">Aggregated Balance</p>
+          <div className="flex items-baseline gap-2">
+            <h2 className="font-headline-md text-2xl font-bold text-on-surface">{currency(aggregatedNetWorth)}</h2>
+            <span className="text-primary font-bold text-xs">+2.4%</span>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5 text-[11px] text-on-surface-variant">
+            <span className="material-symbols-outlined text-[14px]">info</span>
+            Synced from 4 accounts
+          </div>
+        </div>
+      </div>
+
+      <div className="col-span-12 md:col-span-6 xl:col-span-3">
+        <div className="glass-card p-6 rounded-2xl relative overflow-hidden group">
+          <p className="text-on-surface-variant font-label-md text-xs uppercase tracking-wider mb-2 font-medium">Monthly Savings</p>
+          <h2 className="font-headline-md text-2xl font-bold text-on-surface">{currency(summary?.savings ?? 45000)}</h2>
+          <div className="mt-4 w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-primary h-full rounded-full" style={{ width: "85%" }}></div>
+          </div>
+          <p className="mt-2 text-[11px] text-on-surface-variant">85% of monthly goal reached</p>
+        </div>
+      </div>
+
+      <div className="col-span-12 md:col-span-6 xl:col-span-3">
+        <div className="glass-card p-6 rounded-2xl relative overflow-hidden group">
+          <p className="text-on-surface-variant font-label-md text-xs uppercase tracking-wider mb-2 font-medium">Portfolio value</p>
+          <h2 className="font-headline-md text-2xl font-bold text-on-surface">{currency(summary?.portfolioValue ?? 815000)}</h2>
+          <div className="mt-4 flex items-center gap-2">
+            <span className="px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] font-bold">STOCKS</span>
+            <span className="px-2 py-0.5 bg-secondary-container/40 text-secondary border border-white/10 rounded text-[10px] font-bold">CRYPTO</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="col-span-12 md:col-span-6 xl:col-span-3">
+        <div className="glass-card p-6 rounded-2xl relative overflow-hidden group">
+          <p className="text-on-surface-variant font-label-md text-xs uppercase tracking-wider mb-2 font-medium">Credit Score</p>
+          <div className="flex items-baseline gap-2">
+            <h2 className="font-headline-md text-2xl font-bold text-on-surface">785</h2>
+            <span className="text-primary font-bold text-xs">Excellent</span>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-error/40"></div>
+            <div className="w-2 h-2 rounded-full bg-tertiary/40"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(66,229,176,0.5)]"></div>
+            <span className="text-[10px] text-on-surface-variant ml-1 font-medium">Experian Synced</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Utilities Quick Navigation Box */}
+      <div className="col-span-12 mb-2">
+        <div className="glass-card p-6 rounded-2xl">
+          <h3 className="font-headline-md text-lg text-on-surface mb-6 font-bold flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary">account_balance_wallet</span>
+            Bills & Utilities Quick Portal
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <div onClick={() => onNavigateToUtility("mobile")} className="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-primary/10 hover:border-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-xl">smartphone</span>
+              </div>
+              <span className="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">Mobile Bills</span>
             </div>
-            <div className="mt-4 font-heading text-3xl font-bold">{currency(value as number)}</div>
-          </Card>
-        ))}
-      </div>
-      <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <Card>
-          <h2 className="mb-4 font-heading text-xl font-bold">Monthly Trend</h2>
-          <div className="h-80">
-            <ResponsiveContainer>
-              <AreaChart data={summary?.monthlyTrend ?? []}>
-                <XAxis dataKey="month" stroke="#bbcac1" />
-                <YAxis stroke="#bbcac1" />
-                <Tooltip />
-                <Area type="monotone" dataKey="savings" stroke="#42e5b0" fill="#42e5b055" />
-                <Area type="monotone" dataKey="expenses" stroke="#ffbca2" fill="#ffbca233" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div onClick={() => onNavigateToUtility("electricity")} className="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-primary/10 hover:border-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-xl">bolt</span>
+              </div>
+              <span className="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">Electricity</span>
+            </div>
+            <div onClick={() => onNavigateToUtility("dth")} className="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-primary/10 hover:border-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-xl">tv</span>
+              </div>
+              <span className="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">DTH</span>
+            </div>
+            <div onClick={() => onNavigateToUtility("water")} className="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-primary/10 hover:border-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-xl">water_drop</span>
+              </div>
+              <span className="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">Water Dues</span>
+            </div>
+            <div onClick={() => onNavigateToUtility("gas")} className="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-primary/10 hover:border-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-xl">local_gas_station</span>
+              </div>
+              <span className="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">Gas Booking</span>
+            </div>
+            <div onClick={() => onNavigateToUtility("fastag")} className="flex flex-col items-center gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer hover:bg-primary/10 hover:border-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-xl">directions_car</span>
+              </div>
+              <span className="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface">FASTag Hub</span>
+            </div>
           </div>
-        </Card>
-        <Card>
-          <h2 className="mb-4 font-heading text-xl font-bold">Recent Transactions</h2>
-          <div className="space-y-3">
-            {(summary?.recentTransactions ?? expenses.slice(0, 5)).map((expense) => <Row key={expense.id} label={expense.description} meta={expense.category} value={currency(expense.amount)} />)}
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function Expenses({ token, expenses, refresh }: { token: string; expenses: Expense[]; refresh: () => Promise<void> }) {
-  const [search, setSearch] = useState("");
-  const filtered = expenses.filter((expense) => expense.description.toLowerCase().includes(search.toLowerCase()));
-  return (
-    <CrudShell title="Add Expense" onSubmit={async (data) => {
-      await apiRequest("/expenses", { method: "POST", body: JSON.stringify(data) }, token);
-      await refresh();
-    }} fields={<>
-      <Input name="amount" type="number" placeholder="Amount" required />
-      <Select name="category">{EXPENSE_CATEGORIES.map((item) => <option key={item}>{item}</option>)}</Select>
-      <Input name="description" placeholder="Description" required />
-      <Input name="date" type="date" defaultValue="2026-06-24" required />
-    </>}>
-      <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search expenses" className="mb-4" />
-      <DataList rows={filtered.map((expense) => ({ id: expense.id, label: expense.description, meta: expense.category, value: currency(expense.amount) }))} />
-    </CrudShell>
-  );
-}
-
-function Budgets({ token, budgets, alerts, refresh }: { token: string; budgets: Budget[]; alerts: Array<{ category: string; overBy: number }>; refresh: () => Promise<void> }) {
-  return (
-    <CrudShell title="Set Budget" onSubmit={async (data) => {
-      await apiRequest("/budgets", { method: "POST", body: JSON.stringify(data) }, token);
-      await refresh();
-    }} fields={<>
-      <Select name="category">{EXPENSE_CATEGORIES.map((item) => <option key={item}>{item}</option>)}</Select>
-      <Input name="limitAmount" type="number" placeholder="Limit amount" required />
-      <Input name="month" defaultValue="2026-06" required />
-    </>}>
-      {alerts.length ? <div className="mb-4 rounded-xl border border-danger/40 bg-danger/10 p-3 text-sm text-danger">{alerts.map((item) => `${item.category} over by ${currency(item.overBy)}`).join(" | ")}</div> : null}
-      <DataList rows={budgets.map((budget) => ({ id: budget.id, label: budget.category, meta: budget.month, value: currency(budget.limitAmount) }))} />
-    </CrudShell>
-  );
-}
-
-function Goals({ token, goals, refresh }: { token: string; goals: Goal[]; refresh: () => Promise<void> }) {
-  return (
-    <CrudShell title="Create Goal" onSubmit={async (data) => {
-      await apiRequest("/goals", { method: "POST", body: JSON.stringify(data) }, token);
-      await refresh();
-    }} fields={<>
-      <Input name="title" placeholder="Goal title" required />
-      <Input name="targetAmount" type="number" placeholder="Target amount" required />
-      <Input name="currentAmount" type="number" placeholder="Current amount" required />
-      <Input name="targetDate" type="date" required />
-    </>}>
-      <div className="grid gap-4 md:grid-cols-2">
-        {goals.map((goal) => <Card key={goal.id}>
-          <div className="flex items-center justify-between"><h3 className="font-heading text-lg font-bold">{goal.title}</h3><Flag size={18} className="text-primary" /></div>
-          <div className="mt-4 h-2 rounded-full bg-white/10"><div className="h-2 rounded-full bg-primary" style={{ width: `${Math.min(100, (goal.currentAmount / goal.targetAmount) * 100)}%` }} /></div>
-          <div className="mt-3 text-sm text-on-surface-variant">{currency(goal.currentAmount)} of {currency(goal.targetAmount)} | {pct((goal.currentAmount / goal.targetAmount) * 100)}</div>
-        </Card>)}
-      </div>
-    </CrudShell>
-  );
-}
-
-function Investments({ token, investments, refresh }: { token: string; investments: Investment[]; refresh: () => Promise<void> }) {
-  return (
-    <CrudShell title="Add Investment" onSubmit={async (data) => {
-      await apiRequest("/investments", { method: "POST", body: JSON.stringify(data) }, token);
-      await refresh();
-    }} fields={<>
-      <Select name="assetType">{INVESTMENT_TYPES.map((item) => <option key={item}>{item}</option>)}</Select>
-      <Input name="name" placeholder="Asset name" required />
-      <Input name="investedAmount" type="number" placeholder="Invested amount" required />
-      <Input name="currentValue" type="number" placeholder="Current value" required />
-    </>}>
-      <div className="grid gap-6 xl:grid-cols-2">
-        <DataList rows={investments.map((item) => ({ id: item.id, label: item.name, meta: item.assetType, value: currency(item.currentValue - item.investedAmount) }))} />
-        <Card>
-          <h3 className="mb-3 font-heading text-lg font-bold">Allocation</h3>
-          <div className="h-72">
-            <ResponsiveContainer>
-              <PieChart><Pie data={investments} dataKey="currentValue" nameKey="name">{investments.map((_, index) => <Cell key={index} fill={["#42e5b0", "#bec6e0", "#ffbca2", "#00c896"][index % 4]} />)}</Pie><Tooltip /></PieChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-      </div>
-    </CrudShell>
-  );
-}
-
-function Credit({ token }: { token: string }) {
-  const [result, setResult] = useState<{ estimatedScore: number; recommendations: string[] } | null>(null);
-  return (
-    <CrudShell title="Simulate Credit Score" onSubmit={async (data) => {
-      const response = await apiRequest<{ estimatedScore: number; recommendations: string[] }>("/credit-profile/simulate", { method: "POST", body: JSON.stringify(data) }, token);
-      setResult(response);
-    }} fields={<>
-      <Input name="utilization" type="number" placeholder="Credit utilization %" defaultValue="24" required />
-      <Input name="paymentHistory" type="number" placeholder="Payment history %" defaultValue="98" required />
-      <Input name="creditAge" type="number" placeholder="Credit age in years" defaultValue="6" required />
-    </>}>
-      <Card>
-        <div className="text-sm uppercase tracking-[0.2em] text-on-surface-variant">Estimated Score</div>
-        <div className="mt-2 font-heading text-6xl font-bold text-primary">{result?.estimatedScore ?? 782}</div>
-        <ul className="mt-5 space-y-2 text-on-surface-variant">{(result?.recommendations ?? ["Run the simulator to refresh recommendations."]).map((item) => <li key={item}>{item}</li>)}</ul>
-      </Card>
-    </CrudShell>
-  );
-}
-
-function Reports({ report, summary }: { report: { totalIncome: number; totalExpenses: number; categoryAnalysis: Array<{ category: string; amount: number; count: number }> } | null; summary: DashboardSummary | null }) {
-  return (
-    <div className="grid gap-6 xl:grid-cols-[1fr_1.2fr]">
-      <Card>
-        <h2 className="font-heading text-xl font-bold">Monthly Summary</h2>
-        <div className="mt-5 space-y-3">
-          <Row label="Income" meta="June 2026" value={currency(report?.totalIncome ?? 0)} />
-          <Row label="Expenses" meta="All categories" value={currency(report?.totalExpenses ?? 0)} />
-          <Row label="Savings" meta="Net retained" value={currency((report?.totalIncome ?? 0) - (report?.totalExpenses ?? 0))} />
-          <Row label="Health" meta={summary?.financialHealthGrade ?? "Pending"} value={`${summary?.financialHealthScore ?? 0}/100`} />
         </div>
-      </Card>
-      <Card>
-        <h2 className="mb-4 font-heading text-xl font-bold">Category Analysis</h2>
-        <div className="h-80">
-          <ResponsiveContainer>
-            <BarChart data={report?.categoryAnalysis ?? []}>
-              <XAxis dataKey="category" stroke="#bbcac1" />
-              <YAxis stroke="#bbcac1" />
-              <Tooltip />
-              <Bar dataKey="amount" fill="#42e5b0" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-    </div>
-  );
-}
-
-function CrudShell({ title, fields, children, onSubmit }: { title: string; fields: React.ReactNode; children: React.ReactNode; onSubmit: (data: Record<string, FormDataEntryValue>) => Promise<void> }) {
-  return (
-    <div className="grid gap-6 xl:grid-cols-[360px_1fr]">
-      <Card>
-        <h2 className="mb-4 font-heading text-xl font-bold">{title}</h2>
-        <form action={async (formData) => {
-          await onSubmit(Object.fromEntries(formData.entries()));
-        }} className="space-y-3">
-          {fields}
-          <Button className="w-full"><Plus size={16} /> Save</Button>
-        </form>
-      </Card>
-      <div>{children}</div>
-    </div>
-  );
-}
-
-function DataList({ rows }: { rows: Array<{ id: string; label: string; meta: string; value: string }> }) {
-  return <Card><div className="space-y-3">{rows.map((row) => <Row key={row.id} label={row.label} meta={row.meta} value={row.value} />)}</div></Card>;
-}
-
-function Row({ label, meta, value }: { label: string; meta: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.03] p-3">
-      <div className="min-w-0">
-        <div className="truncate font-semibold">{label}</div>
-        <div className="text-sm text-on-surface-variant">{meta}</div>
       </div>
-      <div className="font-label font-bold text-primary">{value}</div>
+
+      {/* Spending Trends SVG Chart */}
+      <div className="col-span-12 xl:col-span-8">
+        <div className="glass-card p-6 rounded-2xl h-[400px] flex flex-col justify-between">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h3 className="font-headline-md text-lg font-bold text-on-surface">Spending Trends</h3>
+              <p className="text-on-surface-variant text-xs">Performance comparison vs last quarter</p>
+            </div>
+            <select className="bg-surface-container-low border border-white/10 rounded-lg text-xs text-on-surface focus:ring-primary focus:border-primary px-3 py-1.5 outline-none">
+              <option>Last 6 Months</option>
+              <option>Last Year</option>
+            </select>
+          </div>
+          <div className="flex-1 w-full relative">
+            <svg className="w-full h-full" viewBox="0 0 1000 260" preserveAspectRatio="none">
+              <path d={areaPoints ? `M ${areaPoints}` : ""} fill="url(#chartGradient)"></path>
+              <path d={pointsActual ? `M ${pointsActual}` : ""} fill="none" stroke="#42e5b0" strokeLinecap="round" strokeWidth="3" className="chart-path"></path>
+              {trendData.map((d, i) => {
+                const x = (i / (trendData.length - 1)) * 900 + 50;
+                const y = 220 - (d.expenses / maxVal) * 150;
+                return (
+                  <g key={i} className="group/dot">
+                    <circle cx={x} cy={y} r="5" fill="#42e5b0" className="pulsing-glow cursor-pointer hover:r-7 transition-all"></circle>
+                    <text x={x} y={y - 12} textAnchor="middle" fill="#dce4de" className="text-[10px] font-semibold opacity-0 group-hover/dot:opacity-100 transition-opacity bg-black/60 px-1 rounded">
+                      {currency(d.expenses)}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-5">
+              <div className="border-b border-on-surface w-full"></div>
+              <div className="border-b border-on-surface w-full"></div>
+              <div className="border-b border-on-surface w-full"></div>
+              <div className="border-b border-on-surface w-full"></div>
+            </div>
+          </div>
+          <div className="flex justify-between mt-4 text-[10px] text-on-surface-variant font-semibold uppercase tracking-wider">
+            {trendData.map((d, i) => (
+              <span key={i}>{d.month}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Financial Health Radial Gauge */}
+      <div className="col-span-12 xl:col-span-4">
+        <div className="glass-card p-6 rounded-2xl h-[400px] flex flex-col items-center justify-center text-center">
+          <h3 className="font-headline-md text-lg font-bold text-on-surface mb-1">Financial Health</h3>
+          <p className="text-on-surface-variant text-xs mb-8">AI-calculated stability index</p>
+          
+          <div className="relative w-44 h-44">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" fill="none" r="40" stroke="rgba(255,255,255,0.05)" strokeWidth="8"></circle>
+              <circle
+                className="transition-all duration-1000"
+                cx="50"
+                cy="50"
+                fill="none"
+                r="40"
+                stroke="#42e5b0"
+                strokeDasharray="251.2"
+                strokeDashoffset={strokeOffset}
+                strokeLinecap="round"
+                strokeWidth="8"
+              ></circle>
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-4xl font-bold text-on-surface">{score}</span>
+              <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mt-1">Out of 100</span>
+            </div>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-4 w-full">
+            <div className="bg-surface-container-low p-3 rounded-xl border border-white/5">
+              <p className="text-[10px] text-on-surface-variant uppercase mb-1 font-semibold">Stability</p>
+              <p className="text-sm font-bold text-primary">High</p>
+            </div>
+            <div className="bg-surface-container-low p-3 rounded-xl border border-white/5">
+              <p className="text-[10px] text-on-surface-variant uppercase mb-1 font-semibold">Risk level</p>
+              <p className="text-sm font-bold text-tertiary">Minimal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Transactions List & Table */}
+      <div className="col-span-12 xl:col-span-8">
+        <div className="glass-card p-6 rounded-2xl">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="font-headline-md text-lg font-bold text-on-surface">Recent Transactions</h3>
+            <button onClick={() => onNavigate("expenses")} className="text-primary font-bold text-sm hover:underline flex items-center gap-1">
+              View All <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="border-b border-white/5">
+                <tr className="text-on-surface-variant font-label-md text-xs uppercase tracking-wider">
+                  <th className="pb-4 font-semibold">Description</th>
+                  <th className="pb-4 font-semibold">Category</th>
+                  <th className="pb-4 font-semibold">Date</th>
+                  <th className="pb-4 font-semibold text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {(summary?.recentTransactions ?? expenses.slice(0, 5)).map((expense) => (
+                  <tr key={expense.id} className="hover:bg-white/5 transition-colors">
+                    <td className="py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+                          <span className="material-symbols-outlined text-sm">
+                            {expense.category === "Food" ? "restaurant" : expense.category === "Travel" ? "flight" : expense.category === "Bills" ? "electric_bolt" : "shopping_bag"}
+                          </span>
+                        </div>
+                        <span className="text-on-surface font-semibold">{expense.description}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 text-on-surface-variant text-sm">{expense.category}</td>
+                    <td className="py-4 text-on-surface-variant text-sm">{expense.date}</td>
+                    <td className="py-4 text-right text-on-surface font-bold">{currency(expense.amount)}</td>
+                  </tr>
+                ))}
+                {expenses.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="py-8 text-center text-on-surface-variant text-sm">
+                      No recent transactions found. Create one using Quick Actions!
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Insights & Quick Actions Sidebar */}
+      <div className="col-span-12 xl:col-span-4 space-y-6">
+        
+        {/* AI Insight Box */}
+        <div className="glass-card p-6 rounded-2xl glow-pulse border-primary/20">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                smart_toy
+              </span>
+            </div>
+            <div>
+              <h3 className="font-headline-md text-base font-bold text-on-surface leading-tight">AI Insights</h3>
+              <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Active Processing</span>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="p-4 bg-white/5 rounded-xl border-l-4 border-tertiary">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-tertiary text-lg">event_upcoming</span>
+                <div>
+                  <p className="text-sm font-semibold text-on-surface">Upcoming Payment</p>
+                  <p className="text-xs text-on-surface-variant mt-1">Your subscription for Netflix is due tomorrow.</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-white/5 rounded-xl border-l-4 border-primary">
+              <div className="flex items-start gap-3">
+                <span className="material-symbols-outlined text-primary text-lg">savings</span>
+                <div>
+                  <p className="text-sm font-semibold text-on-surface">Savings Opportunity</p>
+                  <p className="text-xs text-on-surface-variant mt-1">You could save ₹5,000 this month by reducing Food &amp; Dining expenses.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button onClick={() => onNavigate("ai-advisor")} className="w-full mt-6 py-2.5 border border-white/10 rounded-xl text-sm font-bold text-on-surface hover:bg-white/5 transition-all">
+            Talk to Advisor
+          </button>
+        </div>
+
+        {/* Quick Actions Panel */}
+        <div className="glass-card p-6 rounded-2xl">
+          <h3 className="font-headline-md text-base font-bold text-on-surface mb-6">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <button onClick={onAddExpense} className="flex flex-col items-center justify-center p-4 bg-surface-container-low rounded-2xl hover:border-primary/50 border border-transparent transition-all group">
+              <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors mb-2">add_circle</span>
+              <span className="text-xs font-bold text-on-surface text-center">Add Expense</span>
+            </button>
+            <button onClick={onInvestNow} className="flex flex-col items-center justify-center p-4 bg-surface-container-low rounded-2xl hover:border-primary/50 border border-transparent transition-all group">
+              <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors mb-2">account_balance</span>
+              <span className="text-xs font-bold text-on-surface text-center">Invest Now</span>
+            </button>
+            <button onClick={onGoalProgress} className="flex flex-col items-center justify-center p-4 bg-surface-container-low rounded-2xl hover:border-primary/50 border border-transparent transition-all group">
+              <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors mb-2">flag</span>
+              <span className="text-xs font-bold text-on-surface text-center">Goal Progress</span>
+            </button>
+            <button onClick={() => onNavigateToUtility("upi-qr")} className="flex flex-col items-center justify-center p-4 bg-primary/10 rounded-2xl border border-primary/30 shadow-[0_0_15px_rgba(66,229,176,0.2)] hover:bg-primary/20 transition-all group">
+              <span className="material-symbols-outlined text-primary text-xl mb-2">qr_code_scanner</span>
+              <span className="text-xs font-bold text-primary text-center">Scan &amp; Pay</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

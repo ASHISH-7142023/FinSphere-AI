@@ -20,7 +20,7 @@ if (process.env.DATABASE_URL) {
     
     console.log("Successfully connected to the database. Using PrismaStore.");
     store = new PrismaStore();
-  } catch (error) {
+  } catch {
     console.warn("WARNING: DATABASE_URL is set but database is not reachable. Falling back to InMemoryStore.");
     store = new InMemoryStore();
   }
