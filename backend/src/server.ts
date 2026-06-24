@@ -29,6 +29,12 @@ if (process.env.DATABASE_URL) {
   store = new InMemoryStore();
 }
 
-createApp(store).listen(port, () => {
-  console.log(`FinSphere API listening on http://localhost:${port}`);
-});
+const app = createApp(store);
+
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`FinSphere API listening on http://localhost:${port}`);
+  });
+}
+
+export default app;
