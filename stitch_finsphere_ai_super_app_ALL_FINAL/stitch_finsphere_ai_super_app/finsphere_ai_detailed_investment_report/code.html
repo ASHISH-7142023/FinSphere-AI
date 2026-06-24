@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Investment Report | FinSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbce",
+                        "surface-container": "#1a211d",
+                        "tertiary-fixed-dim": "#ffb598",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error-container": "#ffdad6",
+                        "surface-dim": "#0e1511",
+                        "on-tertiary-container": "#762b05",
+                        "on-surface-variant": "#bbcac1",
+                        "inverse-surface": "#dce4de",
+                        "background": "#0e1511",
+                        "surface-variant": "#2f3632",
+                        "primary": "#42e5b0",
+                        "tertiary": "#ffbca2",
+                        "on-surface": "#dce4de",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#2a322e",
+                        "primary-fixed-dim": "#3adfab",
+                        "inverse-primary": "#006c4f",
+                        "tertiary-container": "#ff9467",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container-highest": "#2f3632",
+                        "primary-container": "#00c896",
+                        "surface-tint": "#3adfab",
+                        "on-tertiary-fixed": "#370e00",
+                        "on-secondary": "#283044",
+                        "primary-fixed": "#60fcc6",
+                        "surface-container-lowest": "#08100c",
+                        "secondary-container": "#3f465c",
+                        "on-secondary-container": "#adb4ce",
+                        "secondary-fixed": "#dae2fd",
+                        "surface": "#0e1511",
+                        "outline": "#85948c",
+                        "on-tertiary": "#591d00",
+                        "surface-container-low": "#161d1a",
+                        "on-primary-container": "#004d38",
+                        "on-error": "#690005",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-primary-fixed": "#002116",
+                        "outline-variant": "#3c4a43",
+                        "on-primary-fixed-variant": "#00513b",
+                        "on-primary": "#003828",
+                        "on-background": "#dce4de",
+                        "on-tertiary-fixed-variant": "#7b2f09",
+                        "surface-bright": "#333b37",
+                        "surface-container-high": "#242c28",
+                        "error": "#ffb4ab",
+                        "secondary": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "48px",
+                        "container-max": "1440px",
+                        "lg": "32px",
+                        "xs": "8px",
+                        "base": "4px",
+                        "sm": "16px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Geist"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(47, 54, 50, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(66, 229, 176, 0.3);
+            box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+        }
+        .glow-pulse {
+            position: relative;
+        }
+        .glow-pulse::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #42e5b0, transparent);
+            animation: pulse-line 2s infinite ease-in-out;
+        }
+        @keyframes pulse-line {
+            0% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 0.3; transform: scaleX(0.8); }
+        }
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- Side Navigation Shell -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 bg-surface/40 backdrop-blur-xl border-r border-white/10 w-64 z-40 sidebar-scroll">
+<div class="mb-10">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">FinSphere AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Elite Tier</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 font-bold active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label-md text-label-md">Investments</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-8">
+<div class="glass-card rounded-2xl p-4 bg-primary/10">
+<p class="font-label-sm text-label-sm text-primary mb-2">Portfolio Health</p>
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[92%]"></div>
+</div>
+<p class="font-label-sm text-label-sm mt-2 text-on-surface">Excellent (92%)</p>
+</div>
+<button class="mt-4 w-full bg-primary text-on-primary font-bold py-3 rounded-xl active:scale-95 transition-all">Upgrade to Pro</button>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-0 lg:left-64 z-50 flex justify-between items-center px-gutter h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-4">
+<div class="lg:hidden font-headline-md text-headline-md font-extrabold text-primary">FS AI</div>
+<div class="hidden md:flex items-center bg-surface-variant/50 rounded-full px-4 py-1.5 border border-white/5">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface-variant w-48" placeholder="Search assets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_balance_wallet</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/50">
+<img class="h-full w-full object-cover" data-alt="A professional close-up studio portrait of a high-net-worth individual with subtle graying hair, wearing a sharp charcoal suit and a light blue shirt. The background is a sophisticated out-of-focus dark office interior with soft blue and emerald lighting accents reflecting the FinSphere AI brand colors. The mood is confident, experienced, and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX763BUHB6JhkbVVNRUSSIksasVRKfQcYU7BB28u6zro5p5hHvyPoaIsfvKS3R9wMuxgk2LV5lMQtxqLJ9Fk_3JDNkx6aQplF1OjvFED16zmQXsER2TEYmBnzhrPLEioEYD3smJZNxbmWC0rdSjmGl0r-7Wd78yiT75g9a2TjkpolNE1hWEjM8POeQnkfyC2Q_FVuNWw-2GYlsDZmavSe7t0Alp0ljHjd6GS7rPdkIpHFGyzc8A-j8yI51kjktwu29hwg1U-BqY7jA"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="max-w-[1200px] mx-auto p-gutter animate-in fade-in duration-700">
+<!-- Page Header / Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Detailed Investment Report</h2>
+<p class="text-on-surface-variant font-body-md mt-1">Generated on October 24, 2023 • Elite Tier Analytics</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-label-md hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span> Download PDF
+                    </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-label-md hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined text-[20px]">share</span> Share
+                    </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-bold hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span> Schedule
+                    </button>
+</div>
+</div>
+<!-- Executive Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">account_balance</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Net Worth</p>
+<h3 class="font-display-lg text-display-lg text-on-surface">$1,428,950.00</h3>
+<div class="flex items-center gap-2 mt-4 text-primary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label-md">+12.4% vs last month</span>
+</div>
+</div>
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">show_chart</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Absolute Returns</p>
+<h3 class="font-display-lg text-display-lg text-primary">+$214,320</h3>
+<div class="flex items-center gap-2 mt-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">info</span>
+<span class="font-label-md">Since inception (2020)</span>
+</div>
+</div>
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">percent</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">XIRR</p>
+<h3 class="font-display-lg text-display-lg text-on-surface">18.42%</h3>
+<div class="flex items-center gap-2 mt-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="font-label-md">Beat Benchmark by 4.2%</span>
+</div>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+<!-- Asset Allocation Section -->
+<div class="xl:col-span-8 flex flex-col gap-8">
+<!-- Chart & Distribution -->
+<section class="glass-card rounded-3xl p-8">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-headline-md text-headline-md text-on-surface">Asset Allocation Breakdown</h4>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase">Optimal Risk</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="relative flex justify-center">
+<!-- Simulated Donut Chart -->
+<div class="w-64 h-64 rounded-full border-[20px] border-surface-container-highest relative flex items-center justify-center">
+<div class="absolute inset-[-20px] rounded-full border-[20px] border-primary border-r-transparent border-b-transparent transform rotate-45"></div>
+<div class="absolute inset-[-20px] rounded-full border-[20px] border-secondary-container border-l-transparent border-t-transparent border-r-transparent transform -rotate-12"></div>
+<div class="absolute inset-[-20px] rounded-full border-[20px] border-tertiary-container border-l-transparent border-t-transparent border-r-transparent transform rotate-[140deg]"></div>
+<div class="text-center">
+<span class="text-on-surface-variant font-label-sm">Diversification</span>
+<div class="text-2xl font-bold text-on-surface">94/100</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-body-md">Equity</span>
+</div>
+<span class="font-bold">62%</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+<span class="font-body-md">Debt / Fixed Income</span>
+</div>
+<span class="font-bold">24%</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="font-body-md">Gold &amp; Commodities</span>
+</div>
+<span class="font-bold">10%</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-on-surface-variant"></div>
+<span class="font-body-md">Liquid Cash</span>
+</div>
+<span class="font-bold">4%</span>
+</div>
+</div>
+</div>
+<div class="mt-10 p-5 rounded-2xl bg-surface-container/50 border-l-4 border-primary">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<div class="space-y-2">
+<p class="font-label-md text-primary font-bold">AI Risk Assessment</p>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                        Your current allocation is <span class="text-on-surface font-semibold">"Moderately Aggressive."</span> While the Equity exposure is high, the 24% Debt cushion protects against short-term volatility. AI detects a slight overweight in Tech stocks; consider rebalancing into Defensive sectors.
+                                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Performance Attribution -->
+<section class="glass-card rounded-3xl overflow-hidden">
+<div class="p-8 border-b border-white/5">
+<h4 class="font-headline-md text-headline-md text-on-surface">Performance Attribution</h4>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high/50">
+<tr>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-wider">Asset Class / Security</th>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-wider">Returns (1Y)</th>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-wider">AI Insights</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">rocket_launch</span>
+</div>
+<div>
+<div class="font-bold text-on-surface">Tech Growth ETF</div>
+<div class="text-xs text-on-surface-variant">Top Performer</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="text-primary font-bold">+28.4%</span>
+</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant">Driven by AI-sector surge and cloud adoption rates.</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-tertiary/10 text-tertiary">
+<span class="material-symbols-outlined">trending_down</span>
+</div>
+<div>
+<div class="font-bold text-on-surface">Global Emerging Markets</div>
+<div class="text-xs text-on-surface-variant">Worst Performer</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="text-error font-bold">-4.2%</span>
+</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant">Macro headwinds and currency devaluation in SE Asia.</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-secondary-container/50 text-secondary">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div>
+<div class="font-bold text-on-surface">Gov. Bonds (10Y)</div>
+<div class="text-xs text-on-surface-variant">Stable Anchor</div>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="text-on-surface font-bold">+6.1%</span>
+</td>
+<td class="px-8 py-5 text-sm text-on-surface-variant">Yield curve normalization improved fixed-income outlook.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Right Sidebar Sections -->
+<div class="xl:col-span-4 flex flex-col gap-8">
+<!-- Tax Implications -->
+<section class="glass-card rounded-3xl p-6 border-l-2 border-tertiary/30">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-tertiary">receipt_long</span>
+<h4 class="font-headline-md text-headline-md text-on-surface">Tax Implications</h4>
+</div>
+<div class="space-y-6">
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5">
+<p class="text-on-surface-variant text-sm mb-1">Unrealized Gains</p>
+<p class="text-2xl font-bold text-on-surface">$142,000</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5">
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider mb-1">LTCG (Est.)</p>
+<p class="text-lg font-bold text-on-surface">$12,450</p>
+</div>
+<div class="p-4 rounded-2xl bg-surface-container-low border border-white/5">
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider mb-1">STCG (Est.)</p>
+<p class="text-lg font-bold text-on-surface">$3,120</p>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-tertiary/10 border border-tertiary/20">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary text-sm mt-1">lightbulb</span>
+<p class="text-xs text-tertiary-container leading-relaxed">
+<span class="font-bold">Tax-Loss Harvesting Alert:</span> You have $8,200 in carry-forward losses. Offsetting these against STCG could save you $2,460 this fiscal year.
+                                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommendations -->
+<section class="glass-card rounded-3xl p-6 glow-pulse">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h4 class="font-headline-md text-headline-md text-on-surface">AI Action Plan</h4>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 p-3 rounded-xl bg-surface-container-highest/30">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">01</div>
+<div class="space-y-1">
+<p class="font-bold text-on-surface text-sm">Trim High-Growth Equity</p>
+<p class="text-xs text-on-surface-variant">Sell 5% of Tech ETF to lock in profits while valuations are at peak.</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-xl bg-surface-container-highest/30">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">02</div>
+<div class="space-y-1">
+<p class="font-bold text-on-surface text-sm">Deploy Cash Reserves</p>
+<p class="text-xs text-on-surface-variant">Liquidate $20k cash and move to Dividend Yield stocks for passive flow.</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 rounded-xl bg-surface-container-highest/30">
+<div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">03</div>
+<div class="space-y-1">
+<p class="font-bold text-on-surface text-sm">Increase Gold Hedge</p>
+<p class="text-xs text-on-surface-variant">Recommended increase from 10% to 12% to offset upcoming inflation data.</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 rounded-xl border border-primary/40 text-primary font-bold hover:bg-primary hover:text-on-primary transition-all">
+                            Execute Rebalancing Plan
+                        </button>
+</section>
+<!-- Professional Advisor Card -->
+<div class="relative rounded-3xl overflow-hidden h-48 group">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 transition-all duration-500" data-alt="A sophisticated digital rendering of a premium glass-textured credit card floating in a dark, atmospheric space with neon emerald and deep navy blue light trails. The lighting is dramatic and luxurious, focusing on reflective surfaces and sharp geometric edges. The overall mood is high-end, futuristic, and financial elite." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuN6ygRKUSyD_kC29FuFuOJDU4OcE0t12npwQ7opormu1cUuyKmnOlNHftPJY9OJBL8-wie5vibaZiKhMcaxL8ak0j1Z_kTIeysPLmQ-_5EpPGqNuCCuIp7SKs2I1xs9ugSQET9NCITvL-39z8FY1duinzZOkAy2KRmCNWMDsLQI31eeHVyWhX0gVhcn1-V1rQ-H3lSAO1TEaadNJqGaLMD_DHzS6JJtV-iMPkfbcrau2FXktUchLSP8o0CkOZR68LL3nxMmo146ny"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10"></div>
+<div class="absolute inset-0 z-20 p-6 flex flex-col justify-end">
+<p class="font-label-sm text-primary mb-1">Dedicated Support</p>
+<h5 class="font-bold text-xl text-on-surface">Speak with an Advisor</h5>
+<p class="text-xs text-on-surface-variant mb-3">Priority access for Elite Tier members.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Compliance -->
+<footer class="mt-16 pb-8 border-t border-white/5 pt-8 text-center">
+<p class="text-[11px] text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
+                    Disclaimer: Investment reports are generated using historical data and AI predictive models. Past performance does not guarantee future results. Please consult with a certified financial advisor before making significant trades. FinSphere AI Elite Tier services are subject to terms and conditions.
+                </p>
+</footer>
+</div>
+</main>
+<!-- Navigation Mobile Bottom Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center h-16 px-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px]">Reports</span>
+</button>
+<div class="relative -top-5">
+<button class="w-12 h-12 rounded-full bg-primary text-on-primary shadow-lg shadow-primary/40 flex items-center justify-center">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="text-[10px]">AI</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">More</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions and effects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Simple Fade-in Observer
+        const observerOptions = {
+            threshold: 0.1
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(el => {
+            el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-4');
+            observer.observe(el);
+        });
+    </script>
+</body></html>

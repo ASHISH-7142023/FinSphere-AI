@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinSphere AI | Mutual Fund Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0e1511;
+            color: #dce4de;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: #161d1a;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 200, 150, 0.3);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+        .glow-accent {
+            filter: drop-shadow(0 0 8px rgba(0, 200, 150, 0.4));
+        }
+        .mesh-gradient {
+            background: radial-gradient(at 0% 0%, rgba(0, 200, 150, 0.05) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(190, 198, 224, 0.02) 0px, transparent 50%);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#00c896",
+                      "on-primary": "#003828",
+                      "primary-container": "#00513b",
+                      "on-primary-container": "#60fcc6",
+                      "secondary": "#bec6e0",
+                      "surface": "#0e1511",
+                      "surface-container-low": "#161d1a",
+                      "surface-container": "#1a211d",
+                      "surface-container-high": "#242c28",
+                      "on-surface": "#dce4de",
+                      "on-surface-variant": "#bbcac1",
+                      "outline": "#85948c",
+                      "error": "#ffb4ab",
+                      "background": "#0e1511"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1440px",
+                      "xl": "48px",
+                      "margin-mobile": "16px",
+                      "sm": "16px",
+                      "md": "24px",
+                      "gutter": "24px",
+                      "lg": "32px",
+                      "xs": "8px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Geist"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["Geist"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"],
+                      "display-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="mesh-gradient min-h-screen bg-surface">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-[#08100c] border-r border-white/5 flex flex-col py-lg px-md gap-md">
+<div class="flex items-center gap-sm mb-lg px-xs">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center glow-accent">
+<span class="material-symbols-outlined text-on-primary font-bold">rocket_launch</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary leading-none">FinSphere AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">Elite Tier</p>
+</div>
+</div>
+<nav class="flex-1 space-y-xs">
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-primary hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-300">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-primary border-r-2 border-primary bg-primary/5 group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-300">monitoring</span>
+<span class="font-label-md text-label-md font-bold">Portfolio</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-primary hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-300">analytics</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-primary hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-300">savings</span>
+<span class="font-label-md text-label-md">Savings</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant hover:text-primary hover:bg-white/5 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:translate-x-1 duration-300">military_tech</span>
+<span class="font-label-md text-label-md">Rewards</span>
+</a>
+</nav>
+<div class="mt-auto space-y-md">
+<button class="w-full py-md px-md bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-95 flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                Upgrade to Platinum
+            </button>
+<div class="pt-md border-t border-white/5">
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Top Navigation -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-surface/80 backdrop-blur-xl border-b border-white/5 flex justify-between items-center px-xl py-sm">
+<div class="flex items-center bg-surface-container-low border border-white/5 rounded-full px-md py-xs w-96 group focus-within:border-primary/50 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mr-xs">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder:text-on-surface-variant/50 text-on-surface" placeholder="Search portfolios, funds, or AI insights..." type="text"/>
+</div>
+<div class="flex items-center gap-md">
+<button class="relative p-xs rounded-full hover:bg-primary/10 transition-colors text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-xs rounded-full hover:bg-primary/10 transition-colors text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<div class="flex items-center gap-sm pl-md border-l border-white/10">
+<div class="text-right hidden lg:block">
+<p class="font-label-md text-on-surface leading-tight">Alex Mercer</p>
+<p class="font-label-sm text-primary leading-tight">Platinum Member</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/30 overflow-hidden cursor-pointer active:scale-95 duration-200">
+<img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9jE0z0YM351gyLQGAfwdN3KweP2WNUfS22jNzi9gRYnb0VXZcj4WKBUhNUaun8QnoZtqEZZpxdYSe586X6sPMrWKvRiHZau6GE4AOY0jTJL28ae6A46WAIm8bJw6T00giJ5eZkCM1zi-npCKyqmyQFwovEtpZsQ-GTUjSiJNsf_GBhFZ-9q6JKRtBhYRK71zUFyVnymYIsGRQvXyg-t1V-1wX-1kH-NJ7PAGYPHSQNPtujQIb17klKkpacXpBaVn8Z2zE05BqV8EE"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-32 pb-xl px-xl">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-lg mb-xl">
+<div>
+<p class="font-label-md text-primary mb-xs tracking-widest uppercase">Portfolio Overview</p>
+<h2 class="font-display-lg text-display-lg text-on-surface">Mutual Fund Portfolio</h2>
+</div>
+<div class="flex items-center gap-md">
+<div class="glass-card px-lg py-md rounded-2xl flex flex-col">
+<span class="font-label-sm text-on-surface-variant">Portfolio Value</span>
+<span class="font-headline-lg text-headline-lg text-on-surface">$482,904.50</span>
+</div>
+<div class="glass-card px-lg py-md rounded-2xl flex flex-col border-primary/20">
+<span class="font-label-sm text-primary">Current XIRR</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-headline-lg text-headline-lg text-primary">24.8%</span>
+<span class="material-symbols-outlined text-primary text-body-md" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid Section -->
+<div class="grid grid-cols-12 gap-gutter mb-xl">
+<!-- Health Score -->
+<div class="col-span-12 lg:col-span-4 glass-card p-lg rounded-3xl relative overflow-hidden group">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all duration-500"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface">Health Score</h3>
+<span class="material-symbols-outlined text-primary text-headline-md">verified_user</span>
+</div>
+<div class="flex flex-col items-center justify-center py-md">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="rgba(255,255,255,0.03)" stroke-width="12"></circle>
+<circle class="text-primary glow-accent" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="44" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-on-surface">92</span>
+<span class="font-label-sm text-on-surface-variant uppercase">Excellent</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-center mt-md px-md">
+                        Your portfolio is well-diversified across large-cap and aggressive growth funds. Risk exposure is optimal.
+                    </p>
+</div>
+</div>
+<!-- AI Rebalance -->
+<div class="col-span-12 lg:col-span-8 glass-card p-lg rounded-3xl relative overflow-hidden">
+<div class="absolute inset-0 shimmer opacity-50"></div>
+<div class="flex flex-col md:flex-row gap-lg h-full relative z-10">
+<div class="flex-1 space-y-md">
+<div class="flex items-center gap-sm">
+<div class="p-xs bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">AI Rebalance</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            FinSphere AI has detected a drift in your sector allocation. Rebalancing now could potentially increase your annualized returns by <span class="text-primary font-bold">2.4%</span>.
+                        </p>
+<div class="space-y-sm">
+<div class="flex items-center justify-between text-label-md">
+<span class="text-on-surface-variant">Current Tech Weight</span>
+<span class="text-on-surface">42%</span>
+</div>
+<div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[42%]"></div>
+</div>
+<div class="flex items-center justify-between text-label-md pt-xs">
+<span class="text-on-surface-variant">Recommended Tech Weight</span>
+<span class="text-primary">35%</span>
+</div>
+<div class="w-full bg-white/5 h-2 rounded-full overflow-hidden border border-primary/20">
+<div class="bg-primary/40 h-full w-[35%]"></div>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between items-center md:items-end">
+<div class="text-right">
+<div class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-xs">Action Required</div>
+<div class="font-headline-md text-primary font-bold">Shift $24,500.00</div>
+<div class="font-label-sm text-on-surface-variant">From Growth to Debt Funds</div>
+</div>
+<button class="mt-md md:mt-0 px-xl py-md bg-white/5 hover:bg-white/10 border border-white/10 text-on-surface rounded-xl font-bold flex items-center gap-sm transition-all group">
+                            Execute AI Recommendation
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="col-span-12 glass-card rounded-3xl p-lg">
+<div class="flex justify-between items-center mb-xl">
+<h3 class="font-headline-md text-headline-md text-on-surface">Top Performing Funds</h3>
+<button class="text-primary font-label-md hover:underline">View All Holdings</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-on-surface-variant border-b border-white/5 font-label-md">
+<th class="pb-md font-medium">Fund Name</th>
+<th class="pb-md font-medium">Category</th>
+<th class="pb-md font-medium">Invested Value</th>
+<th class="pb-md font-medium">Current Value</th>
+<th class="pb-md font-medium">Returns (1Y)</th>
+<th class="pb-md font-medium text-right">Trend</th>
+</tr>
+</thead>
+<tbody class="text-body-md">
+<tr class="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary border border-white/5">V</div>
+<div>
+<p class="font-bold text-on-surface">Vanguard S&amp;P 500 Index</p>
+<p class="text-label-sm text-on-surface-variant">Growth • Large Cap</p>
+</div>
+</div>
+</td>
+<td class="py-md text-on-surface-variant">Equity</td>
+<td class="py-md text-on-surface">$120,000</td>
+<td class="py-md text-on-surface">$148,200</td>
+<td class="py-md text-primary font-bold">+23.5%</td>
+<td class="py-md text-right">
+<div class="inline-block w-24 h-8 opacity-60 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" viewbox="0 0 100 30">
+<path d="M0 25 Q 10 5, 20 20 T 40 10 T 60 25 T 80 5 T 100 15" fill="none" stroke="#00c896" stroke-width="2"></path>
+</svg>
+</div>
+</td>
+</tr>
+<tr class="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-secondary border border-white/5">F</div>
+<div>
+<p class="font-bold text-on-surface">Fidelity Blue Chip Growth</p>
+<p class="text-label-sm text-on-surface-variant">Aggressive • Large Cap</p>
+</div>
+</div>
+</td>
+<td class="py-md text-on-surface-variant">Equity</td>
+<td class="py-md text-on-surface">$85,000</td>
+<td class="py-md text-on-surface">$112,400</td>
+<td class="py-md text-primary font-bold">+32.2%</td>
+<td class="py-md text-right">
+<div class="inline-block w-24 h-8 opacity-60 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" viewbox="0 0 100 30">
+<path d="M0 28 L 20 15 L 40 22 L 60 5 L 80 12 L 100 2" fill="none" stroke="#00c896" stroke-width="2"></path>
+</svg>
+</div>
+</td>
+</tr>
+<tr class="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors">
+<td class="py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-on-surface-variant border border-white/5">P</div>
+<div>
+<p class="font-bold text-on-surface">PIMCO Income Fund</p>
+<p class="text-label-sm text-on-surface-variant">Conservative • Debt</p>
+</div>
+</div>
+</td>
+<td class="py-md text-on-surface-variant">Fixed Income</td>
+<td class="py-md text-on-surface">$50,000</td>
+<td class="py-md text-on-surface">$54,100</td>
+<td class="py-md text-on-surface-variant font-bold">+8.2%</td>
+<td class="py-md text-right">
+<div class="inline-block w-24 h-8 opacity-60 group-hover:opacity-100 transition-opacity">
+<svg class="w-full h-full" viewbox="0 0 100 30">
+<path d="M0 20 L 100 15" fill="none" stroke="#bbcac1" stroke-width="2"></path>
+</svg>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Discovery Cards -->
+<div class="col-span-12">
+<div class="flex items-center gap-md mb-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface">Discover High-Yield Opportunities</h3>
+<span class="px-sm py-xs bg-primary/10 text-primary font-label-sm rounded-full border border-primary/20">AI Curated</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Fund Card 1 -->
+<div class="glass-card p-lg rounded-3xl hover:-translate-y-2 transition-all flex flex-col h-full">
+<div class="flex justify-between items-start mb-md">
+<div class="p-sm bg-surface-container-high rounded-xl">
+<span class="material-symbols-outlined text-primary">eco</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-on-surface-variant uppercase">Potential YTM</div>
+<div class="font-headline-md text-primary">18.4%</div>
+</div>
+</div>
+<h4 class="font-headline-md text-on-surface mb-xs">Green Energy Index</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg flex-1">
+                            A thematic fund focused on hydrogen fuel cells and battery storage leaders in EMEA markets.
+                        </p>
+<div class="flex gap-sm mb-lg">
+<span class="px-sm py-xs bg-white/5 rounded-lg text-label-sm text-on-surface-variant">High Risk</span>
+<span class="px-sm py-xs bg-white/5 rounded-lg text-label-sm text-on-surface-variant">Thematic</span>
+</div>
+<button class="w-full py-md bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 rounded-xl font-bold transition-all">
+                            Learn More
+                        </button>
+</div>
+<!-- Fund Card 2 -->
+<div class="glass-card p-lg rounded-3xl hover:-translate-y-2 transition-all flex flex-col h-full border-primary/10">
+<div class="flex justify-between items-start mb-md">
+<div class="p-sm bg-surface-container-high rounded-xl">
+<span class="material-symbols-outlined text-primary">memory</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-on-surface-variant uppercase">Potential YTM</div>
+<div class="font-headline-md text-primary">22.1%</div>
+</div>
+</div>
+<h4 class="font-headline-md text-on-surface mb-xs">NextGen AI Tech</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg flex-1">
+                            Exposure to early-stage generative AI infrastructure and semiconductor supply chains.
+                        </p>
+<div class="flex gap-sm mb-lg">
+<span class="px-sm py-xs bg-white/5 rounded-lg text-label-sm text-on-surface-variant">Aggressive</span>
+<span class="px-sm py-xs bg-white/5 rounded-lg text-label-sm text-on-surface-variant">Tech</span>
+</div>
+<button class="w-full py-md bg-primary text-on-primary border border-primary/20 rounded-xl font-bold transition-all">
+                            Learn More
+                        </button>
+</div>
+<!-- Fund Card 3 -->
+<div class="glass-card p-lg rounded-3xl hover:-translate-y-2 transition-all flex flex-col h-full">
+<div class="flex justify-between items-start mb-md">
+<div class="p-sm bg-surface-container-high rounded-xl">
+<span class="material-symbols-outlined text-primary">apartment</span>
+</div>
+<div class="text-right">
+<div class="font-label-sm text-on-surface-variant uppercase">Potential YTM</div>
+<div class="font-headline-md text-primary">12.5%</div>
+</div>
+</div>
+<h4 class="font-headline-md text-on-surface mb-xs">Urban REIT Advantage</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg flex-1">
+                            Stable monthly dividends from premium commercial real estate in high-growth tier-1 cities.
+                        </p>
+<div class="flex gap-sm mb-lg">
+<span class="px-sm py-xs bg-white/5 rounded-lg text-label-sm text-on-surface-variant">Low Risk</span>
+<span class="px-sm py-xs bg-white/5 rounded-lg text-label-sm text-on-surface-variant">Income</span>
+</div>
+<button class="w-full py-md bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 rounded-xl font-bold transition-all">
+                            Learn More
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Micro-interaction for table rows
+        document.querySelectorAll('tr.group').forEach(row => {
+            row.addEventListener('click', () => {
+                row.classList.add('bg-primary/5');
+                setTimeout(() => row.classList.remove('bg-primary/5'), 500);
+            });
+        });
+    </script>
+</body></html>

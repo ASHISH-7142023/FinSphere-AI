@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New SIP Setup | FinSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0e1511;
+            color: #dce4de;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(26, 33, 29, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .emerald-glow {
+            box-shadow: 0 0 20px rgba(66, 229, 176, 0.15);
+        }
+        .step-active {
+            width: 2rem;
+            background-color: #42e5b0;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #42e5b0;
+            border-radius: 10px;
+        }
+        @keyframes pulse-border {
+            0% { border-color: rgba(66, 229, 176, 0.2); }
+            50% { border-color: rgba(66, 229, 176, 0.6); }
+            100% { border-color: rgba(66, 229, 176, 0.2); }
+        }
+        .ai-thinking {
+            animation: pulse-border 2s infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbce",
+                        "surface-container": "#1a211d",
+                        "tertiary-fixed-dim": "#ffb598",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error-container": "#ffdad6",
+                        "surface-dim": "#0e1511",
+                        "on-tertiary-container": "#762b05",
+                        "on-surface-variant": "#bbcac1",
+                        "inverse-surface": "#dce4de",
+                        "background": "#0e1511",
+                        "surface-variant": "#2f3632",
+                        "primary": "#42e5b0",
+                        "tertiary": "#ffbca2",
+                        "on-surface": "#dce4de",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#2a322e",
+                        "primary-fixed-dim": "#3adfab",
+                        "inverse-primary": "#006c4f",
+                        "tertiary-container": "#ff9467",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container-highest": "#2f3632",
+                        "primary-container": "#00c896",
+                        "surface-tint": "#3adfab",
+                        "on-tertiary-fixed": "#370e00",
+                        "on-secondary": "#283044",
+                        "primary-fixed": "#60fcc6",
+                        "surface-container-lowest": "#08100c",
+                        "secondary-container": "#3f465c",
+                        "on-secondary-container": "#adb4ce",
+                        "secondary-fixed": "#dae2fd",
+                        "surface": "#0e1511",
+                        "outline": "#85948c",
+                        "on-tertiary": "#591d00",
+                        "surface-container-low": "#161d1a",
+                        "on-primary-container": "#004d38",
+                        "on-error": "#690005",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-primary-fixed": "#002116",
+                        "outline-variant": "#3c4a43",
+                        "on-primary-fixed-variant": "#00513b",
+                        "on-primary": "#003828",
+                        "on-background": "#dce4de",
+                        "on-tertiary-fixed-variant": "#7b2f09",
+                        "surface-bright": "#333b37",
+                        "surface-container-high": "#242c28",
+                        "error": "#ffb4ab",
+                        "secondary": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "48px",
+                        "container-max": "1440px",
+                        "lg": "32px",
+                        "xs": "8px",
+                        "base": "4px",
+                        "sm": "16px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Geist"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface">
+<!-- Top Navigation Anchor -->
+<nav class="fixed top-0 right-0 left-0 lg:left-64 z-50 flex justify-between items-center px-gutter h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/20">
+<div class="flex items-center gap-4">
+<span class="lg:hidden material-symbols-outlined text-on-surface">menu</span>
+<span class="font-headline-md text-headline-md font-extrabold text-primary">FinSphere AI</span>
+</div>
+<div class="hidden md:flex items-center gap-6 bg-surface-variant/20 rounded-full px-4 py-1.5 border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md text-on-surface placeholder-on-surface-variant w-48" placeholder="Search funds or insights..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="account_balance_wallet">account_balance_wallet</span>
+<div class="w-8 h-8 rounded-full border border-primary/30 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up professional portrait of a high-net-worth individual with a focused expression. The lighting is dramatic and cinematic, reflecting off a polished glass background in deep obsidian and emerald tones. High-end financial executive aesthetic, minimalist and sharp." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzIJ7vidxgWoC5yPW77sTLDI2DFyJp_IFSnVI-gcJuGLudmY8WxlcppOh1Ss3j96Erc9dUSRcg1REwNfNvjnCvWFL1QMzMSBl7L2kdp1WPpjuMTo3FAotwZzh3BbXz8UNbSbBvlivPjpzRGWwDxKh3jVTKCt9bKRspkD0CjLxdrVpuXI-w5FL1aEaWkZvCGiq6qJe80LGCReraElp7FP-8WZVdW6Raqsli2uRcpS2np0sCTczKSkYtYlF_juGObJVaS-eddAwGrF_o"/>
+</div>
+</div>
+</nav>
+<!-- Side Navigation Anchor -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 bg-surface/40 backdrop-blur-xl w-64 border-r border-white/10 z-50">
+<div class="mb-10">
+<span class="font-headline-md text-headline-md font-bold text-primary">FinSphere AI</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant tracking-widest mt-1 uppercase">Elite Tier</p>
+</div>
+<div class="space-y-2 flex-grow">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5 group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 font-bold active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-md text-label-md">Investments</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5 group" href="#">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5 group" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5 group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto glass-card rounded-2xl p-4 border-primary/20">
+<p class="font-label-sm text-label-sm text-primary mb-2">Portfolio Health</p>
+<div class="flex items-center justify-between mb-3">
+<span class="font-headline-md text-headline-md font-bold">94%</span>
+<span class="material-symbols-outlined text-primary" data-icon="verified">verified</span>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-2 rounded-lg font-bold hover:brightness-110 transition-all">Upgrade to Pro</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-24 px-gutter pb-12 min-h-screen relative">
+<!-- Background Ambient Shader -->
+<div class="fixed inset-0 pointer-events-none opacity-40 mix-blend-screen">
+
+</div>
+<!-- Centered SIP Modal/Container -->
+<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+<!-- Left: Multi-Step Setup Form -->
+<div class="lg:col-span-8 space-y-6">
+<header class="mb-8">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Setup New SIP</h1>
+<p class="text-on-surface-variant font-body-md text-body-md mt-2">Personalize your wealth creation journey with FinSphere's AI-driven insights.</p>
+<!-- Progress Stepper -->
+<div class="flex gap-2 mt-6">
+<div class="h-1.5 step-active rounded-full transition-all duration-500"></div>
+<div class="h-1.5 w-8 bg-surface-variant rounded-full"></div>
+<div class="h-1.5 w-8 bg-surface-variant rounded-full"></div>
+</div>
+</header>
+<!-- Section: Fund Selection -->
+<section class="glass-card rounded-3xl p-8 border border-white/5">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-headline-md">Select Mutual Fund</h2>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                            View All <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<div class="relative mb-6">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl pl-12 pr-4 py-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-on-surface" placeholder="Search by fund name, category or risk..." type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Fund Card 1 (Selected) -->
+<div class="p-5 rounded-2xl bg-primary-container/10 border-2 border-primary emerald-glow cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-3">
+<div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5">
+<img class="w-full h-full object-contain" data-alt="A minimalist logo for a financial tech company featuring a stylized emerald mountain peak and a rising arrow, set against a clean white background. Vector style, sharp edges, professional corporate identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq133TIML9RiccYohLlxMY28sqWW4HA1Jb6zdRJaNvY8-31QPLFEJoMkA7t4SKAsoy9tPRwrV2vmxG6wtHSVqeUdXMotL56hJQJaoUfECcOr0A4XeB1oeuYQ5vfoKivFZXsFAoJXnJM_ZNvWyBaUWMW_0GRtoAS7PSpan9pZr6-5MmRMqTxsQcBTDSuuN9skkeng31koZ4JCZKvSeui04q6ECmu9j3orTMBGq5uguD57GlKJ8WEKZ9yegzzpF5IUISAs_f4L4rvWmL"/>
+</div>
+<span class="bg-primary/20 text-primary px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Top Performer</span>
+</div>
+<h3 class="font-bold text-on-surface">FinSphere Bluechip Growth</h3>
+<p class="text-label-sm text-on-surface-variant mt-1">Equity • Very High Risk</p>
+<div class="mt-4 flex items-end justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase">3Y Returns</p>
+<p class="text-primary font-bold text-body-lg">18.4% p.a.</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Fund Card 2 -->
+<div class="p-5 rounded-2xl bg-surface-container/50 border border-outline-variant/20 hover:border-primary/50 cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-3">
+<div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5">
+<img class="w-full h-full object-contain" data-alt="A minimalist tech-focused investment logo with a series of interconnecting dots forming a sphere. The colors are deep navy and silver. High-contrast, sleek modern finish, vector graphic quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCflWazHKfj6F2P0l0Ai5FeNxKFuE0-gsfsaqL5SNt0oCy7Z9cOqnKnUbesNBZzmqj1SSoY1Q5wACeyMRmI_C0gFl3viRJGHnPXVTC_XMtHCVeTjaKI1EEjOgPiVMw5rY2B0FBC5aF2ZZ88J22Z4EXEdjwIejloKQdyxkaRj-YTopHH4V-DQHGeNmJY_tt14BxeVqriCfck3uLwdTLOyxIK7zU5CqwPdLY2oq4yRYVh-NAhl_gKmLGJBEE_h5ISxognS5GnDr5vx_ik"/>
+</div>
+</div>
+<h3 class="font-bold text-on-surface">Techno-Focus Direct Plan</h3>
+<p class="text-label-sm text-on-surface-variant mt-1">Equity • Sectoral</p>
+<div class="mt-4 flex items-end justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase">3Y Returns</p>
+<p class="text-on-surface font-bold text-body-lg">21.2% p.a.</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">add_circle</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Investment Details -->
+<section class="glass-card rounded-3xl p-8 border border-white/5">
+<h2 class="font-headline-md text-headline-md mb-6">Investment Details</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-3">Monthly Investment Amount</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl pl-10 pr-4 py-4 text-headline-md font-bold focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="number" value="5000"/>
+</div>
+<div class="flex gap-2 mt-4">
+<button class="px-3 py-1.5 rounded-lg bg-surface-variant text-label-sm hover:bg-primary/20 transition-colors">+ $1k</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-variant text-label-sm hover:bg-primary/20 transition-colors">+ $5k</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-variant text-label-sm hover:bg-primary/20 transition-colors">+ $10k</button>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-3">SIP Date</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">calendar_today</span>
+<select class="w-full bg-surface-container-low border border-outline-variant/30 rounded-2xl pl-12 pr-4 py-4 text-body-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none">
+<option>01 of every month</option>
+<option selected="">05 of every month</option>
+<option>10 of every month</option>
+<option>15 of every month</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined pointer-events-none">expand_more</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">Next installment on May 05, 2024</p>
+</div>
+</div>
+<div class="mt-8">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-4">Payment Method</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<label class="flex items-center gap-3 p-4 rounded-2xl bg-surface-container-low border border-primary/40 cursor-pointer">
+<input checked="" class="text-primary focus:ring-primary bg-transparent border-outline-variant" name="payment" type="radio"/>
+<div>
+<p class="font-bold text-on-surface text-label-md">One-Tap UPI</p>
+<p class="text-[10px] text-on-surface-variant">Instant Setup</p>
+</div>
+</label>
+<label class="flex items-center gap-3 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/40 cursor-pointer transition-all">
+<input class="text-primary focus:ring-primary bg-transparent border-outline-variant" name="payment" type="radio"/>
+<div>
+<p class="font-bold text-on-surface text-label-md">Net Banking</p>
+<p class="text-[10px] text-on-surface-variant">All Major Banks</p>
+</div>
+</label>
+<label class="flex items-center gap-3 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/20 hover:border-primary/40 cursor-pointer transition-all">
+<input class="text-primary focus:ring-primary bg-transparent border-outline-variant" name="payment" type="radio"/>
+<div>
+<p class="font-bold text-on-surface text-label-md">Bank Mandate</p>
+<p class="text-[10px] text-on-surface-variant">Auto-Debit</p>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Section: AI Wealth Projection Chart -->
+<section class="glass-card rounded-3xl p-8 border border-white/5 ai-thinking">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                                AI Wealth Projection
+                            </h2>
+<p class="text-label-sm text-on-surface-variant mt-1">Based on historical 18.4% p.a. simulation</p>
+</div>
+<div class="flex bg-surface-container rounded-full p-1 border border-outline-variant/20">
+<button class="px-4 py-1.5 rounded-full bg-primary text-on-primary text-[12px] font-bold">Linear</button>
+<button class="px-4 py-1.5 rounded-full text-on-surface-variant text-[12px] hover:text-on-surface">Compounded</button>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<!-- Chart Mockup with CSS -->
+<div class="absolute inset-0 flex items-end justify-between px-2 gap-4">
+<div class="relative w-full h-[30%] bg-surface-variant/30 rounded-t-xl group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-on-surface text-surface px-2 py-1 rounded text-[10px] font-bold">$125k</div>
+<div class="w-full h-full bg-gradient-to-t from-primary/10 to-primary/40 rounded-t-xl"></div>
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">5 Yrs</div>
+</div>
+<div class="relative w-full h-[55%] bg-surface-variant/30 rounded-t-xl group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-on-surface text-surface px-2 py-1 rounded text-[10px] font-bold">$482k</div>
+<div class="w-full h-full bg-gradient-to-t from-primary/10 to-primary/50 rounded-t-xl"></div>
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">10 Yrs</div>
+</div>
+<div class="relative w-full h-[90%] bg-surface-variant/30 rounded-t-xl group">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-on-surface text-surface px-2 py-1 rounded text-[10px] font-bold">$1.2M</div>
+<div class="w-full h-full bg-gradient-to-t from-primary/20 to-primary rounded-t-xl"></div>
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary">15 Yrs</div>
+</div>
+</div>
+<!-- Horizontal Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+<div class="border-t border-on-surface w-full"></div>
+<div class="border-t border-on-surface w-full"></div>
+<div class="border-t border-on-surface w-full"></div>
+<div class="border-t border-on-surface w-full"></div>
+</div>
+</div>
+<div class="mt-16 flex items-center gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/20">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">
+<strong class="text-on-surface">Advisor Tip:</strong> Increasing your SIP by just 10% annually can potentially grow your 15-year wealth by an additional <strong>$340,000</strong>.
+                        </p>
+</div>
+</section>
+</div>
+<!-- Right: Summary Card & CTA -->
+<div class="lg:col-span-4 sticky top-24">
+<div class="glass-card rounded-3xl overflow-hidden border border-white/10 flex flex-col">
+<div class="bg-primary/10 p-8 border-b border-white/5">
+<h3 class="font-headline-md text-headline-md mb-6">Order Summary</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-label-md">Monthly SIP</span>
+<span class="text-on-surface font-bold text-body-lg">$5,000.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-label-md">Total Yearly Investment</span>
+<span class="text-on-surface font-bold text-body-lg">$60,000.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-label-md">Expected CAGR</span>
+<span class="text-primary font-bold text-body-lg">18.4%</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant text-label-md">Expense Ratio</span>
+<span class="text-on-surface font-bold text-body-lg">0.45%</span>
+</div>
+</div>
+</div>
+<div class="p-8 space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="shield">shield</span>
+<p class="text-[11px] text-on-surface-variant">Your investments are secured with 256-bit encryption and SEBI-regulated custodians.</p>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold py-5 rounded-2xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20">
+                            Start SIP with One-Tap UPI
+                            <span class="material-symbols-outlined">bolt</span>
+</button>
+<div class="flex justify-center">
+<button class="text-on-surface-variant hover:text-on-surface text-label-sm font-bold transition-colors">Save as Draft</button>
+</div>
+</div>
+<div class="bg-surface-container-highest/30 p-4 flex items-center justify-center gap-2">
+<img class="h-6 opacity-60" data-alt="A small group of recognizable high-end credit and payment brand logos like Visa, Mastercard, and a secure bank vault symbol. Minimalist flat design, monochrome silver and white palette, professional fintech presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-hlWd6fVuuBDKLJ4bTB40VEETeQ6hA6oPi9Jen4WAUbK-bRkt4pvVa42L2ayVyfEzlxj0TEIjTbGErMy_IdFOjsTjDrksS3WMj72vjstpdhfiAQ_VAs4I0rX95frB5JD8-q5HYn2aovR-fL5kVPL-XsurgPqvCF7QeVFKJ4N_Aoy79GpWEEj3QxVlD8YkHvFVo03lRAi6UdCr_uM2Bi5rGjQRzeVnB_WhcExMw7AqxpIiHMRc5D9maH0mrQuQ3sr-MOZZH51NZDe4"/>
+</div>
+</div>
+<!-- AI Helper Card -->
+<div class="mt-6 glass-card rounded-3xl p-6 border-l-4 border-primary">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-label-md">Need help choosing?</p>
+<p class="text-label-sm text-on-surface-variant mt-1 mb-3">Ask FinSphere AI about this fund's sector exposure or tax implications.</p>
+<button class="text-primary font-bold text-label-sm hover:underline flex items-center gap-1">Chat with Advisor <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Message (Toast) - Hidden by default -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] opacity-0 translate-y-10 transition-all duration-500 pointer-events-none" id="toast">
+<div class="bg-primary-container text-on-primary-container px-6 py-4 rounded-full flex items-center gap-3 shadow-2xl">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-bold text-label-md">SIP Request Initiated. Complete payment in your UPI app.</span>
+</div>
+</div>
+<script>
+        // Micro-interactions
+        const mainCta = document.querySelector('button.bg-primary');
+        const toast = document.getElementById('toast');
+
+        mainCta.addEventListener('click', () => {
+            toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 4000);
+        });
+
+        // Hover effect for charts
+        const bars = document.querySelectorAll('.group');
+        bars.forEach(bar => {
+            bar.addEventListener('mouseenter', () => {
+                bar.classList.add('brightness-125');
+            });
+            bar.addEventListener('mouseleave', () => {
+                bar.classList.remove('brightness-125');
+            });
+        });
+    </script>
+</body></html>

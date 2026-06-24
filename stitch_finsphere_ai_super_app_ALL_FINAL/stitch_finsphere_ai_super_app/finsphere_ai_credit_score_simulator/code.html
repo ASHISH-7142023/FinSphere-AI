@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinSphere AI | Credit Score Simulator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Geist:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @keyframes glow-pulse {
+            0%, 100% { border-bottom-color: rgba(66, 229, 176, 0.2); }
+            50% { border-bottom-color: rgba(66, 229, 176, 1); }
+        }
+        .ai-thinking {
+            animation: glow-pulse 2s infinite;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gauge-container {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            overflow: hidden;
+        }
+        .gauge-bg {
+            fill: none;
+            stroke: #2f3632;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+        .gauge-fill {
+            fill: none;
+            stroke: #42e5b0;
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+        .conic-border {
+            position: relative;
+        }
+        .conic-border::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            padding: 1px;
+            border-radius: inherit;
+            background: conic-gradient(from 0deg, transparent, #42e5b0, transparent, #42e5b0, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#2f3632",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "surface-tint": "#3adfab",
+                    "outline-variant": "#3c4a43",
+                    "surface-bright": "#333b37",
+                    "on-tertiary-container": "#762b05",
+                    "on-primary": "#003828",
+                    "tertiary-fixed": "#ffdbce",
+                    "on-tertiary-fixed": "#370e00",
+                    "primary-container": "#00c896",
+                    "surface-container-lowest": "#08100c",
+                    "secondary": "#bec6e0",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "on-primary-fixed": "#002116",
+                    "secondary-fixed": "#dae2fd",
+                    "surface-container-low": "#161d1a",
+                    "surface-container-high": "#242c28",
+                    "on-tertiary-fixed-variant": "#7b2f09",
+                    "on-background": "#dce4de",
+                    "on-secondary": "#283044",
+                    "error": "#ffb4ab",
+                    "tertiary-container": "#ff9467",
+                    "on-tertiary": "#591d00",
+                    "on-primary-fixed-variant": "#00513b",
+                    "on-primary-container": "#004d38",
+                    "background": "#0e1511",
+                    "tertiary-fixed-dim": "#ffb598",
+                    "error-container": "#93000a",
+                    "primary": "#42e5b0",
+                    "surface-container": "#1a211d",
+                    "on-secondary-fixed": "#131b2e",
+                    "secondary-container": "#3f465c",
+                    "inverse-surface": "#dce4de",
+                    "primary-fixed-dim": "#3adfab",
+                    "on-surface": "#dce4de",
+                    "primary-fixed": "#60fcc6",
+                    "outline": "#85948c",
+                    "inverse-on-surface": "#2a322e",
+                    "on-surface-variant": "#bbcac1",
+                    "on-error-container": "#ffdad6",
+                    "surface-dim": "#0e1511",
+                    "on-error": "#690005",
+                    "tertiary": "#ffbca2",
+                    "surface": "#0e1511",
+                    "on-secondary-container": "#adb4ce",
+                    "surface-variant": "#2f3632",
+                    "inverse-primary": "#006c4f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1440px",
+                    "xs": "8px",
+                    "base": "4px",
+                    "gutter": "24px",
+                    "sm": "16px",
+                    "md": "24px",
+                    "margin-mobile": "16px",
+                    "xl": "48px",
+                    "lg": "32px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Geist"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Geist"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md text-body-md overflow-x-hidden">
+<aside class="fixed left-0 top-0 h-screen w-64 border-r border-white/10 bg-surface-container-lowest/40 backdrop-blur-xl flex flex-col py-lg px-md z-[60]">
+<div class="mb-xl px-md">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">FinSphere AI</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Elite Finance</p>
+</div>
+<nav class="flex-1 space-y-base">
+<a class="flex items-center gap-sm px-md py-sm rounded-xl text-on-surface-variant font-medium hover:bg-primary/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-xl text-on-surface-variant font-medium hover:bg-primary/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-xl text-on-surface-variant font-medium hover:bg-primary/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label-md text-label-md">Investments</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-xl text-primary border-r-2 border-primary bg-primary/5 font-bold transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+<a class="flex items-center gap-sm px-md py-sm rounded-xl text-on-surface-variant font-medium hover:bg-primary/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-md pt-lg">
+<div class="flex items-center gap-sm">
+<img class="w-10 h-10 rounded-full border border-primary/20 object-cover" data-alt="Close-up professional portrait of a high-net-worth individual investor, confident expression, soft studio lighting, sharp focus, set against a dark, technologically themed office background with hints of glass and emerald light accents, high-end photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOIptM4zbYbck5ST8DJUhB5TUvrojA9T3XjivuDkXWeNm1aV5eMhUG2jTH73A8qVrufUAvACTPPFrDqweGMAMnH0LALU7WgNZtRw8NbkhqRaEy44KRUXIgCWRk_lxLGZbsZ2Kj44D5Uu0211mjAawkaQ58hcAYL427GWzL1HypqJYjm3XbBl3Y61CcNcMuMBriaOdnm3nZlpFJQiFDDMvXNpcBeNt2nKjm39MbAAPC7KNR7X928u5jyZilzw_24ofA95UoRP-LgOe7"/>
+<div>
+<p class="font-label-md text-label-md font-bold">Alex Sterling</p>
+<p class="text-[10px] text-primary uppercase tracking-widest font-bold">Pro Account</p>
+</div>
+</div>
+</div>
+</aside>
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-20 bg-surface/10 backdrop-blur-lg border-b border-white/5 flex justify-between items-center px-xl z-50">
+<div class="flex items-center bg-surface-container-low/50 border border-white/5 rounded-full px-md py-base w-96 focus-within:ring-1 focus-within:ring-primary/50 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md w-full ml-xs text-on-surface" placeholder="Search financial insights..." type="text"/>
+</div>
+<div class="flex items-center gap-md">
+<button class="relative hover:text-primary transition-all">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="hover:text-primary transition-all">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<div class="h-6 w-[1px] bg-white/10 mx-base"></div>
+<span class="font-label-md text-label-md font-bold text-primary">Simulator Mode</span>
+</div>
+</header>
+<main class="ml-64 pt-20 p-xl min-h-screen">
+<div class="max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg font-bold mb-xs">Credit Score Simulator</h2>
+<p class="text-on-surface-variant max-w-xl">Project your financial future. Simulate key decisions and witness their real-time impact on your creditworthiness through our neural scoring engine.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-sm rounded-xl font-label-md text-label-md border border-white/10 hover:bg-white/5 transition-all flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">history</span> History
+                    </button>
+<button class="px-md py-sm rounded-xl font-label-md text-label-md bg-primary text-on-primary font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                        Reset Simulator
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-lg">
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-lg">
+<div class="glass-card rounded-[2rem] p-lg flex flex-col items-center text-center conic-border">
+<p class="font-label-md text-label-md uppercase tracking-tighter text-on-surface-variant mb-lg">Current Projected Score</p>
+<div class="gauge-container mb-md">
+<svg class="w-full h-full" viewbox="0 0 100 50">
+<path class="gauge-bg" d="M10,45 A40,40 0 0,1 90,45"></path>
+<path class="gauge-fill" d="M10,45 A40,40 0 0,1 90,45" id="scoreGauge" style="stroke-dashoffset: 110;"></path>
+</svg>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 text-center">
+<span class="font-display-lg text-display-lg font-extrabold text-primary" id="scoreValue">742</span>
+<p class="font-label-md text-label-md text-primary-fixed-dim">Excellent</p>
+</div>
+</div>
+<div class="grid grid-cols-3 w-full gap-base mt-md">
+<div class="text-left">
+<p class="text-[10px] text-on-surface-variant uppercase">Potential</p>
+<p class="font-label-md text-label-md text-primary">+34 pts</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-surface-variant uppercase">Confidence</p>
+<p class="font-label-md text-label-md">98.2%</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-on-surface-variant uppercase">Rank</p>
+<p class="font-label-md text-label-md">Top 12%</p>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-[2rem] p-lg flex flex-col h-full border-primary/20">
+<div class="flex items-center gap-sm mb-md ai-thinking border-b-2 pb-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<h3 class="font-headline-md text-headline-md">AI Credit Repair</h3>
+</div>
+<ul class="space-y-md">
+<li class="flex gap-sm items-start">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center mt-xs shrink-0">
+<span class="material-symbols-outlined text-xs text-primary">check</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">Dispute Inaccurate Limit</p>
+<p class="text-sm text-on-surface-variant">We detected a limit discrepancy on your Chase Sapphire card. Disputing could add 12pts.</p>
+</div>
+</li>
+<li class="flex gap-sm items-start">
+<div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center mt-xs shrink-0">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">bolt</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">Optimization: Payment Date</p>
+<p class="text-sm text-on-surface-variant">Shift your Amex payment date to the 4th to reduce reported utilization by 8%.</p>
+</div>
+</li>
+<li class="flex gap-sm items-start">
+<div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center mt-xs shrink-0">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">add</span>
+</div>
+<div>
+<p class="font-label-md text-label-md font-bold">Strategic Credit Mix</p>
+<p class="text-sm text-on-surface-variant">Opening a secured line of credit would diversify your portfolio in 3 months.</p>
+</div>
+</li>
+</ul>
+<button class="mt-xl w-full py-md rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-bold text-label-md">Execute Recovery Plan</button>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-8">
+<div class="glass-card rounded-[2rem] p-lg h-full">
+<div class="flex justify-between items-center mb-xl">
+<h3 class="font-headline-md text-headline-md font-bold">Simulation Scenarios</h3>
+<span class="text-sm text-on-surface-variant bg-surface-container-high px-sm py-xs rounded-full">3 Active Simulations</span>
+</div>
+<div class="space-y-lg">
+<div class="group relative overflow-hidden bg-surface-container-low/50 rounded-2xl p-lg border border-white/5 hover:border-primary/50 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="flex gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[20px] font-bold">Pay Off Major Debt</h4>
+<p class="text-on-surface-variant text-sm">Simulate paying off $5,000 from current revolving balances.</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary font-extrabold text-headline-md">+42</p>
+<p class="text-[10px] text-primary uppercase">Predicted Impact</p>
+</div>
+</div>
+<input class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="10000" min="500" step="500" type="range" value="5000"/>
+<div class="flex justify-between mt-sm text-xs font-label-sm text-on-surface-variant uppercase">
+<span>$500</span>
+<span class="text-primary font-bold">$5,000</span>
+<span>$10,000</span>
+</div>
+</div>
+<div class="group relative overflow-hidden bg-surface-container-low/50 rounded-2xl p-lg border border-white/5 hover:border-primary/50 transition-all cursor-pointer">
+<div class="flex justify-between items-start">
+<div class="flex gap-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">credit_card</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[20px] font-bold">New Credit Line</h4>
+<p class="text-on-surface-variant text-sm">Opening a premium card with a $15,000 limit.</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-error font-extrabold text-headline-md">-8</p>
+<p class="text-[10px] text-error uppercase">Hard Inquiry Impact</p>
+</div>
+</div>
+<div class="mt-md flex gap-sm">
+<div class="px-md py-xs rounded-full border border-white/10 text-sm hover:bg-primary/5 hover:border-primary/30 transition-all">Gold Card</div>
+<div class="px-md py-xs rounded-full border border-primary text-primary bg-primary/10 text-sm">Platinum Card</div>
+<div class="px-md py-xs rounded-full border border-white/10 text-sm hover:bg-primary/5 hover:border-primary/30 transition-all">Elite Black</div>
+</div>
+</div>
+<div class="group relative overflow-hidden bg-surface-container-low/50 rounded-2xl p-lg border border-white/5 hover:border-primary/50 transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="flex gap-md">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<div>
+<h4 class="font-headline-md text-[20px] font-bold">Mortgage Pre-Approval</h4>
+<p class="text-on-surface-variant text-sm">Impact of a $450k mortgage application and inquiry.</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-on-surface-variant font-extrabold text-headline-md">-15</p>
+<p class="text-[10px] text-on-surface-variant uppercase">Initial 6-mo Impact</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md mt-md">
+<div class="p-md rounded-xl bg-surface-container-high flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant">Interest Savings</span>
+<span class="text-lg font-bold text-primary">-$1,240/yr</span>
+</div>
+<div class="p-md rounded-xl bg-surface-container-high flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant">Score Recovery</span>
+<span class="text-lg font-bold">9 Months</span>
+</div>
+</div>
+</div>
+<button class="w-full py-xl rounded-2xl border-2 border-dashed border-white/10 hover:border-primary/30 hover:bg-primary/5 flex flex-col items-center justify-center gap-sm transition-all group">
+<div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Add Custom Simulation Event</p>
+</button>
+</div>
+</div>
+</div>
+</div>
+<section class="mt-xl">
+<div class="glass-card rounded-[2rem] overflow-hidden">
+<div class="grid grid-cols-1 md:grid-cols-2 h-96">
+<div class="p-xl flex flex-col justify-center">
+<span class="text-primary font-bold text-sm tracking-widest uppercase mb-sm">Neural Insights</span>
+<h3 class="font-headline-lg text-headline-lg font-bold mb-md">How AI Predicts Your Score</h3>
+<p class="text-on-surface-variant mb-lg">Our deep-learning models analyze over 5,000 data points across the credit spectrum, including non-traditional markers like rent payments and subscription consistency, to provide a 99.7% accurate credit simulation.</p>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="text-sm font-bold">FICO® Compatible</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary">shield_lock</span>
+<span class="text-sm font-bold">Bank-Grade Privacy</span>
+</div>
+</div>
+</div>
+<div class="relative bg-gradient-to-br from-primary/10 to-transparent flex items-center justify-center overflow-hidden">
+
+<div class="relative z-10 glass-card p-xl rounded-3xl border-primary/20 shadow-2xl shadow-primary/10 max-w-sm">
+<div class="flex gap-md items-center mb-md">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h4 class="font-bold">Optimization Active</h4>
+</div>
+<p class="text-sm mb-md text-on-surface-variant italic">"Current simulations suggest you are 3 weeks away from qualifying for the 'Elite Platinum' tier. Recommend delaying new inquiries."</p>
+<div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-4/5"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="ml-64 p-xl border-t border-white/5 text-center">
+<p class="text-on-surface-variant text-sm">© 2024 FinSphere AI. For simulation purposes only. Actual scores may vary based on lender-specific models.</p>
+</footer>
+<script>
+        // Micro-interactions for the gauge
+        document.addEventListener('DOMContentLoaded', () => {
+            const gauge = document.getElementById('scoreGauge');
+            const valueDisplay = document.getElementById('scoreValue');
+            
+            // Simulation logic
+            const updateGauge = (score) => {
+                // Max FICO is 850, Gauge is path-based (dasharray 440)
+                // 440 is empty, 0 is full
+                const maxScore = 850;
+                const minScore = 300;
+                const percentage = (score - minScore) / (maxScore - minScore);
+                const offset = 440 - (percentage * 440);
+                
+                gauge.style.strokeDashoffset = offset;
+                
+                // Animate value
+                let current = parseInt(valueDisplay.innerText);
+                const step = score > current ? 1 : -1;
+                const timer = setInterval(() => {
+                    if(current === score) clearInterval(timer);
+                    else {
+                        current += step;
+                        valueDisplay.innerText = current;
+                    }
+                }, 10);
+            };
+
+            // Initial load
+            setTimeout(() => updateGauge(742), 500);
+
+            // Slider interaction example
+            const debtSlider = document.querySelector('input[type="range"]');
+            debtSlider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                const baseScore = 742;
+                const dynamicImpact = Math.floor(val / 150); 
+                updateGauge(baseScore + dynamicImpact);
+            });
+        });
+    </script>
+</body></html>

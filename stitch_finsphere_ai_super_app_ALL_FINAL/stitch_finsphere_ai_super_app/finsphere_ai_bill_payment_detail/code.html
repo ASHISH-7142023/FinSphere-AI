@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinSphere AI | Bill Payment Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-border {
+            position: relative;
+        }
+        .glow-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #42e5b0, transparent);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+        .shimmer {
+            background: linear-gradient(90deg, rgba(66, 229, 176, 0) 0%, rgba(66, 229, 176, 0.1) 50%, rgba(66, 229, 176, 0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#2f3632",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "surface-tint": "#3adfab",
+                      "outline-variant": "#3c4a43",
+                      "surface-bright": "#333b37",
+                      "on-tertiary-container": "#762b05",
+                      "on-primary": "#003828",
+                      "tertiary-fixed": "#ffdbce",
+                      "on-tertiary-fixed": "#370e00",
+                      "primary-container": "#00c896",
+                      "surface-container-lowest": "#08100c",
+                      "secondary": "#bec6e0",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "on-primary-fixed": "#002116",
+                      "secondary-fixed": "#dae2fd",
+                      "surface-container-low": "#161d1a",
+                      "surface-container-high": "#242c28",
+                      "on-tertiary-fixed-variant": "#7b2f09",
+                      "on-background": "#dce4de",
+                      "on-secondary": "#283044",
+                      "error": "#ffb4ab",
+                      "tertiary-container": "#ff9467",
+                      "on-tertiary": "#591d00",
+                      "on-primary-fixed-variant": "#00513b",
+                      "on-primary-container": "#004d38",
+                      "background": "#0e1511",
+                      "tertiary-fixed-dim": "#ffb598",
+                      "error-container": "#93000a",
+                      "primary": "#42e5b0",
+                      "surface-container": "#1a211d",
+                      "on-secondary-fixed": "#131b2e",
+                      "secondary-container": "#3f465c",
+                      "inverse-surface": "#dce4de",
+                      "primary-fixed-dim": "#3adfab",
+                      "on-surface": "#dce4de",
+                      "primary-fixed": "#60fcc6",
+                      "outline": "#85948c",
+                      "inverse-on-surface": "#2a322e",
+                      "on-surface-variant": "#bbcac1",
+                      "on-error-container": "#ffdad6",
+                      "surface-dim": "#0e1511",
+                      "on-error": "#690005",
+                      "tertiary": "#ffbca2",
+                      "surface": "#0e1511",
+                      "on-secondary-container": "#adb4ce",
+                      "surface-variant": "#2f3632",
+                      "inverse-primary": "#006c4f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1440px",
+                      "xs": "8px",
+                      "base": "4px",
+                      "gutter": "24px",
+                      "sm": "16px",
+                      "md": "24px",
+                      "margin-mobile": "16px",
+                      "xl": "48px",
+                      "lg": "32px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Geist"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["Geist"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-full z-50 bg-surface/10 backdrop-blur-lg border-b border-white/5 flex justify-between items-center h-20 px-xl">
+<div class="flex items-center gap-md">
+<button class="p-xs hover:bg-white/10 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-extrabold text-primary">FinSphere AI</h1>
+</div>
+<div class="hidden md:flex items-center flex-1 max-w-md mx-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-3 pl-12 pr-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Search transactions or bills..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all">account_balance_wallet</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A sophisticated professional portrait of a high-net-worth individual with a focused expression, set against a blurred background of a modern high-tech office with cool blue and emerald ambient lighting. The style is clean, sharp, and mirrors a high-end financial app aesthetic with premium color grading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSPA2MDyRQBbDFimV-QEmfBs5h6oetKaW2ZXnaRrWqS6UqEkIfRU3-ihaZhI65Yx1ezXRGHSWkDDvpU6sXqIPlsXBC0qlp0Xb2CURuummxJIcpaM96DBuqmHqvP9j0Ffd4yMv9D59Z5SCY245j8u9F_SzKmSH_BVXNdWl4bB7Byu0uW82SHTkVd8h2LbL_Dz1J8cY5MAFW0pEaE0iVPJ5l6gkcrGaG4rYRfLM88PpJV6BAEeeVnfBcftdhM79oAdrrBfB37vz6ZDCz"/>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-16 px-margin-mobile md:px-xl max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Left Column: Billing Details & Input -->
+<div class="lg:col-span-7 space-y-lg">
+<section class="glass-card rounded-2xl p-lg relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 shimmer opacity-50"></div>
+<div class="flex items-center gap-md mb-lg">
+<div class="w-16 h-16 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary text-4xl">bolt</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Electricity Bill</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">Metropolis Power Grid Corp</p>
+</div>
+</div>
+<form class="space-y-md">
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Consumer ID / Account Number</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-low border border-outline/20 rounded-xl py-4 px-md text-on-surface font-headline-md focus:border-primary/50 focus:ring-0 transition-all outline-none" type="text" value="8821-4490-1203"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary opacity-60">verified</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Billing Cycle</label>
+<div class="bg-surface-container-low/50 rounded-xl py-3 px-md text-on-surface font-medium border border-white/5">
+                                    Oct 2023
+                                </div>
+</div>
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1">Due Date</label>
+<div class="bg-surface-container-low/50 rounded-xl py-3 px-md text-error/80 font-medium border border-white/5">
+                                    Nov 15, 2023
+                                </div>
+</div>
+</div>
+</form>
+</section>
+<!-- AI Bill Audit Section -->
+<section class="glass-card rounded-2xl p-lg border-primary/20 relative overflow-hidden">
+<div class="flex items-center gap-xs mb-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<h3 class="font-label-md text-label-md text-primary tracking-widest uppercase">FinSphere AI Bill Audit</h3>
+</div>
+<div class="flex flex-col md:flex-row gap-md items-start">
+<div class="flex-1 space-y-sm">
+<div class="glow-border pb-xs">
+<p class="font-headline-md text-headline-md text-on-surface">Abnormal Surge Detected</p>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                This month's bill is <span class="text-error font-bold">24% higher</span> than your 6-month average. We've identified a spike in consumption between 2:00 AM and 5:00 AM.
+                            </p>
+<div class="flex gap-sm">
+<button class="px-md py-xs bg-primary/10 border border-primary/20 rounded-full text-primary font-label-md hover:bg-primary/20 transition-all">View Breakdown</button>
+<button class="px-md py-xs bg-white/5 border border-white/10 rounded-full text-on-surface-variant font-label-md hover:bg-white/10 transition-all">Flag Inaccuracy</button>
+</div>
+</div>
+<div class="w-full md:w-48 aspect-square relative">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-32 h-32 rounded-full border-[10px] border-surface-container-highest flex flex-col items-center justify-center">
+<span class="text-error font-bold text-lg">+24%</span>
+<span class="text-[10px] text-on-surface-variant uppercase">Spike</span>
+</div>
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-primary" cx="50%" cy="50%" fill="none" r="48" stroke="currentColor" stroke-dasharray="301.6" stroke-dashoffset="220" stroke-width="10"></circle>
+<circle class="text-error/60" cx="50%" cy="50%" fill="none" r="48" stroke="currentColor" stroke-dasharray="301.6" stroke-dashoffset="280" stroke-width="10"></circle>
+</svg>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Bill History -->
+<section class="space-y-md">
+<h3 class="font-headline-md text-headline-md text-on-surface px-1">Payment History</h3>
+<div class="space-y-sm">
+<!-- History Item 1 -->
+<div class="glass-card rounded-xl p-md flex items-center justify-between group hover:bg-white/5 transition-all cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">history</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">September 2023</p>
+<p class="text-xs text-on-surface-variant">Paid via UPI • Sep 12</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-primary">$142.50</p>
+<span class="text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 uppercase font-bold">Success</span>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="glass-card rounded-xl p-md flex items-center justify-between group hover:bg-white/5 transition-all cursor-pointer">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">history</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">August 2023</p>
+<p class="text-xs text-on-surface-variant">Paid via Wallet • Aug 14</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-primary">$138.20</p>
+<span class="text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 uppercase font-bold">Success</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Checkout & Summary -->
+<div class="lg:col-span-5">
+<div class="sticky top-28 space-y-lg">
+<section class="glass-card rounded-2xl p-lg border-primary/10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-lg">Bill Summary</h3>
+<div class="space-y-md border-b border-white/5 pb-md mb-md">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Current Usage</span>
+<span class="text-on-surface">$168.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Fixed Service Fee</span>
+<span class="text-on-surface">$12.50</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Late Penalty</span>
+<span class="text-error">$5.00</span>
+</div>
+<div class="flex justify-between items-center bg-primary/5 p-sm rounded-lg border border-primary/10">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-sm">percent</span>
+<span class="text-primary font-medium">FinSphere Cashback</span>
+</div>
+<span class="text-primary">-$8.40</span>
+</div>
+</div>
+<div class="flex justify-between items-end mb-lg">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Total Payable</p>
+<p class="font-display-lg text-display-lg text-on-surface">$177.10</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-on-surface-variant">Due in 4 days</p>
+</div>
+</div>
+<!-- UPI Payment Options -->
+<div class="space-y-md">
+<p class="font-label-md text-label-md text-on-surface-variant mb-xs">Select UPI Method</p>
+<div class="grid grid-cols-2 gap-sm">
+<button class="flex items-center gap-sm p-md rounded-xl border border-primary/50 bg-primary/5 text-primary">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span class="font-bold">UPI ID</span>
+</button>
+<button class="flex items-center gap-sm p-md rounded-xl border border-white/10 hover:border-white/20 transition-all bg-white/5 text-on-surface-variant">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-bold">Net Banking</span>
+</button>
+</div>
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary font-bold py-5 rounded-2xl flex items-center justify-center gap-md active:scale-[0.98] transition-all shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined">bolt</span>
+                                PAY NOW WITH UPI
+                            </button>
+<p class="text-[10px] text-center text-outline uppercase tracking-widest">Secured by AES-256 Multi-layer AI Encryption</p>
+</div>
+</section>
+<!-- Promotion Card -->
+<div class="rounded-2xl h-48 relative overflow-hidden group cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A futuristic, high-tech abstract visualization of glowing digital energy flowing through fiber optic cables in shades of emerald green and dark obsidian. The scene represents fast, secure financial transactions and cutting-edge artificial intelligence, with a shallow depth of field and premium cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-ezAd8et0ZkTdMHSTC6s_ePaTu2y_xaqi6Kfi1SL8oUikS1FivW49JA6aVHFa2OLjwdRzVwhYb-TsBmd1SI09jzyvnY0J8N_2ateQpxq_V6bAVZPIoHktMGtKFOcLY9ORG7ZfHhtxrfTDEbYHhveNzgGVTKg1_5MSTNokCKjkzFkc4eyfuFVaiFuXmyPhBqNxvS_cXIIzkA4HSUIqSwokb2T9jd1BwqApgStrHcRfpuHrT7CiXpfJEzZAYJjWy2uVjMKTpAaaK4sI"/>
+<div class="absolute bottom-4 left-4 z-20">
+<p class="font-label-md text-label-md text-primary-fixed mb-1">Elite Benefit</p>
+<p class="font-headline-md text-headline-md text-white">Enable Auto-Pay</p>
+<p class="text-xs text-white/70">Get 2% additional cashback every month.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-low/80 backdrop-blur-xl border-t border-white/5 flex items-center justify-around z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Dashboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-[10px]">Payments</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="text-[10px]">Advisor</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.96)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        if(searchInput) {
+            searchInput.addEventListener('focus', () => {
+                searchInput.parentElement.classList.add('ring-1', 'ring-primary/50');
+            });
+            searchInput.addEventListener('blur', () => {
+                searchInput.parentElement.classList.remove('ring-1', 'ring-primary/50');
+            });
+        }
+    </script>
+</body></html>

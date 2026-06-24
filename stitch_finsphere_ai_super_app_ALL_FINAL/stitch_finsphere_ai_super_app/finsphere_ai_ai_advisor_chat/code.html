@@ -1,0 +1,366 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>AI Advisor | FinSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(26, 33, 29, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .ai-bubble {
+            background: linear-gradient(135deg, rgba(66, 229, 176, 0.15) 0%, rgba(26, 33, 29, 0.4) 100%);
+            border: 1px solid rgba(66, 229, 176, 0.2);
+        }
+        .user-bubble {
+            background: rgba(47, 54, 50, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-pulse {
+            box-shadow: 0 0 15px rgba(66, 229, 176, 0.3);
+            animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px rgba(66, 229, 176, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(66, 229, 176, 0.5); }
+            100% { box-shadow: 0 0 5px rgba(66, 229, 176, 0.2); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(133, 148, 140, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#003828",
+                      "on-tertiary-fixed": "#370e00",
+                      "on-tertiary": "#591d00",
+                      "tertiary": "#ffbca2",
+                      "error": "#ffb4ab",
+                      "surface-container-highest": "#2f3632",
+                      "surface-container-lowest": "#08100c",
+                      "surface": "#0e1511",
+                      "surface-container-high": "#242c28",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#ffb598",
+                      "surface-tint": "#3adfab",
+                      "background": "#0e1511",
+                      "primary-container": "#00c896",
+                      "inverse-surface": "#dce4de",
+                      "outline-variant": "#3c4a43",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#3adfab",
+                      "tertiary-container": "#ff9467",
+                      "inverse-on-surface": "#2a322e",
+                      "secondary-container": "#3f465c",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "on-tertiary-container": "#762b05",
+                      "surface-container-low": "#161d1a",
+                      "surface-container": "#1a211d",
+                      "surface-bright": "#333b37",
+                      "on-tertiary-fixed-variant": "#7b2f09",
+                      "on-surface": "#dce4de",
+                      "outline": "#85948c",
+                      "on-surface-variant": "#bbcac1",
+                      "tertiary-fixed": "#ffdbce",
+                      "surface-variant": "#2f3632",
+                      "on-secondary": "#283044",
+                      "inverse-primary": "#006c4f",
+                      "on-primary-fixed": "#002116",
+                      "on-secondary-fixed": "#131b2e",
+                      "on-primary-fixed-variant": "#00513b",
+                      "primary": "#42e5b0",
+                      "secondary-fixed": "#dae2fd",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "on-primary-container": "#004d38",
+                      "on-background": "#dce4de",
+                      "surface-dim": "#0e1511",
+                      "on-secondary-container": "#adb4ce",
+                      "error-container": "#93000a",
+                      "primary-fixed": "#60fcc6",
+                      "secondary": "#bec6e0"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "32px",
+                      "md": "24px",
+                      "xl": "48px",
+                      "base": "4px",
+                      "container-max": "1440px",
+                      "xs": "8px",
+                      "gutter": "24px",
+                      "sm": "16px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Geist"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "label-md": ["Geist"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background selection:bg-primary/30 selection:text-primary overflow-hidden h-screen flex flex-col lg:flex-row">
+<!-- Sidebar Navigation (Desktop) -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 bg-surface/40 dark:bg-surface/40 backdrop-blur-xl h-full w-64 border-r border-white/10 z-50">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary font-bold">account_balance</span>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">FinSphere AI | AI Advisor Chat</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<div class="text-xs font-label-sm text-on-surface-variant uppercase tracking-widest mb-4 opacity-50">Main</div>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label-md text-label-md">Investments</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container rounded-xl px-4 py-3 font-bold scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+<div class="pt-8 pb-4">
+<div class="text-xs font-label-sm text-on-surface-variant uppercase tracking-widest mb-4 opacity-50">Recent Conversations</div>
+<div class="space-y-1">
+<button class="w-full text-left px-4 py-3 text-label-md font-label-md text-on-surface-variant hover:text-on-surface rounded-xl transition-all hover:bg-white/5 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">history</span> Budget Planning
+                    </button>
+<button class="w-full text-left px-4 py-3 text-label-md font-label-md text-on-surface-variant hover:text-on-surface rounded-xl transition-all hover:bg-white/5 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">history</span> Risk Analysis
+                    </button>
+<button class="w-full text-left px-4 py-3 text-label-md font-label-md text-on-surface-variant hover:text-on-surface rounded-xl transition-all hover:bg-white/5 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">history</span> Tax Strategies
+                    </button>
+</div>
+</div>
+</nav>
+<div class="mt-auto pt-6 space-y-4">
+<div class="p-4 rounded-2xl bg-surface-container-high border border-white/5">
+<div class="flex items-center gap-3 mb-3">
+<img class="w-10 h-10 rounded-full border border-primary/20" data-alt="Close up profile portrait of a professional male investor in his 30s with short hair, wearing a high-tech smart watch and a dark minimalist blazer. Soft dramatic studio lighting with a deep teal and obsidian background to match the premium fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr4y2-kGqXBelBTL_HRd1GWBP63TZdXNma2kMQmpo511giyUQ_TogUWiH8rXDCGvHzRBQTGo5WmtEHkb9mCX3QjyITizOQy0neZRdoiFgpwohd4tBeyj42rktoUN3cwp9lY_vY19ZN3vqBvn2jIqFE13e1k17tV1z4agorSYekLbzdX3rrfLguLHx8Fdg_11X0yaxjj2Ec1b-XmV3TUW4RhKOq9IlLsFaOcTTv0POcZOHctypSYeV7yh42I554gXCku28gEwAO1-9p">
+<div>
+<p class="font-label-md text-label-md text-on-surface">Alex Rivera</p>
+<p class="text-[10px] text-primary uppercase font-bold tracking-tighter">Elite Tier</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-on-primary rounded-lg font-label-sm text-label-sm hover:brightness-110 transition-all active:scale-95">Upgrade to Pro</button>
+</div>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface rounded-xl px-4 py-3 transition-colors hover:bg-white/5" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col relative lg:ml-64 overflow-hidden h-full">
+<!-- Top Navigation -->
+<header class="w-full h-16 border-b border-white/10 bg-surface/40 dark:bg-surface/40 backdrop-blur-xl z-50 flex justify-between items-center px-6 shadow-lg shadow-black/20">
+<div class="flex items-center gap-4">
+<button class="lg:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex flex-col">
+<h2 class="font-headline-md text-headline-md font-extrabold text-primary leading-tight">FinSphere AI | AI Advisor Chat</h2>
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-primary glow-pulse"></div>
+<span class="text-[10px] font-label-sm text-on-surface-variant uppercase tracking-wider">Advisor Online</span>
+</div>
+</div>
+</div>
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-2 rounded-full border border-white/5 w-96">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface-variant/50 w-full" placeholder="Search insights..." type="text">
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<div class="w-8 h-8 rounded-full border border-primary/30 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional user profile avatar, minimalist and sleek with soft shadows. Neutral studio lighting against a dark corporate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFrE1Fdk_OyMujd0oTkLAd-Nm6CNJDnxd_cnp6ZuKmfiKLbjG9kGkXMA13Yl7ABewkVM4q8_Ewv_AcDdbjjZwyOW5v97Q-qHYA0Xc8KvAtRyZsr7t53UA1TYBKVimlxoZPcx55HExp60cK8Yz1jNzZ_f17gVoksy_hc9MKIicum6AkNa6gMkt0YBG6OmKtboO1Oo0c4AoPnO1fZYjTIq_OLD02O60Q1vHIsHg3w3Y-brjnzzfIYZH4AqevFaZO1h6KQr6hNS7OxYVR">
+</div>
+</div>
+</header>
+<!-- Chat Canvas -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 custom-scrollbar relative">
+<!-- Atmospheric Shader Background -->
+
+<!-- Welcome/Info Section -->
+<div class="max-w-3xl mx-auto flex flex-col items-center text-center space-y-4 mb-12 py-10 opacity-60">
+<div class="w-16 h-16 rounded-2xl bg-surface-container-high border border-white/10 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Your Financial Strategist</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">I analyze your spending patterns, market trends, and risk profile to provide precision wealth advice.</p>
+</div>
+<!-- Chat Threads -->
+<div class="max-w-4xl mx-auto space-y-8 pb-32">
+<!-- User Message -->
+<div class="flex justify-end items-start gap-4">
+<div class="flex flex-col items-end max-w-[80%]">
+<div class="user-bubble rounded-2xl rounded-tr-none px-6 py-4 shadow-xl">
+<p class="font-body-md text-body-md text-on-surface">How can I save more for my Emergency Fund goal?</p>
+</div>
+<span class="text-[10px] font-label-sm text-on-surface-variant mt-2">10:24 AM • Sent</span>
+</div>
+<div class="w-8 h-8 rounded-lg bg-surface-container border border-white/5 flex-shrink-0 flex items-center justify-center mt-1">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">person</span>
+</div>
+</div>
+<!-- AI Message -->
+<div class="flex justify-start items-start gap-4">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex-shrink-0 flex items-center justify-center glow-pulse mt-1">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="ai-bubble rounded-2xl rounded-tl-none px-6 py-5 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-transparent opacity-50"></div>
+<div class="space-y-4">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                                    Based on your current spending, I recommend shifting <span class="text-primary font-bold">₹3,000</span> from your <span class="text-tertiary font-bold">Entertainment</span> budget to your <span class="text-primary-container font-bold">Savings</span>. 
+                                </p>
+<!-- Data Insight Card -->
+<div class="glass-card rounded-xl p-4 border-primary/10 flex items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">speed</span>
+</div>
+<div>
+<p class="text-[10px] font-label-sm text-on-surface-variant uppercase tracking-widest">Impact Analysis</p>
+<p class="font-headline-md text-headline-md text-primary">-2 Months</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-label-md font-label-md text-on-surface">Target Deadline</p>
+<p class="text-xs text-on-surface-variant">Estimated: Nov 2024</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface/80">
+                                    This adjustment optimizes your current cash flow without impacting your fixed utility costs. Would you like me to automate this transfer for the next 6 months?
+                                </p>
+</div>
+</div>
+<span class="text-[10px] font-label-sm text-on-surface-variant mt-2">10:24 AM • FinSphere Intelligence</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Interaction Bar -->
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background/90 to-transparent">
+<div class="max-w-4xl mx-auto space-y-4">
+<!-- Action Chips -->
+<div class="flex flex-wrap gap-2 justify-center md:justify-start">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-md text-label-md">Apply Changes</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">analytics</span>
+<span class="font-label-md text-label-md">See Detailed Forecast</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">monitoring</span>
+<span class="font-label-md text-label-md">Analyze Stocks</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-surface-container hover:bg-surface-container-high text-on-surface-variant transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+<span class="font-label-md text-label-md">Refine Goal</span>
+</button>
+</div>
+<!-- Input Area -->
+<div class="glass-card rounded-2xl p-2 flex items-center gap-2 shadow-2xl focus-within:ring-1 ring-primary/50 transition-all">
+<button class="p-3 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface py-4 px-2 placeholder:text-on-surface-variant/40" placeholder="Ask about your investments, taxes, or budget..." type="text">
+<button class="p-3 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined font-bold">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputField = document.querySelector('input[type="text"]');
+            const mainContent = document.querySelector('.custom-scrollbar');
+            
+            // Auto-scroll to bottom of chat
+            mainContent.scrollTop = mainContent.scrollHeight;
+
+            inputField.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    // Logic for sending message would go here
+                    console.log('Sending message:', inputField.value);
+                    inputField.value = '';
+                }
+            });
+
+            // Subtle button hover effects
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    btn.classList.add('brightness-110');
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.classList.remove('brightness-110');
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

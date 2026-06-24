@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinSphere AI | Gas &amp; Utility Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Geist:wght@400;500;600&amp;family=Inter:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(26, 33, 29, 0.7) 0%, rgba(14, 21, 17, 0.8) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .emerald-glow {
+            box-shadow: 0 0 20px rgba(66, 229, 176, 0.15);
+        }
+        .conic-border {
+            position: relative;
+            padding: 1px;
+            border-radius: 0.75rem;
+            background: conic-gradient(from 0deg, transparent 70%, #42e5b0 100%);
+            animation: rotate 4s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .chart-gradient {
+            background: linear-gradient(to bottom, rgba(66, 229, 176, 0.2), transparent);
+        }
+        body {
+            background-color: #0e1511;
+            color: #dce4de;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#0e1511",
+                      "surface-container-highest": "#2f3632",
+                      "surface-container-lowest": "#08100c",
+                      "surface-container-high": "#242c28",
+                      "on-tertiary-fixed": "#370e00",
+                      "on-tertiary": "#591d00",
+                      "on-primary": "#003828",
+                      "error": "#ffb4ab",
+                      "tertiary": "#ffbca2",
+                      "outline-variant": "#3c4a43",
+                      "inverse-surface": "#dce4de",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#00c896",
+                      "tertiary-container": "#ff9467",
+                      "primary-fixed-dim": "#3adfab",
+                      "tertiary-fixed-dim": "#ffb598",
+                      "on-error": "#690005",
+                      "background": "#0e1511",
+                      "surface-tint": "#3adfab",
+                      "on-primary-fixed": "#002116",
+                      "on-secondary": "#283044",
+                      "inverse-primary": "#006c4f",
+                      "on-secondary-fixed": "#131b2e",
+                      "surface-bright": "#333b37",
+                      "on-tertiary-fixed-variant": "#7b2f09",
+                      "inverse-on-surface": "#2a322e",
+                      "surface-container-low": "#161d1a",
+                      "surface-container": "#1a211d",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "secondary-container": "#3f465c",
+                      "on-tertiary-container": "#762b05",
+                      "surface-variant": "#2f3632",
+                      "on-surface": "#dce4de",
+                      "tertiary-fixed": "#ffdbce",
+                      "outline": "#85948c",
+                      "on-surface-variant": "#bbcac1",
+                      "primary-fixed": "#60fcc6",
+                      "secondary": "#bec6e0",
+                      "on-primary-container": "#004d38",
+                      "on-background": "#dce4de",
+                      "on-primary-fixed-variant": "#00513b",
+                      "secondary-fixed": "#dae2fd",
+                      "primary": "#42e5b0",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "surface-dim": "#0e1511",
+                      "on-secondary-container": "#adb4ce",
+                      "error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "xs": "8px",
+                      "margin-mobile": "16px",
+                      "sm": "16px",
+                      "md": "24px",
+                      "lg": "32px",
+                      "xl": "48px",
+                      "container-max": "1440px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-md": ["Geist"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface selection:bg-primary/30 selection:text-primary overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="bg-background/80 backdrop-blur-xl border-b border-white/10 w-full sticky top-0 z-50 flex justify-between items-center px-lg py-sm shadow-sm">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary">FinSphere AI</span>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<nav class="flex items-center gap-lg">
+<a class="text-on-surface-variant font-label-md text-label-md hover:bg-white/5 transition-colors px-xs py-base rounded cursor-pointer" href="#">Dashboard</a>
+<a class="text-primary font-bold border-b-2 border-primary font-label-md text-label-md px-xs py-base cursor-pointer" href="#">FinSphere AI</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:bg-white/5 transition-colors px-xs py-base rounded cursor-pointer" href="#">Investments</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:bg-white/5 transition-colors px-xs py-base rounded cursor-pointer" href="#">AI Advisor</a>
+</nav>
+<div class="flex items-center gap-md">
+<div class="cursor-pointer active:scale-95 transition-all p-xs rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</div>
+<img class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" data-alt="A professional studio portrait of a high-net-worth individual with a warm smile, wearing a designer navy blazer. The lighting is soft and cinematic, emphasizing a premium fintech lifestyle. The background is a clean, blurred executive office with emerald accents that match the FinSphere brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1w3lCAXBZuaAU9Ov-QSdOc3MpTWfZsgGP-oNPeZkYH5dZ-5uX9KzBCkttYvFVO6iRSuKPYihvLmqqL4je2XG3XXuEG7Blj11ik6iFEOBMU47Ws2qaI3JSMRoSQ8j1cxidzOPTr5SL9lw_gUUKYVM7caXwm7gYxMR3kGdYumbJgPW3S_zu1aL4c5hYFr_KujI2TGlwV6AqgT7I6HDjZZiiCMB6slA97YsZ_3AgjvQ1Y2gcJFna_f22z-ibpVYdexSY3StFGxTAxGXV"/>
+</div>
+</div>
+<!-- Mobile Trigger -->
+<div class="md:hidden">
+<span class="material-symbols-outlined text-primary">menu</span>
+</div>
+</header>
+<div class="flex">
+<!-- Sidebar (Desktop) -->
+<aside class="hidden md:flex flex-col h-[calc(100vh-64px)] w-64 fixed left-0 top-16 bg-surface-container border-r border-white/5 py-lg px-md gap-sm z-40">
+<div class="flex flex-col gap-xs mb-lg">
+<span class="font-label-md text-label-md text-on-surface-variant px-sm uppercase tracking-widest text-[10px]">Main Menu</span>
+<a class="flex items-center gap-md px-sm py-md text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-sm py-md text-primary font-bold bg-primary/10 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-md px-sm py-md text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label-md text-label-md">Investments</span>
+</a>
+<a class="flex items-center gap-md px-sm py-md text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+</div>
+<div class="mt-auto p-md bg-primary/5 rounded-xl border border-primary/10">
+<p class="text-label-sm font-label-sm text-primary mb-xs uppercase tracking-tighter">Active Subscription</p>
+<p class="text-headline-md font-headline-md text-on-surface leading-tight mb-md">Premium Tier</p>
+<button class="w-full py-xs bg-primary text-on-primary font-bold rounded-lg text-label-md transition-all active:scale-95">Upgrade Portfolio</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-sm md:p-xl space-y-lg max-w-[1200px] mx-auto">
+<!-- Page Header -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Gas &amp; Utilities</h1>
+<p class="text-on-surface-variant font-body-md text-body-md">Manage cylinders, piped connections, and predictive pricing insights.</p>
+</div>
+<div class="flex items-center gap-sm">
+<div class="flex items-center gap-xs px-md py-sm bg-surface-container-high rounded-full border border-white/5">
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Balance: ₹48,290.00</span>
+</div>
+</div>
+</section>
+<!-- Bento Grid Section -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Active Tracking Card (Delivery) -->
+<div class="md:col-span-8 glass-card rounded-xl p-lg flex flex-col justify-between min-h-[320px] relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-lg">
+<div>
+<span class="px-sm py-1 bg-primary/20 text-primary text-label-sm font-label-sm rounded-full border border-primary/30 uppercase">In Transit</span>
+<h2 class="font-headline-md text-headline-md mt-sm">Bharat Gas Delivery</h2>
+<p class="text-on-surface-variant font-body-md">Refill Order #FS-9281-GL</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[32px]">local_shipping</span>
+</div>
+<!-- Delivery Stepper -->
+<div class="space-y-md mt-xl">
+<div class="flex justify-between text-label-sm font-label-sm mb-xs">
+<span class="text-primary">Out for Delivery</span>
+<span class="text-on-surface-variant">Estimated: 4:30 PM Today</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden flex">
+<div class="h-full bg-primary w-[75%] shadow-[0_0_10px_rgba(66,229,176,0.5)]"></div>
+</div>
+<div class="flex justify-between text-[10px] uppercase tracking-widest text-on-surface-variant">
+<span>Booked</span>
+<span>Dispatched</span>
+<span class="text-primary font-bold">On the Way</span>
+<span>Delivered</span>
+</div>
+</div>
+</div>
+<div class="relative z-10 flex items-center justify-between pt-lg border-t border-white/5 mt-lg">
+<div class="flex items-center gap-md">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A close-up high-resolution photograph of a delivery agent's identity card and a polished brass nameplate on a modern dark uniform. Professional lighting captures the texture of the fabric and the clear, secure branding of a premium logistics service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnbINIJPwibQnSeDSfHYfhmdg0e6EalyckdBeH8Fo8H8ye836ixLX7rj4U4oU-kyymAhfjIGy-pjLnugQPV4MIbvEd1TKEpAVdVjEEoyVd7PhiU363S4V4NIpCwcnRmAiBXIdfvhuj8rULYVa0B2be5EsDjAXGJl0QTysLXjNFmAO8mh3XIgCCDFMLzE_7baRNWLN73_8FGqZe7y36JyPjlgxzgiHxb7aKw1DZ-r3xyxCGc8sBLhJNhgG6NAq3FTmNQFKRYtVAswNO"/>
+<div>
+<p class="text-label-md font-label-md">Rajesh Kumar</p>
+<p class="text-[12px] text-on-surface-variant">4.9 ★ Verified Partner</p>
+</div>
+</div>
+<button class="px-lg py-sm bg-surface-container-highest hover:bg-white/10 rounded-lg text-label-md font-label-md transition-all flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">call</span> Contact
+                        </button>
+</div>
+</div>
+<!-- Price Insights Card -->
+<div class="md:col-span-4 glass-card rounded-xl p-lg flex flex-col">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-md text-headline-md">Price Trends</h3>
+<span class="material-symbols-outlined text-on-surface-variant">insights</span>
+</div>
+<p class="text-on-surface-variant text-label-sm font-label-sm mb-lg">LPG Refill (14.2kg) - Last 6 Months</p>
+<!-- Simplified Visual Chart Area -->
+<div class="flex-1 flex items-end gap-xs py-md relative group">
+<div class="flex-1 bg-primary/10 h-[40%] rounded-t-sm hover:bg-primary/30 transition-all cursor-help relative">
+<span class="hidden group-hover:block absolute -top-8 left-0 text-[10px] bg-surface-container p-1 rounded">₹820</span>
+</div>
+<div class="flex-1 bg-primary/15 h-[45%] rounded-t-sm hover:bg-primary/30 transition-all cursor-help"></div>
+<div class="flex-1 bg-primary/20 h-[55%] rounded-t-sm hover:bg-primary/30 transition-all cursor-help"></div>
+<div class="flex-1 bg-primary/25 h-[65%] rounded-t-sm hover:bg-primary/30 transition-all cursor-help"></div>
+<div class="flex-1 bg-primary/30 h-[85%] rounded-t-sm hover:bg-primary/30 transition-all cursor-help"></div>
+<div class="flex-1 bg-primary h-[95%] rounded-t-sm shadow-[0_-4px_12px_rgba(66,229,176,0.3)]"></div>
+</div>
+<div class="flex justify-between mt-sm text-[10px] text-on-surface-variant uppercase tracking-tighter">
+<span>Jul</span>
+<span>Aug</span>
+<span>Sep</span>
+<span>Oct</span>
+<span>Nov</span>
+<span class="text-primary font-bold">Dec</span>
+</div>
+<div class="mt-lg p-md bg-surface-container-low rounded-lg border border-primary/10">
+<div class="flex items-center gap-xs text-primary mb-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="text-label-sm font-label-sm">AI Prediction</span>
+</div>
+<p class="text-body-md text-on-surface text-[13px] leading-snug">Prices expected to stabilize in Jan. High probability of government subsidy adjustment.</p>
+</div>
+</div>
+<!-- Booking Options Header -->
+<div class="md:col-span-12 mt-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Book &amp; Pay</h3>
+</div>
+<!-- Cylinder Booking Selection -->
+<div class="md:col-span-6 grid grid-cols-1 gap-md">
+<div class="glass-card rounded-xl p-lg hover:border-primary/30 transition-all group cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-16 h-16 bg-surface-container-highest rounded-xl flex items-center justify-center border border-white/5">
+<img class="w-10 h-10 object-contain" data-alt="A minimalist and sharp logo for HP Gas, characterized by its blue and red color scheme. The image is a crisp vector-style icon centered on a high-gloss metallic obsidian surface, reflecting a premium fintech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZezw5oZDLaZUJJcf2DQS3MXqR9-9pZeo1lAG68dMNeqZpVnkkdaFaWiQEd0pMjdFjBJsb7GjocqUDNr21UGRp5usuxeYz0-xTqe7RlyAMppzHFqikszJqUZVpzA-WTa9sLomEKuC1fOgNDtR-CVXzLySyCYyBjVJD4e_Fhxw1cV2mvE5V59wHjl5e1UEU8OhEtxpazzCiy7V0OO1XESmSMBziny0FQXvl37o-w2jTjNHXEJBOZf6GPmjwxiY7xOkqktf3cRYOZNq6"/>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md">HP Gas</h4>
+<p class="text-on-surface-variant text-label-md">Consumer ID: 829104443</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+</div>
+</div>
+<div class="glass-card rounded-xl p-lg hover:border-primary/30 transition-all group cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-16 h-16 bg-surface-container-highest rounded-xl flex items-center justify-center border border-white/5">
+<img class="w-10 h-10 object-contain" data-alt="A professional vector logo for Bharat Gas, featuring its distinctive blue branding. The icon is rendered with a subtle glassmorphism effect, placed against a dark architectural background with emerald green accent lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnR6heG4oyB9RS4dFmvKzqdDI9NwdDl_lHagRpCCVE5a0m4rdTl86LhPw5IUFjAA1IF2R5YVDzhccMPptDxxZHG_aQRZk1wNYIM7JSOHvVhoTckjTewr0mMcEa4Ln65T2yUqTHer_avl9zg8Lj-5X_SMoZd6nCm8TPEXahlxSZvMsDXFnRkWambwZqPPBzsQb7O1WpFT3b1JRwP2hVOeoqajIjgCM7W9sy-HApe-CdAgkcN-PIjHj7weeOJpacQbphnrNSzfM6iD-g"/>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md">Bharat Gas</h4>
+<p class="text-on-surface-variant text-label-md">Connect new account</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary group-hover:translate-x-1 transition-all">add</span>
+</div>
+</div>
+<div class="glass-card rounded-xl p-lg hover:border-primary/30 transition-all group cursor-pointer">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-16 h-16 bg-surface-container-highest rounded-xl flex items-center justify-center border border-white/5">
+<img class="w-10 h-10 object-contain" data-alt="A sleek corporate logo for Indane Gas, showcasing its classic flame motif and red typography. The image is presented as a high-quality UI element with soft shadows and a premium metallic finish, set on a dark textured background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOHL1v6F2FddqpqOWB9U4z4lgAf4FD3cpbeH-Sbq-WcQJAB-bSOsCHiZWA4vtLhlmV07_k1GMg2LSrii60Hi4nx4EjS5eA9jquLDKFNMKlq71BbgUZClahKX-WaMLruwLsCLbMxTcba5So8oGwU9o1zRrfKdyFZAU4pAQ7jrX-PewOgdQh7sLmf8GtNvhYKJRdqZ1fo2PwAJMwa53nNBajJ7Ui513i7Mm8agZuRfBXESBTEEtbkEtOeGY5a__uoMNuTR93Pz4ErN3M"/>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md">Indane Gas</h4>
+<p class="text-on-surface-variant text-label-md">Connect new account</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary group-hover:translate-x-1 transition-all">add</span>
+</div>
+</div>
+</div>
+<!-- Piped Gas Selection & Bill -->
+<div class="md:col-span-6 flex flex-col gap-md">
+<div class="glass-card rounded-xl p-lg flex-1 border border-primary/20 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-5">
+<span class="material-symbols-outlined text-[120px] text-primary">mode_fan</span>
+</div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-xl">
+<div>
+<p class="text-label-sm font-label-sm text-primary uppercase tracking-widest mb-1">Piped Gas (PNG)</p>
+<h4 class="font-headline-lg text-headline-lg">Adani Total Gas</h4>
+<p class="text-on-surface-variant text-body-md">Acct: 1002-3948-221</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[32px]">gas_meter</span>
+</div>
+<div class="bg-white/5 rounded-xl p-lg border border-white/5 flex items-center justify-between mb-xl">
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Outstanding Bill</p>
+<p class="text-display-lg font-display-lg text-on-surface mt-1">₹1,245.50</p>
+<p class="text-label-md font-label-md text-error mt-1 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">schedule</span> Due in 3 days
+                                    </p>
+</div>
+<div class="text-right">
+<p class="text-label-sm font-label-sm text-on-surface-variant">Last Reading</p>
+<p class="text-headline-md font-headline-md">412.5 SCM</p>
+</div>
+</div>
+<button class="w-full py-md bg-primary text-on-primary font-bold rounded-xl text-headline-md flex items-center justify-center gap-md emerald-glow active:scale-95 transition-all" id="checkout-btn">
+<span class="material-symbols-outlined">bolt</span> One-Tap Pay with UPI
+                            </button>
+</div>
+</div>
+<div class="glass-card rounded-xl p-lg flex items-center justify-between hover:border-white/20 transition-all cursor-pointer">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center border border-white/5">
+<span class="material-symbols-outlined text-on-surface-variant">domain</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md">IGL (Indraprastha)</h4>
+<p class="text-on-surface-variant text-label-md">Secondary Property Connection</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
+</div>
+</div>
+</section>
+<!-- Bottom Information Panel -->
+<section class="glass-card rounded-xl p-lg md:p-xl mt-xl bg-gradient-to-r from-surface-container-high to-surface">
+<div class="flex flex-col md:flex-row gap-xl items-center">
+<div class="flex-1 space-y-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+</div>
+<h3 class="font-headline-md text-headline-md">FinSphere Secure Billing</h3>
+</div>
+<p class="text-body-lg text-body-lg text-on-surface-variant">All payments are encrypted and processed through our tier-1 financial partners. Earn up to 2% cashback in <span class="text-primary font-bold">SpherePoints</span> on every gas bill paid through FinSphere AI.</p>
+<div class="flex flex-wrap gap-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="text-label-md font-label-md">Zero Conv. Fee</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="text-label-md font-label-md">Instant Receipts</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="text-label-md font-label-md">24/7 Concierge</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/3 flex justify-center">
+<div class="relative w-48 h-48">
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[64px]" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-high/90 backdrop-blur-md border-t border-white/10 flex justify-around items-center py-sm z-50">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-label-md font-bold">Payments</span>
+</a>
+<div class="bg-primary -mt-8 w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-on-primary">qr_code_scanner</span>
+</div>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="text-[10px] font-label-md">AI Advisor</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-label-md">Settings</span>
+</a>
+</nav>
+<!-- Success Modal Overlay (Hidden by default) -->
+<div class="fixed inset-0 bg-surface/80 backdrop-blur-xl z-[100] flex items-center justify-center p-md hidden" id="payment-modal">
+<div class="glass-card max-w-md w-full rounded-2xl p-xl flex flex-col items-center text-center space-y-lg border border-primary/40">
+<div class="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-[48px] animate-pulse">check_circle</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Payment Successful</h3>
+<p class="text-on-surface-variant text-body-lg">₹1,245.50 has been paid to Adani Total Gas. Your receipt FS-88229 is being generated.</p>
+</div>
+<div class="w-full p-md bg-surface-container rounded-xl border border-white/5 space-y-sm">
+<div class="flex justify-between text-label-md font-label-md">
+<span class="text-on-surface-variant">Transaction ID</span>
+<span class="text-on-surface">FT92839441120</span>
+</div>
+<div class="flex justify-between text-label-md font-label-md">
+<span class="text-on-surface-variant">Rewards Earned</span>
+<span class="text-primary">+24 SpherePoints</span>
+</div>
+</div>
+<button class="w-full py-md bg-surface-container-highest hover:bg-white/10 rounded-xl font-bold transition-all" id="close-modal">Back to Dashboard</button>
+</div>
+</div>
+<script>
+        // Micro-interactions
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const modal = document.getElementById('payment-modal');
+        const closeModal = document.getElementById('close-modal');
+
+        checkoutBtn.addEventListener('click', () => {
+            checkoutBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Processing...';
+            checkoutBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            
+            setTimeout(() => {
+                modal.classList.remove('hidden');
+                checkoutBtn.innerHTML = '<span class="material-symbols-outlined">bolt</span> One-Tap Pay with UPI';
+                checkoutBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+            }, 1500);
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Atmosphere Effect: Subtle pulse for the active indicator
+        setInterval(() => {
+            const transitBadge = document.querySelector('.animate-pulse-slow');
+            if (transitBadge) {
+                transitBadge.classList.toggle('opacity-70');
+            }
+        }, 2000);
+    </script>
+</body></html>
