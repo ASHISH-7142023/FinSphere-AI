@@ -21,6 +21,10 @@ import GoalsView from "@/components/GoalsView";
 import InvestmentsView from "@/components/InvestmentsView";
 import CreditView from "@/components/CreditView";
 import ReportsView from "@/components/ReportsView";
+import MutualFundPortfolio from "@/components/MutualFundPortfolio";
+import FeaturesExplorer from "@/components/FeaturesExplorer";
+import PricingView from "@/components/PricingView";
+import CreditCardBillCenter from "@/components/CreditCardBillCenter";
 
 type View =
   | "dashboard"
@@ -28,26 +32,34 @@ type View =
   | "budgets"
   | "goals"
   | "investments"
+  | "mutual-funds"
   | "credit"
   | "reports"
   | "ai-advisor"
   | "utilities"
+  | "credit-card-center"
   | "merchant-khata"
   | "rewards"
   | "sip-setup"
   | "insurance"
+  | "features"
+  | "pricing"
   | "demo";
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: "dashboard" },
   { id: "ai-advisor", label: "AI Advisor Chat", icon: "smart_toy" },
   { id: "utilities", label: "Utilities Hub", icon: "account_balance_wallet" },
+  { id: "credit-card-center", label: "Credit Card Bills", icon: "credit_card" },
   { id: "expenses", label: "Expenses", icon: "payments" },
-  { id: "budgets", label: "Budgets", icon: "piggy_bank" },
+  { id: "budgets", label: "Budget Planner", icon: "savings" },
   { id: "goals", label: "Goals", icon: "target" },
   { id: "investments", label: "Investments", icon: "trending_up" },
+  { id: "mutual-funds", label: "Mutual Funds", icon: "finance_mode" },
   { id: "sip-setup", label: "SIP Setup", icon: "toll" },
-  { id: "credit", label: "Credit Engine", icon: "credit_card" },
+  { id: "credit", label: "Credit Engine", icon: "credit_score" },
+  { id: "features", label: "Features Explorer", icon: "explore" },
+  { id: "pricing", label: "Premium Tiers", icon: "workspace_premium" },
   { id: "insurance", label: "Insurance Hub", icon: "shield" },
   { id: "merchant-khata", label: "Merchant Khata", icon: "receipt_long" },
   { id: "rewards", label: "Rewards & Offers", icon: "military_tech" },
@@ -402,6 +414,22 @@ export default function Home() {
 
           {view === "utilities" && (
             <UtilitiesHubView initialTab={utilityTab} key={utilityTab} />
+          )}
+
+          {view === "credit-card-center" && (
+            <CreditCardBillCenter />
+          )}
+
+          {view === "mutual-funds" && (
+            <MutualFundPortfolio />
+          )}
+
+          {view === "features" && (
+            <FeaturesExplorer />
+          )}
+
+          {view === "pricing" && (
+            <PricingView />
           )}
 
           {view === "merchant-khata" && (

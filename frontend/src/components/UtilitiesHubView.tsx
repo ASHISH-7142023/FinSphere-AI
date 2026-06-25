@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { currency } from "@/lib/utils";
+import CreditCardBillCenter from "@/components/CreditCardBillCenter";
+import BillPaymentDetail from "@/components/BillPaymentDetail";
 
-type UtilityTab = "mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" | "upi-qr";
+type UtilityTab = "mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" | "upi-qr" | "credit-card";
 
 interface UtilitiesHubViewProps {
   initialTab?: UtilityTab;
@@ -14,6 +16,29 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
   const [activeTab, setActiveTab] = useState<UtilityTab>(initialTab);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [successAmount, setSuccessAmount] = useState(0);
+
+  // Bill payment detailed modal state
+  const [billDetailOpen, setBillDetailOpen] = useState(false);
+  const [billDetailType, setBillDetailType] = useState<"electricity" | "water" | "gas" | "dth" | "fastag">("electricity");
+  const [billDetailProvider, setBillDetailProvider] = useState("");
+  const [billDetailConsumerId, setBillDetailConsumerId] = useState("");
+  const [billDetailAmount, setBillDetailAmount] = useState(0);
+  const [billDetailDueDate, setBillDetailDueDate] = useState("");
+
+  const openBillDetail = (
+    type: "electricity" | "water" | "gas" | "dth" | "fastag",
+    provider: string,
+    id: string,
+    amount: number,
+    dueDate: string
+  ) => {
+    setBillDetailType(type);
+    setBillDetailProvider(provider);
+    setBillDetailConsumerId(id);
+    setBillDetailAmount(amount);
+    setBillDetailDueDate(dueDate);
+    setBillDetailOpen(true);
+  };
 
   // Water Bill State
   const [waterProvider, setWaterProvider] = useState("Delhi Jal Board (DJB)");
@@ -55,6 +80,7 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
     { id: "dth", label: "DTH Connection", icon: "tv" },
     { id: "gas", label: "Gas Booking", icon: "local_gas_station" },
     { id: "fastag", label: "FASTag Hub", icon: "directions_car" },
+    { id: "credit-card", label: "Credit Card", icon: "credit_card" },
     { id: "upi-qr", label: "Scan & Pay", icon: "qr_code_scanner" },
   ];
 
@@ -129,9 +155,14 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
         </motion.div>
       ) : (
         <div className="grid grid-cols-12 gap-6">
-          
-          {/* Main utility forms area */}
-          <div className="col-span-12 lg:col-span-8 space-y-6">
+          {activeTab === "credit-card" ? (
+            <div className="col-span-12">
+              <CreditCardBillCenter />
+            </div>
+          ) : (
+            <>
+              {/* Main utility forms area */}
+              <div className="col-span-12 lg:col-span-8 space-y-6">
             
             {activeTab === "water" && (
               <div className="glass-card p-6 rounded-3xl space-y-6 border border-white/10">
@@ -190,7 +221,7 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
                       <p className="text-xs text-on-surface-variant">Outstanding Due</p>
                       <p className="text-2xl font-bold text-primary mt-1">{currency(waterDue)}</p>
                       <button
-                        onClick={() => triggerPayment(waterDue)}
+                        onClick={() => openBillDetail("water", waterProvider, waterConsumerId, waterDue, "Nov 25, 2026")}
                         className="mt-3 px-5 py-2 btn-emerald-gradient rounded-lg font-bold text-xs"
                       >
                         Pay Due Bill
@@ -278,7 +309,7 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
                       <p className="text-xs text-on-surface-variant">Current Bill Due</p>
                       <p className="text-2xl font-bold text-primary mt-1">{currency(elecDue)}</p>
                       <button
-                        onClick={() => triggerPayment(elecDue)}
+                        onClick={() => openBillDetail("electricity", elecProvider, elecConsumerId, elecDue, "Nov 15, 2026")}
                         className="mt-3 px-5 py-2.5 btn-emerald-gradient rounded-lg font-bold text-xs"
                       >
                         Proceed to Pay
@@ -456,7 +487,7 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                triggerPayment(pkg.price);
+                                openBillDetail("dth", dthOperator, dthSubscriberId, pkg.price, "Immediate");
                               }}
                               className="mt-2 px-3 py-1 bg-primary text-background rounded font-bold text-[10px]"
                             >
@@ -518,7 +549,7 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
                       <p className="text-xs text-on-surface-variant">Refill Cost</p>
                       <p className="text-xl font-bold text-primary mt-1">{currency(1053)}</p>
                       <button
-                        onClick={() => triggerPayment(1053)}
+                        onClick={() => openBillDetail("gas", gasOperator, gasConsumerId, 1053, "Immediate")}
                         className="mt-3 px-5 py-2 btn-emerald-gradient rounded-lg font-bold text-xs"
                       >
                         Book & Pay
@@ -584,8 +615,8 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
                     </div>
                     <div className="text-right">
                       <button
-                        onClick={() => triggerPayment(fastagAmount)}
-                        className="px-5 py-2.5 btn-emerald-gradient rounded-lg font-bold text-xs"
+                        onClick={() => openBillDetail("fastag", fastagBank, vehicleNo, fastagAmount, "Immediate")}
+                        className="mt-3 px-5 py-2.5 btn-emerald-gradient rounded-lg font-bold text-xs"
                       >
                         Recharge FASTag
                       </button>
@@ -698,9 +729,22 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
             </div>
 
           </div>
-
+            </>
+          )}
         </div>
       )}
+
+      {/* Bill detailed audit modal popup */}
+      <BillPaymentDetail
+        isOpen={billDetailOpen}
+        onClose={() => setBillDetailOpen(false)}
+        billType={billDetailType}
+        providerName={billDetailProvider}
+        consumerId={billDetailConsumerId}
+        dueAmount={billDetailAmount}
+        dueDate={billDetailDueDate}
+        onPaymentSuccess={(paidAmount) => triggerPayment(paidAmount)}
+      />
 
     </div>
   );
