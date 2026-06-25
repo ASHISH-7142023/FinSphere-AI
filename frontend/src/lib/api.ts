@@ -2,7 +2,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 export interface Session {
   token: string;
-  user: { id: string; name: string; email: string; monthlyIncome: number; createdAt: string };
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    monthlyIncome: number;
+    createdAt: string;
+    upiId?: string;
+    upiQr?: string;
+  };
 }
 
 export async function apiRequest<T>(path: string, options: RequestInit = {}, token?: string): Promise<T> {

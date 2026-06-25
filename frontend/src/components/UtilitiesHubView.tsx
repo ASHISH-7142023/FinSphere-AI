@@ -10,9 +10,15 @@ type UtilityTab = "mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" 
 
 interface UtilitiesHubViewProps {
   initialTab?: UtilityTab;
+  user?: {
+    name: string;
+    email: string;
+    upiId?: string;
+    upiQr?: string;
+  } | null;
 }
 
-export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHubViewProps) {
+export default function UtilitiesHubView({ initialTab = "mobile", user }: UtilitiesHubViewProps) {
   const [activeTab, setActiveTab] = useState<UtilityTab>(initialTab);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [successAmount, setSuccessAmount] = useState(0);
@@ -654,21 +660,25 @@ export default function UtilitiesHubView({ initialTab = "mobile" }: UtilitiesHub
                     <p className="text-xs font-bold text-white mb-4">Your Dynamic FinSphere UPI QR</p>
                     
                     <div className="w-40 h-40 bg-white p-3 rounded-2xl flex items-center justify-center relative shadow-xl">
-                      {/* Generates a neat mockup QR code vector */}
-                      <svg className="w-full h-full text-background" viewBox="0 0 100 100">
-                        <path d="M0,0 h30 v10 h-20 v20 h-10 z M70,0 h30 v30 h-10 v-20 h-20 z M0,70 h10 v20 h20 v10 h-30 z M70,100 h30 v-30 h-10 v20 h-20 z" fill="currentColor"></path>
-                        <rect x="15" y="15" width="20" height="20" fill="currentColor"></rect>
-                        <rect x="65" y="15" width="20" height="20" fill="currentColor"></rect>
-                        <rect x="15" y="65" width="20" height="20" fill="currentColor"></rect>
-                        <rect x="45" y="45" width="10" height="10" fill="currentColor"></rect>
-                        <rect x="65" y="65" width="10" height="10" fill="currentColor"></rect>
-                        <rect x="55" y="75" width="10" height="15" fill="currentColor"></rect>
-                        <rect x="75" y="55" width="15" height="10" fill="currentColor"></rect>
-                      </svg>
+                      {user?.upiQr ? (
+                        <img src={user.upiQr} alt="UPI QR" className="w-full h-full object-contain" />
+                      ) : (
+                        /* Generates a neat mockup QR code vector */
+                        <svg className="w-full h-full text-background" viewBox="0 0 100 100">
+                          <path d="M0,0 h30 v10 h-20 v20 h-10 z M70,0 h30 v30 h-10 v-20 h-20 z M0,70 h10 v20 h20 v10 h-30 z M70,100 h30 v-30 h-10 v-20 h-20 z" fill="currentColor"></path>
+                          <rect x="15" y="15" width="20" height="20" fill="currentColor"></rect>
+                          <rect x="65" y="15" width="20" height="20" fill="currentColor"></rect>
+                          <rect x="15" y="65" width="20" height="20" fill="currentColor"></rect>
+                          <rect x="45" y="45" width="10" height="10" fill="currentColor"></rect>
+                          <rect x="65" y="65" width="10" height="10" fill="currentColor"></rect>
+                          <rect x="55" y="75" width="10" height="15" fill="currentColor"></rect>
+                          <rect x="75" y="55" width="15" height="10" fill="currentColor"></rect>
+                        </svg>
+                      )}
                     </div>
 
                     <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mt-4">UPI VPA Address</p>
-                    <p className="text-xs text-primary font-bold">demo@finsphere</p>
+                    <p className="text-xs text-primary font-bold">{user?.upiId ?? "demo@finsphere"}</p>
                   </div>
                 </div>
               </div>

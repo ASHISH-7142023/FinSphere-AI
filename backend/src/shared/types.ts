@@ -22,6 +22,8 @@ export interface User {
   email: string;
   monthlyIncome: number;
   createdAt: string;
+  upiId?: string;
+  upiQr?: string;
 }
 
 export interface Expense {

@@ -413,7 +413,7 @@ export default function Home() {
           )}
 
           {view === "utilities" && (
-            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} />
+            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} user={session?.user} />
           )}
 
           {view === "credit-card-center" && (
