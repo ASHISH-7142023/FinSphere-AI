@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinSphere AI | Neural Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(14, 21, 17, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 200, 150, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .emerald-glow {
+            box-shadow: 0 0 20px rgba(0, 200, 150, 0.15);
+        }
+        .pulse-animation {
+            animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
+        }
+        .neural-line {
+            stroke-dasharray: 100;
+            animation: dash 5s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -200; }
+        }
+        body {
+            background-color: #0e1511;
+            color: #eceef0;
+            overflow-x: hidden;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#1a241f",
+                      "on-primary-fixed": "#002116",
+                      "secondary-container": "#1e2b24",
+                      "on-error": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "inverse-primary": "#3adfab",
+                      "secondary-fixed-dim": "#bcc7de",
+                      "surface-tint": "#00c896",
+                      "error": "#ffb4ab",
+                      "surface-container-high": "#232b27",
+                      "on-tertiary-container": "#d3e4fe",
+                      "primary-fixed": "#60fcc6",
+                      "outline": "#8b938e",
+                      "on-tertiary-fixed": "#0b1c30",
+                      "inverse-surface": "#eff1f3",
+                      "outline-variant": "#414945",
+                      "secondary": "#bcc7de",
+                      "surface-container": "#1d2521",
+                      "primary-container": "#00c896",
+                      "on-background": "#e0e3e5",
+                      "primary-fixed-dim": "#3adfab",
+                      "on-secondary-fixed": "#111c2d",
+                      "on-secondary-fixed-variant": "#3c475a",
+                      "tertiary-fixed": "#d3e4fe",
+                      "primary": "#00c896",
+                      "inverse-on-surface": "#2d3133",
+                      "surface": "#0e1511",
+                      "on-error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#38485d",
+                      "tertiary": "#a1b1ca",
+                      "surface-container-lowest": "#0a100d",
+                      "error-container": "#93000a",
+                      "on-tertiary": "#0b1c30",
+                      "on-secondary-container": "#d5e0f8",
+                      "on-primary-fixed-variant": "#00513b",
+                      "on-primary-container": "#002116",
+                      "tertiary-fixed-dim": "#b7c8e1",
+                      "on-surface": "#e0e3e5",
+                      "on-primary": "#003827",
+                      "tertiary-container": "#38485d",
+                      "surface-variant": "#414945",
+                      "secondary-fixed": "#d8e3fb",
+                      "surface-dim": "#0e1511",
+                      "surface-container-low": "#19211d",
+                      "surface-container-highest": "#323a35",
+                      "on-surface-variant": "#c0c9c3",
+                      "background": "#0e1511"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "16px",
+                      "xl": "24px",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "sm": "12px",
+                      "lg": "48px",
+                      "xl": "80px",
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "md": "24px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Lexend"],
+                      "display-lg-mobile": ["Lexend"],
+                      "display-lg": ["Lexend"],
+                      "body-sm": ["Inter"],
+                      "headline-sm": ["Lexend"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface bg-background">
+<!-- Top Navigation -->
+<nav class="fixed top-0 right-0 left-0 lg:left-64 z-50 flex justify-between items-center px-gutter h-16 bg-surface/60 backdrop-blur-xl border-b border-white/5 shadow-lg">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary-container text-on-surface placeholder-on-surface-variant/50 transition-all" placeholder="Search AI Command..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs shadow-sm shadow-primary/20">
+            JD
+        </div>
+</div>
+</nav>
+<!-- Side Navigation -->
+<aside class="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 w-64 bg-surface-container-lowest/80 backdrop-blur-2xl border-r border-white/5 z-[60]">
+<div class="mb-10 px-4">
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">FinSphere AI</h1>
+<p class="font-label-md text-label-md text-primary/60 mt-1 uppercase tracking-widest">Elite Tier</p>
+</div>
+<div class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-white/5 rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-white/5 rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md">Expenses</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-white/5 rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label-md text-label-md">Investments</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container/10 text-primary border border-primary/20 rounded-xl px-4 py-3 font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-white/5 rounded-xl px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto pt-6 px-2">
+<button class="w-full bg-primary-container text-on-primary-container font-bold py-3 rounded-xl shadow-lg shadow-primary-container/10 hover:brightness-110 active:scale-95 transition-all">
+            Upgrade to Pro
+        </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-16 min-h-screen px-4 md:px-gutter lg:px-margin-desktop pb-12">
+<!-- Hero Section: The Neural Pulse -->
+<section class="mt-8 mb-12">
+<div class="relative overflow-hidden rounded-xl h-[450px] group bg-black border border-white/5">
+<!-- Background Image Injection -->
+<div class="absolute inset-0 opacity-30 mix-blend-screen">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLuPBQOZhrxeQuHszZxz3xOeDW5YQrcd3leFwkA0Ldok9gLv080h09WVJY2KiDsH2evUu8kh2QGAEru1hkMK3FD9B5PL9Y7k3gF2pxTWib5zs3lLF8BPMvbtejOWGWi71Lj32nWbN1ppcmmgXfzKoHS34ID8Cmit-vfvpO_jxaTN_5y9w7-tcJ5mvNYNqJ9uDDPeCuSzoPG-70MUMmuGa8slLvmRGOvE_B5NLPTSFPVmbGtjdQTNhgglSTjB"/>
+</div>
+<!-- AI Visualization overlay (Conceptual SVG) -->
+<div class="absolute inset-0 flex items-center justify-center">
+<svg class="w-full h-full opacity-40" viewbox="0 0 800 400">
+<g class="neural-network">
+<circle class="pulse-animation" cx="200" cy="200" fill="#00C896" r="4"></circle>
+<circle class="pulse-animation" cx="400" cy="100" fill="#00C896" r="4" style="animation-delay: 1s"></circle>
+<circle class="pulse-animation" cx="400" cy="300" fill="#00C896" r="4" style="animation-delay: 2s"></circle>
+<circle class="pulse-animation" cx="600" cy="200" fill="#00C896" r="4" style="animation-delay: 1.5s"></circle>
+<path class="neural-line" d="M200 200 L400 100 L600 200 L400 300 Z" fill="none" stroke="#00C896" stroke-width="0.5"></path>
+</g>
+</svg>
+</div>
+<div class="relative z-10 h-full flex flex-col justify-center px-12 text-white">
+<div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-md px-4 py-1 rounded-full border border-primary/30 w-fit mb-4">
+<span class="flex h-2 w-2 rounded-full bg-primary-container animate-ping"></span>
+<span class="text-xs font-bold tracking-widest uppercase text-primary">Live Neural Processing</span>
+</div>
+<h2 class="font-display-lg text-display-lg mb-4 text-white max-w-2xl">The Neural Pulse</h2>
+<p class="font-body-lg text-body-lg text-white/70 max-w-xl">Our proprietary AI is currently analyzing 4.2M global market vectors to optimize your liquidity and tax exposure in real-time.</p>
+<div class="mt-8 flex gap-4">
+<button class="bg-primary-container text-on-primary-container font-bold px-8 py-3 rounded-lg hover:scale-105 transition-transform shadow-lg shadow-primary/20">Initialize Core</button>
+<button class="bg-white/5 backdrop-blur-md border border-white/10 text-white font-bold px-8 py-3 rounded-lg hover:bg-white/10 transition-all">View Logs</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Column 1: Analytics & Forecasting (8 cols) -->
+<div class="lg:col-span-8 space-y-gutter">
+<!-- Real-time Analytics -->
+<div class="glass-card p-6 rounded-xl">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm text-white">Real-time Analytics</h3>
+<div class="flex gap-2">
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">LIVE FEED</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-1">
+<span class="text-on-surface-variant font-label-md text-label-md">Fraud Detection</span>
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold font-headline-md text-white">Active</span>
+<span class="material-symbols-outlined text-primary">verified_user</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full w-full shadow-[0_0_10px_#00c896]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 uppercase tracking-tight">Scanning 142 gateways</p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-on-surface-variant font-label-md text-label-md">Tax-Loss Harvesting</span>
+<div class="flex items-center gap-2 text-primary">
+<span class="text-2xl font-bold font-headline-md">+$4,120</span>
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full w-[65%] shadow-[0_0_10px_#00c896]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 uppercase tracking-tight">Optimized for Q4</p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-on-surface-variant font-label-md text-label-md">Risk Assessment</span>
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold font-headline-md text-white">Optimal</span>
+<span class="material-symbols-outlined text-secondary">security</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full w-[88%] shadow-[0_0_10px_#00c896]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-1 uppercase tracking-tight">Market volatility: Low</p>
+</div>
+</div>
+</div>
+<!-- Predictive Forecasting -->
+<div class="glass-card p-6 rounded-xl">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-white">Predictive Forecasting</h3>
+<p class="text-sm text-on-surface-variant">Wealth projection based on current spending velocity</p>
+</div>
+<select class="bg-surface-container-low border border-white/10 rounded-lg text-sm px-4 py-2 text-on-surface ring-0 outline-none">
+<option>Next 5 Years</option>
+<option>Next 10 Years</option>
+</select>
+</div>
+<div class="h-64 relative flex items-end justify-between gap-4 px-4">
+<!-- Simplified Visualization Bars -->
+<div class="w-full h-24 bg-primary-container/10 rounded-t-lg relative group border-t border-x border-white/5">
+<div class="absolute inset-x-0 bottom-0 bg-primary-container/60 h-1/2 rounded-t-lg group-hover:bg-primary-container transition-all"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">2024</span>
+</div>
+<div class="w-full h-32 bg-primary-container/10 rounded-t-lg relative group border-t border-x border-white/5">
+<div class="absolute inset-x-0 bottom-0 bg-primary-container/60 h-1/2 rounded-t-lg group-hover:bg-primary-container transition-all"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">2025</span>
+</div>
+<div class="w-full h-44 bg-primary-container/10 rounded-t-lg relative group border-t border-x border-white/5">
+<div class="absolute inset-x-0 bottom-0 bg-primary-container/60 h-1/2 rounded-t-lg group-hover:bg-primary-container transition-all"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">2026</span>
+</div>
+<div class="w-full h-56 bg-primary-container/10 rounded-t-lg relative group border-t border-x border-white/5">
+<div class="absolute inset-x-0 bottom-0 bg-primary-container/60 h-1/2 rounded-t-lg group-hover:bg-primary-container transition-all"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">2027</span>
+</div>
+<div class="w-full h-64 bg-primary-container/10 rounded-t-lg relative group border-t border-x border-white/5">
+<div class="absolute inset-x-0 bottom-0 bg-primary-container/60 h-full rounded-t-lg group-hover:bg-primary-container transition-all"></div>
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-on-surface-variant">2028</span>
+</div>
+<!-- Projection Line (SVG Overlay) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none">
+<path class="neural-line" d="M 50 200 Q 200 150 400 100 T 800 20" fill="none" stroke="#00C896" stroke-width="3" style="stroke-dasharray: 8 8"></path>
+</svg>
+</div>
+</div>
+<!-- Core AI Capabilities -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-card p-5 rounded-xl hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="h-12 w-12 rounded-lg bg-primary-container/10 text-primary flex items-center justify-center mb-4 group-hover:bg-primary-container group-hover:text-on-primary-container transition-all">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<h4 class="font-headline-sm text-[16px] mb-2 text-white">Autonomous Budgeting</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">AI automatically redirects surplus cash to high-yield vehicles.</p>
+</div>
+<div class="glass-card p-5 rounded-xl hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="h-12 w-12 rounded-lg bg-secondary-container/10 text-secondary flex items-center justify-center mb-4 group-hover:bg-secondary group-hover:text-on-secondary-fixed transition-all">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<h4 class="font-headline-sm text-[16px] mb-2 text-white">Algorithmic Trading</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Daily insights based on micro-pattern institutional signals.</p>
+</div>
+<div class="glass-card p-5 rounded-xl hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="h-12 w-12 rounded-lg bg-tertiary-container/10 text-tertiary flex items-center justify-center mb-4 group-hover:bg-tertiary-container group-hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+</div>
+<h4 class="font-headline-sm text-[16px] mb-2 text-white">Personalized Audit</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">Automated financial health checkups generated every 24h.</p>
+</div>
+</div>
+</div>
+<!-- Column 2: Sidebar (4 cols) -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- Compute Health -->
+<div class="glass-card p-6 rounded-xl border-primary-container/20">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">memory</span>
+<h3 class="font-headline-sm text-headline-sm text-white">Compute Health</h3>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="font-medium text-on-surface-variant">Model Efficiency</span>
+<span class="text-primary font-bold">99.8%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[99.8%] shadow-[0_0_10px_rgba(0,200,150,0.5)]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="font-medium text-on-surface-variant">Latency</span>
+<span class="text-primary font-bold">14ms</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[15%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="font-medium text-on-surface-variant">Neural Synapse Load</span>
+<span class="text-secondary font-bold">42%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[42%]"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/5">
+<div class="flex items-center justify-between text-xs text-on-surface-variant mb-3">
+<span class="uppercase tracking-widest">Uptime</span>
+<span class="text-on-surface">365d 14h 22m</span>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant">
+<span class="uppercase tracking-widest">Last Update</span>
+<span class="text-on-surface">2 mins ago</span>
+</div>
+</div>
+</div>
+<!-- AI Suggestion Card -->
+<div class="glass-card p-6 rounded-xl bg-primary-container/5 border-primary-container/20 relative overflow-hidden emerald-glow">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-8xl text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<h4 class="font-headline-sm text-[18px] text-primary mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+                    Smart Insight
+                </h4>
+<p class="text-sm leading-relaxed mb-6 text-on-surface">"Based on current market volatility, transferring $2,400 to your Emerald Growth fund today could yield an additional 1.2% by EOM."</p>
+<button class="w-full py-3 bg-primary text-on-primary-container rounded-lg font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/10">Execute Shift</button>
+</div>
+<!-- Active Processes List -->
+<div class="glass-card p-6 rounded-xl">
+<h4 class="font-label-md text-label-md text-primary mb-4 tracking-widest uppercase">Active Processes</h4>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="h-2 w-2 rounded-full bg-primary pulse-animation shadow-[0_0_8px_#00c896]"></div>
+<span class="text-sm font-medium text-on-surface">Scraping SEC Filings</span>
+<span class="ml-auto text-[10px] text-on-surface-variant font-bold">ONGOING</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="h-2 w-2 rounded-full bg-primary pulse-animation shadow-[0_0_8px_#00c896]" style="animation-delay: 0.5s"></div>
+<span class="text-sm font-medium text-on-surface">Rebalancing Crypto Portfolio</span>
+<span class="ml-auto text-[10px] text-on-surface-variant font-bold">92%</span>
+</div>
+<div class="flex items-center gap-3 opacity-60">
+<div class="h-2 w-2 rounded-full bg-surface-variant"></div>
+<span class="text-sm font-medium text-on-surface-variant">Macro Trend Analysis</span>
+<span class="ml-auto text-[10px] text-on-surface-variant font-bold">QUEUED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-2xl border-t border-white/5 z-50 flex items-center justify-around px-4 shadow-2xl">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">AI Engine</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">Markets</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium uppercase tracking-tighter">More</span>
+</button>
+</nav>
+<script>
+    // Simple micro-interaction for hovering effect enhancement
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+</script>
+</body></html>

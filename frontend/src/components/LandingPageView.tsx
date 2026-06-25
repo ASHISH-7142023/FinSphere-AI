@@ -6,6 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Session } from "@/lib/api";
 import { apiRequest } from "@/lib/api";
 import ThreeJsHeroVisual from "./ThreeJsHeroVisual";
+import FeaturesExplorer from "./FeaturesExplorer";
+import PricingView from "./PricingView";
+import AIAdvisorView from "./AIAdvisorView";
 
 export default function LandingPageView({ onSession }: { onSession: (session: Session) => void }) {
   const router = useRouter();
@@ -188,84 +191,28 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
         </div>
       </div>
 
-      {/* Features Bento Grid */}
+      {/* Features Section */}
       <section id="features" className="py-24 px-6 max-w-7xl mx-auto space-y-16">
+        <FeaturesExplorer />
+      </section>
+
+      {/* AI Engine Section */}
+      <section id="ai-engine" className="py-24 px-6 max-w-7xl mx-auto space-y-16">
         <div className="text-center space-y-4">
-          <h2 className="font-display-lg text-3xl md:text-4xl font-extrabold text-white">Precision Engineering for Every Asset</h2>
+          <span className="font-label-sm text-primary text-xs uppercase tracking-widest font-semibold">Real-Time Intelligence</span>
+          <h2 className="font-display-lg text-3xl md:text-4xl font-extrabold text-white">Neural AI Engine</h2>
           <p className="text-on-surface-variant text-sm max-w-2xl mx-auto">
-            Our AI core processes 2.4 million data points per second to ensure your strategy is always ten steps ahead.
+            Interact with our institutional-grade AI core to run calculations, simulate tax implications, and optimize strategies instantly.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Bento Feature 1 */}
-          <div className="glass-card p-8 rounded-3xl relative group overflow-hidden flex flex-col h-full border-primary/20 hover:border-primary/50 transition-all duration-500">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-2xl rounded-full"></div>
-            <div className="mb-6 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-              <span className="material-symbols-outlined text-2xl">chat_bubble</span>
-            </div>
-            <h3 className="font-headline-md text-lg font-bold text-white mb-2">AI Wealth Advisor</h3>
-            <p className="text-on-surface-variant text-xs leading-relaxed flex-grow">
-              A 24/7 hyper-personalized advisor that learns your goals and manages risk in real-time.
-            </p>
-            <span className="text-primary font-bold text-xs mt-6 group-hover:translate-x-2 transition-transform inline-block cursor-pointer">Learn more →</span>
-          </div>
-
-          {/* Bento Feature 2 */}
-          <div className="glass-card p-8 rounded-3xl relative group overflow-hidden flex flex-col h-full border-white/5 hover:border-primary/30 transition-all duration-500">
-            <div className="mb-6 w-12 h-12 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary border border-white/5">
-              <span className="material-symbols-outlined text-2xl">hub</span>
-            </div>
-            <h3 className="font-headline-md text-lg font-bold text-white mb-2">Global Investment Hub</h3>
-            <p className="text-on-surface-variant text-xs leading-relaxed flex-grow">
-              Seamless access to global markets: stocks, crypto, and exclusive mutual funds in one unified dashboard.
-            </p>
-            <div className="mt-6 flex items-center -space-x-2">
-              <span className="w-8 h-8 rounded-full border border-surface bg-white/10 flex items-center justify-center text-[10px] font-bold">US</span>
-              <span className="w-8 h-8 rounded-full border border-surface bg-white/10 flex items-center justify-center text-[10px] font-bold">EU</span>
-              <span className="w-8 h-8 rounded-full border border-surface bg-white/10 flex items-center justify-center text-[10px] font-bold">IN</span>
-            </div>
-          </div>
-
-          {/* Bento Feature 3 */}
-          <div className="glass-card p-8 rounded-3xl relative group overflow-hidden flex flex-col h-full border-white/5 hover:border-primary/30 transition-all duration-500">
-            <div className="mb-6 w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary border border-white/5">
-              <span className="material-symbols-outlined text-2xl">query_stats</span>
-            </div>
-            <h3 className="font-headline-md text-lg font-bold text-white mb-2">Automated Budgeting</h3>
-            <p className="text-on-surface-variant text-xs leading-relaxed flex-grow">
-              Predictive spending alerts and smart categorization that adjusts to your lifestyle changes automatically.
-            </p>
-            <div className="mt-6 w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-tertiary h-full rounded-full" style={{ width: "75%" }}></div>
-            </div>
-            <div className="mt-1 flex justify-between text-[10px] text-on-surface-variant font-bold">
-              <span>Target</span>
-              <span>75% Used</span>
-            </div>
-          </div>
-
-          {/* Bento Feature 4 */}
-          <div className="glass-card p-8 rounded-3xl relative group overflow-hidden flex flex-col h-full border-white/5 hover:border-primary/30 transition-all duration-500">
-            <div className="mb-6 w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary-container border border-white/5">
-              <span className="material-symbols-outlined text-2xl">speed</span>
-            </div>
-            <h3 className="font-headline-md text-lg font-bold text-white mb-2">Score Simulator</h3>
-            <p className="text-on-surface-variant text-xs leading-relaxed flex-grow">
-              See the future of your financial health. Run "what-if" scenarios to maximize your credit potential.
-            </p>
-            <div className="mt-6 flex justify-center">
-              <div className="relative w-16 h-16 flex flex-col items-center justify-center">
-                <svg className="absolute w-full h-full transform -rotate-90">
-                  <circle cx="32" cy="32" r="28" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="4"></circle>
-                  <circle cx="32" cy="32" r="28" fill="transparent" stroke="#42e5b0" strokeDasharray="175" strokeDashoffset="35" strokeWidth="4" strokeLinecap="round"></circle>
-                </svg>
-                <span className="text-xs font-bold text-white">810</span>
-                <span className="text-[7px] text-primary font-bold uppercase tracking-wider">FICO</span>
-              </div>
-            </div>
-          </div>
+        <div className="glass-card rounded-[2rem] border border-white/10 p-6 md:p-8 bg-surface-container/30 relative overflow-hidden max-w-4xl mx-auto shadow-2xl h-[600px] flex flex-col">
+          <AIAdvisorView />
         </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-24 px-6 max-w-7xl mx-auto space-y-16">
+        <PricingView />
       </section>
 
       {/* Footer */}
