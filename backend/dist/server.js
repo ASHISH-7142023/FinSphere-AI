@@ -26,6 +26,10 @@ else {
     console.warn("WARNING: DATABASE_URL not set. Falling back to InMemoryStore for development.");
     store = new InMemoryStore();
 }
-createApp(store).listen(port, () => {
-    console.log(`FinSphere API listening on http://localhost:${port}`);
-});
+const app = createApp(store);
+if (!process.env.VERCEL) {
+    app.listen(port, () => {
+        console.log(`FinSphere API listening on http://localhost:${port}`);
+    });
+}
+export default app;
