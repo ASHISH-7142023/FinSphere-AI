@@ -6,6 +6,14 @@ import morgan from "morgan";
 import { budgetSchema, calculateBudgetUsage, calculateFinancialHealth, creditProfileSchema, expenseSchema, getOverspendingAlerts, goalSchema, investmentSchema, loginSchema, registerSchema, simulateCreditScore } from "./shared/index.js";
 import { authMiddleware, signToken } from "./auth.js";
 import { makeId } from "./store-inmemory.js";
+function generateUpiDetails(user) {
+    const localPart = user.email.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "");
+    const suffix = user.id.replace("user_", "").slice(-4);
+    const upiId = `${localPart}_${suffix}@finsphere`;
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(user.name)}&cu=INR`;
+    const upiQr = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+    return { upiId, upiQr };
+}
 export function createApp(store) {
     const app = express();
     app.use(helmet());
@@ -29,7 +37,8 @@ export function createApp(store) {
             monthlyIncome: parsed.data.monthlyIncome,
             passwordHash: hashedPassword
         });
-        const { passwordHash: _passwordHash, ...safeUser } = user;
+        const { passwordHash: _passwordHash, ...baseUser } = user;
+        const safeUser = { ...baseUser, ...generateUpiDetails(user) };
         return res.status(201).json({ token: signToken(user.id), user: safeUser });
     });
     app.post("/api/auth/login", async (req, res) => {
@@ -40,12 +49,14 @@ export function createApp(store) {
         if (!user || !(await bcrypt.compare(parsed.data.password, user.passwordHash))) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        const { passwordHash: _passwordHash, ...safeUser } = user;
+        const { passwordHash: _passwordHash, ...baseUser } = user;
+        const safeUser = { ...baseUser, ...generateUpiDetails(user) };
         return res.json({ token: signToken(user.id), user: safeUser });
     });
     const requireAuth = authMiddleware(store);
     app.get("/api/auth/me", requireAuth, (_req, res) => {
-        const { passwordHash: _passwordHash, ...safeUser } = res.locals.user;
+        const { passwordHash: _passwordHash, ...baseUser } = res.locals.user;
+        const safeUser = { ...baseUser, ...generateUpiDetails(res.locals.user) };
         res.json({ user: safeUser });
     });
     app.get("/api/dashboard/summary", requireAuth, async (_req, res) => {

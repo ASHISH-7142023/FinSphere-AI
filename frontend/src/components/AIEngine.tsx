@@ -16,7 +16,7 @@ export default function AIEngine() {
   const [synapseLoad, setSynapseLoad] = useState(42);
   const [harvesterSaving, setHarvesterSaving] = useState(4120);
 
-  const [processes, setProcesses] = useState<Process[]>([
+  const [processes] = useState<Process[]>([
     { id: "1", name: "Scraping SEC Filings", status: "ONGOING", active: true },
     { id: "2", name: "Rebalancing Crypto Portfolio", status: "92%", active: true },
     { id: "3", name: "Macro Trend Analysis", status: "QUEUED", active: false },

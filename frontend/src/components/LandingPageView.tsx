@@ -290,7 +290,6 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
                           type="email"
                           className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
                           placeholder="demo@finsphere.ai"
-                          defaultValue="demo@finsphere.ai"
                           required
                         />
                       </div>
@@ -314,7 +313,6 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
                           type="password"
                           className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
                           placeholder="••••••••"
-                          defaultValue="Demo@12345"
                           required
                         />
                       </div>
@@ -395,7 +393,6 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
                           type="number"
                           className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
                           placeholder="150000"
-                          defaultValue="150000"
                           required
                         />
                       </div>

@@ -129,19 +129,18 @@ export default function LoginPage() {
                       type="email"
                       className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm bg-white/[0.03] border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                       placeholder="name@company.com"
-                      defaultValue="demo@finsphere.ai"
                       required
                     />
                   </div>
                 </div>
-
+ 
                 {/* Password Field */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-semibold text-[#bbcac1]" htmlFor="password">Password</label>
                     <button
                       type="button"
-                      onClick={() => router.push("/#forgot-password")}
+                      onClick={() => router.push("/forgot-password")}
                       className="text-[10px] text-primary hover:underline font-semibold"
                     >
                       Forgot Password?
@@ -155,7 +154,6 @@ export default function LoginPage() {
                       type={showPassword ? "text" : "password"}
                       className="input-glass w-full pl-11 pr-11 py-3 rounded-xl text-white text-sm bg-white/[0.03] border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                       placeholder="••••••••"
-                      defaultValue="Demo@12345"
                       required
                     />
                     <button
