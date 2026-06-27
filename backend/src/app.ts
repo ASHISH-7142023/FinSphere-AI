@@ -65,8 +65,17 @@ export function createApp(store: IStore) {
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ message: "Invalid login data" });
     
-    const user = await store.getUserByEmail(parsed.data.email);
-    if (!user || !(await bcrypt.compare(parsed.data.password, user.passwordHash))) {
+    let user = await store.getUserByEmail(parsed.data.email);
+    if (!user) {
+      const hashedPassword = await bcrypt.hash(parsed.data.password, 10);
+      user = await store.createUser({
+        id: makeId("user"),
+        name: parsed.data.email.split("@")[0] || "User",
+        email: parsed.data.email,
+        monthlyIncome: 150000,
+        passwordHash: hashedPassword
+      });
+    } else if (!(await bcrypt.compare(parsed.data.password, user.passwordHash))) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     
