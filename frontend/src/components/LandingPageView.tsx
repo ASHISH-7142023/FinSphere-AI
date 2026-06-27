@@ -177,7 +177,7 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
             Interact with our institutional-grade AI core to run calculations, simulate tax implications, and optimize strategies instantly.
           </p>
         </div>
-        <div className="glass-card rounded-[2rem] border border-white/10 p-6 md:p-8 bg-surface-container/30 relative overflow-hidden max-w-4xl mx-auto shadow-2xl h-[600px] flex flex-col">
+        <div className="glass-card rounded-[2rem] border border-white/10 p-6 md:p-8 bg-surface-container/30 relative overflow-hidden max-w-6xl mx-auto shadow-2xl flex flex-col">
           <AIEngine />
         </div>
       </section>
