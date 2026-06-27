@@ -45,7 +45,10 @@ function LoginCardContent() {
         body: JSON.stringify({ email, password }),
       });
       localStorage.setItem("finsphere.session", JSON.stringify(session));
-      window.location.href = "/";
+      router.push("/");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");
     } finally {
@@ -70,7 +73,10 @@ function LoginCardContent() {
         body: JSON.stringify({ name, email, password, monthlyIncome }),
       });
       localStorage.setItem("finsphere.session", JSON.stringify(session));
-      window.location.href = "/";
+      router.push("/");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -115,7 +121,10 @@ function LoginCardContent() {
       }
 
       localStorage.setItem("finsphere.session", JSON.stringify(session));
-      window.location.href = "/";
+      router.push("/");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : `${provider} authentication failed`);
       setOauthSimulation(null);
