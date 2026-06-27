@@ -241,15 +241,14 @@ export default function Home() {
       {/* Side Navigation Bar */}
       <aside 
         style={{ width: `${sidebarWidth}px` }}
-        className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] custom-scrollbar select-none"
+        className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] sidebar-scrollbar select-none"
       >
-        {/* Drag handle grabber line */}
+        {/* Resizing Drag Handle Overlay over Scrollbar */}
         <div
           onMouseDown={startResizing}
-          className="absolute right-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-primary/50 bg-white/5 hover:w-2 transition-all z-[100] group/handle flex items-center justify-center"
-        >
-          <div className="w-[1px] h-8 bg-white/20 group-hover/handle:bg-white/60 rounded"></div>
-        </div>
+          className="absolute right-0 top-0 bottom-0 w-2.5 cursor-col-resize hover:bg-[#42e5b0]/25 active:bg-[#42e5b0]/40 transition-colors z-[100]"
+          title="Drag scrollbar to resize sidebar"
+        />
 
         <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <div className="flex flex-col">

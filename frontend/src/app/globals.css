@@ -189,6 +189,23 @@ body {
   background: #42e5b0;
 }
 
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: #42e5b0;
+  border-radius: 10px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #00c896;
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
