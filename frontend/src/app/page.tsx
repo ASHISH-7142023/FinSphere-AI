@@ -88,6 +88,8 @@ export default function Home() {
 
   const [sidebarWidth, setSidebarWidth] = useState(256);
   const [isResizing, setIsResizing] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const startResizing = (mouseDownEvent: React.MouseEvent) => {
     mouseDownEvent.preventDefault();
@@ -114,6 +116,15 @@ export default function Home() {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isResizing]);
+
+  useEffect(() => {
+    const checkSize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkSize();
+    window.addEventListener("resize", checkSize);
+    return () => window.removeEventListener("resize", checkSize);
+  }, []);
 
   useEffect(() => {
     const raw = localStorage.getItem("finsphere.session");
@@ -345,12 +356,101 @@ export default function Home() {
         title="Drag scrollbar to resize sidebar"
       />
 
+      {/* Mobile Drawer Navigation Panel */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[70]"
+            />
+            {/* Drawer */}
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="lg:hidden fixed left-0 top-0 bottom-0 w-72 bg-[#0e1511] border-r border-white/10 p-6 z-[80] overflow-y-auto flex flex-col sidebar-scrollbar"
+            >
+              <div className="flex justify-between items-center mb-8 px-2">
+                <div className="flex flex-col">
+                  <span className="text-xl font-extrabold font-heading text-primary tracking-tight leading-tight">FinSphere AI</span>
+                  <span className="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Elite Tier</span>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-on-surface-variant hover:text-white transition-colors"
+                >
+                  <span className="material-symbols-outlined text-2xl">close</span>
+                </button>
+              </div>
+
+              <nav className="flex-1 space-y-1.5">
+                {navItems.map((item) => {
+                  const isActive = view === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setView(item.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all text-xs font-semibold ${
+                        isActive
+                          ? "bg-primary-container text-on-primary-container font-bold shadow-lg shadow-primary/10"
+                          : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+
+              <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <img
+                    className="w-9 h-9 rounded-full border border-primary/30 object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDANrDSLSqhksq2wFTC8UUBGOja8l9SMFRs6AuQQqbBww3YAb9OdV9rrom0LXD1S8O6Gvdq1sR3XYuVaLwO57bs7JGyeF6Wr5EmB5Y8CFCKLtxt8-81C31q3yRJF3d3xl7Z-jh4KS2ZGKx6Bte6cffYNbev3hTX3bU_vYtkj0eYmX639ovs6itTHUX8wPId022TnPb5xhVBC68Ro7ruC9ERZeS5Bon2Tx5nmWHf-Ts3SCwO5cdzEfBeHKSoOAxEKRglzvdB0I7SDW-G"
+                    alt="Profile Avatar"
+                  />
+                  <div className="overflow-hidden">
+                    <p className="text-xs text-on-surface truncate font-semibold">{session.user.name}</p>
+                    <p className="text-[9px] text-on-surface-variant truncate">ID: #{session.user.id}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("finsphere.session");
+                    setSession(null);
+                  }}
+                  title="Logout"
+                  className="text-on-surface-variant hover:text-error transition-colors p-1.5 hover:bg-white/5 rounded-lg flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                </button>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Main Container */}
-      <section style={{ marginLeft: `${sidebarWidth}px` }} className="min-h-screen relative z-10 flex flex-col transition-none">
+      <section style={{ marginLeft: isDesktop ? `${sidebarWidth}px` : "0px" }} className="min-h-screen relative z-10 flex flex-col transition-none">
         
         {/* TopNavBar */}
-        <header style={{ left: `${sidebarWidth}px` }} className="fixed top-0 right-0 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25 transition-none">
+        <header style={{ left: isDesktop ? `${sidebarWidth}px` : "0px" }} className="fixed top-0 right-0 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25 transition-none">
           <div className="flex items-center gap-4 flex-1">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden hover:text-primary transition-colors flex items-center justify-center p-1.5 hover:bg-white/5 rounded-lg mr-2">
+              <span className="material-symbols-outlined text-2xl text-on-surface-variant">menu</span>
+            </button>
             <div className="relative w-full max-w-md hidden md:block">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
               <input

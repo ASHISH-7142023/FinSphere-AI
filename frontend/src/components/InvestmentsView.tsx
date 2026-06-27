@@ -76,16 +76,16 @@ export default function InvestmentsView({ investments, onOpenAddModal }: Investm
           </div>
 
           {/* Sparkline Visual SVG */}
-          <div className="mt-8 h-20 w-full">
+          <div className="mt-8 h-28 w-full">
             <svg className="w-full h-full" viewBox="0 0 1000 100" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="lineGrad" x1="0%" x2="0%" y1="0%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: "#42e5b0", stopOpacity: 0.4 }}></stop>
+                  <stop offset="0%" style={{ stopColor: "#42e5b0", stopOpacity: 0.45 }}></stop>
                   <stop offset="100%" style={{ stopColor: "#42e5b0", stopOpacity: 0 }}></stop>
                 </linearGradient>
               </defs>
-              <path d="M0,80 Q100,20 200,60 T400,40 T600,70 T800,30 T1000,10 L1000,100 L0,100 Z" fill="url(#lineGrad)"></path>
-              <path className="chart-path" d="M0,80 Q100,20 200,60 T400,40 T600,70 T800,30 T1000,10" fill="none" stroke="#42e5b0" strokeWidth="3"></path>
+              <path d="M0,70 C150,95 200,20 350,55 C450,80 550,15 700,45 C800,70 900,20 1000,35 L1000,100 L0,100 Z" fill="url(#lineGrad)"></path>
+              <path className="chart-path" d="M0,70 C150,95 200,20 350,55 C450,80 550,15 700,45 C800,70 900,20 1000,35" fill="none" stroke="#42e5b0" strokeWidth="3.5"></path>
             </svg>
           </div>
         </div>
