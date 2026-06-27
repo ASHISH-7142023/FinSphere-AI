@@ -20,6 +20,7 @@ import BudgetsView from "@/components/BudgetsView";
 import GoalsView from "@/components/GoalsView";
 import InvestmentsView from "@/components/InvestmentsView";
 import CreditView from "@/components/CreditView";
+import CreditScoreSimulator from "@/components/CreditScoreSimulator";
 import ReportsView from "@/components/ReportsView";
 import MutualFundPortfolio from "@/components/MutualFundPortfolio";
 import FeaturesExplorer from "@/components/FeaturesExplorer";
@@ -34,6 +35,7 @@ type View =
   | "investments"
   | "mutual-funds"
   | "credit"
+  | "credit-simulator"
   | "reports"
   | "ai-advisor"
   | "utilities"
@@ -58,6 +60,7 @@ const navItems = [
   { id: "mutual-funds", label: "Mutual Funds", icon: "finance_mode" },
   { id: "sip-setup", label: "SIP Setup", icon: "toll" },
   { id: "credit", label: "Credit Engine", icon: "credit_score" },
+  { id: "credit-simulator", label: "Credit Simulator", icon: "speed" },
   { id: "features", label: "Features Explorer", icon: "explore" },
   { id: "pricing", label: "Premium Tiers", icon: "workspace_premium" },
   { id: "insurance", label: "Insurance Hub", icon: "shield" },
@@ -429,6 +432,10 @@ export default function Home() {
 
           {view === "credit" && (
             <CreditView token={session.token} />
+          )}
+
+          {view === "credit-simulator" && (
+            <CreditScoreSimulator token={session.token} />
           )}
 
           {view === "reports" && (
