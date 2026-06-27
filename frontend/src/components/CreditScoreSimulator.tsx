@@ -181,7 +181,7 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
   const minScore = 300;
   const maxScore = 850;
   const percentage = Math.max(0, Math.min(1, (simulatedScore - minScore) / (maxScore - minScore)));
-  const pathLength = 125.66; // Length of semi-circle of R=40 (pi * R)
+  const pathLength = 109.96; // Length of semi-circle of R-35 (pi * R)
   const strokeDashoffset = pathLength - percentage * pathLength;
 
   return (
@@ -217,68 +217,51 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
         <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
           
           {/* FICO Gauge Card */}
-          <div className="glass-card rounded-[2rem] p-6 flex flex-col items-center relative overflow-hidden">
-            {/* Decorative diagonal neon lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="diagonalLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#42e5b0" stopOpacity="0" />
-                  <stop offset="20%" stopColor="#42e5b0" stopOpacity="0.25" />
-                  <stop offset="80%" stopColor="#42e5b0" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#42e5b0" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <line x1="30%" y1="-10%" x2="-10%" y2="70%" stroke="url(#diagonalLineGrad)" strokeWidth="1.2" />
-              <line x1="110%" y1="30%" x2="70%" y2="110%" stroke="url(#diagonalLineGrad)" strokeWidth="1.2" />
-            </svg>
-
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant/80 font-bold mb-6 text-center w-full">
-              Current Projected Score
+          <div className="glass-card rounded-[2rem] p-6 flex flex-col items-center text-center conic-border relative overflow-hidden">
+            <p className="text-[11px] uppercase tracking-wider text-on-surface-variant/85 font-semibold mb-6">
+              CURRENT PROJECTED SCORE
             </p>
             
             {/* Renders gauge */}
-            <div className="relative w-72 h-36 overflow-hidden mb-2 flex items-center justify-center">
-              <svg className="w-full h-full" viewBox="0 0 100 50">
+            <div className="relative w-72 h-36 overflow-hidden mb-4">
+              <svg className="w-full h-full" viewBox="0 0 100 58">
                 <path
-                  className="fill-none stroke-[#1e2521] stroke-[12] stroke-linecap-round"
-                  d="M10,45 A40,40 0 0,1 90,45"
+                  className="fill-none stroke-[#2f3632] stroke-[15] stroke-linecap-round"
+                  d="M15,50 A35,35 0 0,1 85,50"
                 ></path>
                 <path
-                  className="fill-none stroke-primary stroke-[12] stroke-linecap-round transition-all duration-700 ease-out"
-                  d="M10,45 A40,40 0 0,1 90,45"
-                  strokeDasharray="125.66"
+                  className="fill-none stroke-primary stroke-[15] stroke-linecap-round transition-all duration-700 ease-out"
+                  d="M15,50 A35,35 0 0,1 85,50"
+                  strokeDasharray="109.96"
                   strokeDashoffset={strokeDashoffset}
                 ></path>
               </svg>
-              <div className="absolute bottom-0 text-center flex flex-col items-center">
-                <span className="font-display-lg text-5xl font-extrabold text-primary leading-none select-none tracking-tight">
+              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-center">
+                <span className="font-display-lg text-4xl sm:text-5xl font-extrabold text-primary">
                   {simulatedScore}
                 </span>
-                <p className="font-bold text-xs mt-1 text-primary tracking-wide">
+                <p className="text-primary font-bold text-xs uppercase tracking-wider mt-0.5">
                   {rating.label}
                 </p>
               </div>
             </div>
 
-            {/* Divider Line */}
-            <div className="w-full h-px bg-white/5 my-5 z-10"></div>
-
             {/* Gauge Metrics footer */}
-            <div className="grid grid-cols-3 w-full gap-2 text-xs font-semibold z-10">
-              <div className="text-left">
-                <p className="text-[9px] text-on-surface-variant/70 uppercase font-bold tracking-wider mb-1">Potential</p>
-                <p className="text-sm font-extrabold text-primary">
+            <div className="grid grid-cols-3 w-full gap-2 mt-4 text-xs font-semibold border-t border-white/5 pt-4">
+              <div className="text-center">
+                <p className="text-[9px] text-on-surface-variant uppercase tracking-wider font-semibold">POTENTIAL</p>
+                <p className="text-sm font-bold text-primary mt-1">
                   {totalProjectedScore - 742 >= 0 ? "+" : ""}
                   {totalProjectedScore - 742} pts
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-[9px] text-on-surface-variant/70 uppercase font-bold tracking-wider mb-1">Confidence</p>
-                <p className="text-sm font-extrabold text-white">99.4%</p>
+                <p className="text-[9px] text-on-surface-variant uppercase tracking-wider font-semibold">CONFIDENCE</p>
+                <p className="text-sm font-bold text-white mt-1">98.2%</p>
               </div>
-              <div className="text-right">
-                <p className="text-[9px] text-on-surface-variant/70 uppercase font-bold tracking-wider mb-1">Peer Rank</p>
-                <p className="text-sm font-extrabold text-white">Top 12%</p>
+              <div className="text-center">
+                <p className="text-[9px] text-on-surface-variant uppercase tracking-wider font-semibold">RANK</p>
+                <p className="text-sm font-bold text-white mt-1">Top 12%</p>
               </div>
             </div>
           </div>
