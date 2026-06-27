@@ -238,10 +238,10 @@ export default function Home() {
     fontSize: `${Math.max(16, Math.min(28, 20 * scale))}px`,
   };
   const titleStyle = {
-    fontSize: `${Math.max(16, Math.min(32, 24 * scale))}px`,
+    fontSize: `${(sidebarWidth - 56) / 7.0}px`,
   };
   const subtitleStyle = {
-    fontSize: `${Math.max(8, Math.min(14, 10 * scale))}px`,
+    fontSize: `${Math.max(10, Math.min(18, 11 * scale))}px`,
   };
 
   return (
@@ -260,9 +260,9 @@ export default function Home() {
       >
         <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <div className="flex flex-col">
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">FinSphere AI |</span>
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">Dashboard</span>
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">Overview</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">FinSphere AI |</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">Dashboard</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">Overview</span>
           </div>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>

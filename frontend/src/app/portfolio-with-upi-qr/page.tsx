@@ -92,6 +92,35 @@ export default function Home() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [sidebarWidth, setSidebarWidth] = useState(256);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResizing = (mouseDownEvent: React.MouseEvent) => {
+    mouseDownEvent.preventDefault();
+    setIsResizing(true);
+  };
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newWidth = Math.max(200, Math.min(450, e.clientX));
+      setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
 
   useEffect(() => {
     const checkSize = () => {
@@ -200,6 +229,22 @@ export default function Home() {
     await refreshAll();
   };
 
+  const scale = sidebarWidth / 256;
+  const buttonStyle = {
+    padding: `${Math.max(6, Math.min(18, 12 * scale))}px ${Math.max(8, Math.min(24, 16 * scale))}px`,
+    fontSize: `${Math.max(10, Math.min(18, 12 * scale))}px`,
+    gap: `${Math.max(6, Math.min(16, 12 * scale))}px`,
+  };
+  const iconStyle = {
+    fontSize: `${Math.max(16, Math.min(28, 20 * scale))}px`,
+  };
+  const titleStyle = {
+    fontSize: `${(sidebarWidth - 56) / 7.0}px`,
+  };
+  const subtitleStyle = {
+    fontSize: `${Math.max(10, Math.min(18, 11 * scale))}px`,
+  };
+
   return (
     <main className="min-h-screen bg-background text-on-background selection:bg-primary/30">
       
@@ -210,16 +255,19 @@ export default function Home() {
       </div>
 
       {/* Side Navigation Bar */}
-      <aside className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 w-64 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] custom-scrollbar">
-        <div className="mb-10 px-2">
+      <aside 
+        style={{ width: `${sidebarWidth}px` }}
+        className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] sidebar-scrollbar select-none"
+      >
+        <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <div className="flex flex-col">
-            <span className="text-2xl font-extrabold font-heading text-primary tracking-tight leading-tight">FinSphere AI |</span>
-            <span className="text-2xl font-extrabold font-heading text-primary tracking-tight leading-tight">Dashboard</span>
-            <span className="text-2xl font-extrabold font-heading text-primary tracking-tight leading-tight">Overview</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">FinSphere AI |</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">Dashboard</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">Overview</span>
           </div>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-            <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Elite Tier</span>
+            <span style={subtitleStyle} className="font-semibold uppercase tracking-widest text-on-surface-variant">Elite Tier</span>
           </div>
         </div>
         
@@ -230,16 +278,17 @@ export default function Home() {
               <button
                 key={item.id}
                 onClick={() => setView(item.id)}
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all ${
+                style={buttonStyle}
+                className={`flex w-full items-center rounded-xl text-left transition-all ${
                   isActive
                     ? "bg-primary-container text-on-primary-container font-bold shadow-lg shadow-primary/10 scale-[0.98]"
                     : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
                 }`}
               >
-                <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0", ...iconStyle }}>
                   {item.icon}
                 </span>
-                <span className="font-label-md text-label-md">{item.label}</span>
+                <span className="font-semibold">{item.label}</span>
               </button>
             );
           })}
@@ -303,6 +352,14 @@ export default function Home() {
           </div>
         </div>
       </aside>
+
+      {/* Resizing Drag Handle Overlay over Scrollbar */}
+      <div
+        onMouseDown={startResizing}
+        style={{ left: `${sidebarWidth - 5}px` }}
+        className="hidden lg:block fixed top-0 bottom-0 w-2.5 cursor-col-resize hover:bg-[#42e5b0]/20 active:bg-[#42e5b0]/40 transition-colors z-[100]"
+        title="Drag scrollbar to resize sidebar"
+      />
 
       {/* Mobile Drawer Navigation Panel */}
       <AnimatePresence>
@@ -391,10 +448,10 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Main Container */}
-      <section style={{ marginLeft: isDesktop ? "256px" : "0px" }} className="min-h-screen relative z-10 flex flex-col">
+      <section style={{ marginLeft: isDesktop ? `${sidebarWidth}px` : "0px" }} className="min-h-screen relative z-10 flex flex-col transition-none">
         
         {/* TopNavBar */}
-        <header style={{ left: isDesktop ? "256px" : "0px" }} className="fixed top-0 right-0 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25">
+        <header style={{ left: isDesktop ? `${sidebarWidth}px` : "0px" }} className="fixed top-0 right-0 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25 transition-none">
           <div className="flex items-center gap-4 flex-1">
             <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden hover:text-primary transition-colors flex items-center justify-center p-1.5 hover:bg-white/5 rounded-lg mr-2">
               <span className="material-symbols-outlined text-2xl text-on-surface-variant">menu</span>
