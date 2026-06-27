@@ -80,7 +80,8 @@ export default function Home() {
   const [alerts, setAlerts] = useState<Array<{ category: string; overBy: number }>>([]);
   const [report, setReport] = useState<{ totalIncome: number; totalExpenses: number; categoryAnalysis: Array<{ category: string; amount: number; count: number }> } | null>(null);
   const [_loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [_error, setError] = useState("");
+
   
   // Modal states for creating/editing resources
   const [activeModal, setActiveModal] = useState<"expense" | "budget" | "goal" | "investment" | null>(null);
@@ -558,12 +559,7 @@ export default function Home() {
 
         {/* Main Canvas Body */}
         <section className="flex-1 pt-6 pb-20 lg:pt-20 px-4 md:px-8 max-w-7xl w-full mx-auto space-y-8 overflow-y-auto">
-          {error && (
-            <div className="rounded-xl border border-danger/40 bg-danger/10 p-4 text-sm text-danger flex items-center justify-between">
-              <span>{error}</span>
-              <button onClick={() => setError("")} className="material-symbols-outlined text-sm hover:opacity-80">close</button>
-            </div>
-          )}
+
 
           {view === "dashboard" && (
             <DashboardView
