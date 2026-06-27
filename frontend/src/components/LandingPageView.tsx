@@ -51,28 +51,6 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
     }
   };
 
-  const handleRegisterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const monthlyIncome = String(Number(formData.get("monthlyIncome")));
-
-    try {
-      const session = await apiRequest<Session>("/auth/register", {
-        method: "POST",
-        body: JSON.stringify({ name, email, password, monthlyIncome }),
-      });
-      onSession(session);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const handleForgotSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -114,15 +92,9 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
         <div className="flex items-center gap-4">
           <button 
             onClick={() => router.push("/login")}
-            className="px-4 py-1.5 rounded-lg border border-white/10 text-xs font-semibold text-white hover:bg-white/5 transition-colors"
-          >
-            Log In
-          </button>
-          <button 
-            onClick={() => setAuthModal("register")}
             className="px-4 py-1.5 rounded-lg bg-primary text-background text-xs font-bold hover:brightness-110 transition-all shadow-md shadow-primary/10"
           >
-            Register
+            Log In
           </button>
         </div>
       </header>
@@ -144,7 +116,7 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
               <button 
-                onClick={() => setAuthModal("register")}
+                onClick={() => router.push("/login?signup=true")}
                 className="relative overflow-hidden bg-gradient-to-br from-primary to-primary-container text-background px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20"
               >
                 Get Started
@@ -328,90 +300,12 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
                   </form>
                   <p className="text-xs text-on-surface-variant text-center">
                     Don't have an account?{" "}
-                    <button onClick={() => setAuthModal("register")} className="text-primary font-bold hover:underline">Sign Up</button>
+                    <button onClick={() => router.push("/login?signup=true")} className="text-primary font-bold hover:underline">Sign Up</button>
                   </p>
                 </div>
               )}
 
-              {/* Register form */}
-              {authModal === "register" && (
-                <div className="space-y-6">
-                  <div className="text-center">
-                    <h2 className="font-headline-md text-2xl font-bold text-white">Create Account</h2>
-                    <p className="text-on-surface-variant text-xs mt-1">Join the elite tier of institutional investors.</p>
-                  </div>
-                  <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-on-surface-variant" htmlFor="name">Full Name</label>
-                      <div className="relative">
-                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">person</span>
-                        <input
-                          name="name"
-                          id="name"
-                          type="text"
-                          className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
-                          placeholder="Alex Sterling"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-on-surface-variant" htmlFor="reg-email">Email Address</label>
-                      <div className="relative">
-                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">mail</span>
-                        <input
-                          name="email"
-                          id="reg-email"
-                          type="email"
-                          className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
-                          placeholder="alex@example.com"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-on-surface-variant" htmlFor="reg-password">Password</label>
-                      <div className="relative">
-                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">lock</span>
-                        <input
-                          name="password"
-                          id="reg-password"
-                          type="password"
-                          className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
-                          placeholder="••••••••"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-on-surface-variant" htmlFor="reg-income">Monthly Income (₹)</label>
-                      <div className="relative">
-                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">payments</span>
-                        <input
-                          name="monthlyIncome"
-                          id="reg-income"
-                          type="number"
-                          className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
-                          placeholder="150000"
-                          required
-                        />
-                      </div>
-                    </div>
-                    {error && <p className="text-[10px] text-error font-bold text-left">{error}</p>}
-                    <button
-                      type="submit"
-                      disabled={busy}
-                      className="btn-emerald-gradient w-full py-3.5 rounded-xl text-background font-bold text-sm flex items-center justify-center gap-2 hover:shadow-lg transition-all"
-                    >
-                      {busy ? "Registering..." : <>Register <span className="material-symbols-outlined text-lg">how_to_reg</span></>}
-                    </button>
-                  </form>
-                  <p className="text-xs text-on-surface-variant text-center">
-                    Already have an account?{" "}
-                    <button onClick={() => setAuthModal("login")} className="text-primary font-bold hover:underline">Log In</button>
-                  </p>
-                </div>
-              )}
+
 
               {/* Forgot Password modal form */}
               {authModal === "forgot" && (
