@@ -116,7 +116,7 @@ export default function AIAdvisorView() {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-12rem)] max-w-4xl mx-auto rounded-3xl border border-white/10 bg-surface/20 backdrop-blur-xl relative overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-8rem)] lg:h-[calc(100vh-10rem)] w-full rounded-3xl border border-white/10 bg-surface/20 backdrop-blur-xl relative overflow-hidden">
       
       {/* Advisor Header */}
       <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-surface-container/20">
