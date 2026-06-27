@@ -223,8 +223,8 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
             </p>
             
             {/* Renders gauge */}
-            <div className="relative w-72 h-36 overflow-hidden mb-4">
-              <svg className="w-full h-full" viewBox="0 0 100 58">
+            <div className="relative w-72 h-[155px] mb-4">
+              <svg className="w-full h-full" viewBox="0 0 100 55">
                 <path
                   className="fill-none stroke-[#2f3632] stroke-[15] stroke-linecap-round"
                   d="M15,50 A35,35 0 0,1 85,50"
@@ -236,11 +236,11 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
                   strokeDashoffset={strokeDashoffset}
                 ></path>
               </svg>
-              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-center">
-                <span className="font-display-lg text-4xl sm:text-5xl font-extrabold text-primary">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-center flex flex-col items-center justify-end">
+                <span className="font-display-lg text-4xl sm:text-5xl font-extrabold text-primary leading-none">
                   {simulatedScore}
                 </span>
-                <p className="text-primary font-bold text-xs uppercase tracking-wider mt-0.5">
+                <p className="text-primary font-bold text-xs uppercase tracking-wider mt-2.5">
                   {rating.label}
                 </p>
               </div>
