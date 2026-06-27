@@ -26,6 +26,7 @@ import MutualFundPortfolio from "@/components/MutualFundPortfolio";
 import FeaturesExplorer from "@/components/FeaturesExplorer";
 import PricingView from "@/components/PricingView";
 import CreditCardBillCenter from "@/components/CreditCardBillCenter";
+import SettingsView from "@/components/SettingsView";
 
 type View =
   | "dashboard"
@@ -46,7 +47,8 @@ type View =
   | "insurance"
   | "features"
   | "pricing"
-  | "demo";
+  | "demo"
+  | "settings";
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: "dashboard" },
@@ -64,7 +66,8 @@ const navItems = [
   { id: "insurance", label: "Insurance Hub", icon: "shield" },
   { id: "merchant-khata", label: "Merchant Khata", icon: "receipt_long" },
   { id: "rewards", label: "Rewards & Offers", icon: "military_tech" },
-  { id: "reports", label: "Reports", icon: "bar_chart_4_bars" }
+  { id: "reports", label: "Reports", icon: "bar_chart_4_bars" },
+  { id: "settings", label: "Settings", icon: "settings" }
 ] as const;
 
 
@@ -491,8 +494,10 @@ export default function Home() {
                       setView("rewards");
                     } else if (q.includes("demo")) {
                       setView("demo");
+                    } else if (q.includes("setting") || q.includes("config") || q.includes("preference")) {
+                      setView("settings");
                     } else {
-                      alert(`Search results for "${searchQuery}": No direct feature match. Try searching 'credit', 'budget', 'advisor', 'utilities', 'mutual funds', or 'expenses'.`);
+                      alert(`Search results for "${searchQuery}": No direct feature match. Try searching 'credit', 'budget', 'advisor', 'utilities', 'mutual funds', or 'settings'.`);
                     }
                     setSearchQuery("");
                   }
@@ -679,6 +684,15 @@ export default function Home() {
 
           {view === "demo" && (
             <DemoPlayerView />
+          )}
+
+          {view === "settings" && (
+            <SettingsView
+              session={session}
+              onUpdateUser={(updatedUser) => {
+                setSession((prev) => prev ? { ...prev, user: updatedUser } : null);
+              }}
+            />
           )}
         </section>
 

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FinSphere AI | Settings &amp; Security</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "background": "#0e1511",
+                        "primary-container": "#00c896",
+                        "on-secondary-container": "#586377",
+                        "on-tertiary-container": "#344459",
+                        "primary": "#006c4f",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#3adfab",
+                        "secondary-container": "#d5e0f8",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-primary-fixed-variant": "#00513b",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#002116",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "on-background": "#191c1e",
+                        "on-primary-container": "#004d38",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#111c2d",
+                        "on-surface-variant": "#3c4a43",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "error": "#ba1a1a",
+                        "secondary": "#545f73",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "tertiary": "#505f76",
+                        "primary-fixed": "#60fcc6",
+                        "secondary-fixed": "#d8e3fb",
+                        "outline": "#6c7a72",
+                        "primary-fixed-dim": "#3adfab",
+                        "outline-variant": "#bbcac1",
+                        "surface": "#0e1511",
+                        "on-surface": "#ffffff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#006c4f",
+                        "surface-bright": "#1a221d",
+                        "surface-container-high": "#1e2621",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "tertiary-container": "#a1b1ca",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "16px",
+                        "xl": "24px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "lg": "48px",
+                        "margin-mobile": "16px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Lexend"],
+                        "display-lg": ["Lexend"],
+                        "headline-sm": ["Lexend"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Lexend"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0e1511;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 200, 150, 0.3);
+            transition: all 0.3s ease;
+        }
+        .emerald-glow {
+            box-shadow: 0 0 20px rgba(0, 200, 150, 0.15);
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #00c896;
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-64 py-4 bg-surface/70 backdrop-blur-xl border-b border-outline/20">
+<div class="font-headline-md text-headline-md font-bold text-primary-container">FinSphere AI</div>
+<div class="hidden md:flex gap-8">
+<span class="text-secondary hover:text-primary-container transition-colors cursor-pointer font-body-md">Dashboard</span>
+<span class="text-secondary hover:text-primary-container transition-colors cursor-pointer font-body-md">Portfolio</span>
+<span class="text-secondary hover:text-primary-container transition-colors cursor-pointer font-body-md">Analytics</span>
+<span class="text-primary-container border-b-2 border-primary-container pb-1 cursor-pointer font-body-md font-semibold">Settings</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer opacity-70 hover:opacity-100">notifications</span>
+<span class="material-symbols-outlined text-on-surface cursor-pointer opacity-70 hover:opacity-100">help</span>
+<div class="bg-primary-container/20 text-primary-container px-3 py-1 rounded-full text-label-md font-bold border border-primary-container/30">Platinum Tier</div>
+</div>
+</header>
+<div class="flex pt-20">
+<!-- SideNavBar Shell -->
+<aside class="hidden lg:flex flex-col h-screen sticky top-20 w-64 p-6 bg-surface/50 backdrop-blur-lg border-r border-outline/20">
+<div class="flex items-center gap-3 mb-10 p-2">
+<div class="w-12 h-12 rounded-full border-2 border-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a tech executive named Alex Sterling. The lighting is moody and cinematic with green rim lighting. He has a confident expression, set against a dark, futuristic office background with soft bokeh lights in emerald tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvaqRAOg09vqtfZH-phYIYQ8XRpglnB1X8KocM6XVXqNbQW0OtPcpb3OqgrBm2-Pbx-kqWFWS__HNuN2xHTBJemv83pTN_v0t8ZDiE4l1bs6ckVEuNLdMVuAHwM9kqhpdo69nFYznoDLtl0kZqRABKrsgaC-caeItZz1gMuDxfMzVCoPaJIzINA8h4mH6uxmf-aFuzXMDk-OzNvXFmbXFZT5YL_nhGGX-jjCnUMzmxiHA28h2gW6GdsiK2Y4mdN_XmBNhczeYBXNdj"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-[16px] text-on-surface font-bold">Alex Sterling</h3>
+<p class="text-label-md text-primary-container opacity-80">Platinum Member</p>
+</div>
+</div>
+<nav class="space-y-2">
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary-container">person_add</span>
+<span class="font-label-md">Profile</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg text-primary-container font-bold bg-primary-container/10 border-l-4 border-primary-container cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary-container">account_balance</span>
+<span class="font-label-md">Banking</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary-container">shield_person</span>
+<span class="font-label-md">Security</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary-container">notifications_active</span>
+<span class="font-label-md">Notifications</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary-container">workspace_premium</span>
+<span class="font-label-md">Subscription</span>
+</div>
+</nav>
+<div class="mt-auto p-4 rounded-xl bg-gradient-to-br from-primary-container/20 to-transparent border border-primary-container/20">
+<p class="text-label-md font-bold text-on-surface mb-2">Upgrade Limits</p>
+<p class="text-[10px] text-on-surface/60 mb-3 leading-relaxed">Unlock ultra-high frequency AI trade execution and dedicated nodes.</p>
+<button class="w-full py-2 bg-primary-container text-background font-bold text-label-md rounded-lg hover:scale-105 transition-transform active:scale-95">Explore Enterprise</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-12 lg:px-24">
+<div class="max-w-5xl mx-auto space-y-12">
+<!-- Section 1: Profile & Account -->
+<section>
+<h2 class="font-headline-md text-on-surface mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">account_circle</span>
+                        Profile &amp; Account
+                    </h2>
+<div class="glass-card p-8 rounded-xl flex flex-col md:flex-row items-center gap-8">
+<div class="relative">
+<div class="w-32 h-32 rounded-full border-4 border-primary-container/30 p-1">
+<img class="w-full h-full rounded-full object-cover" data-alt="A detailed close-up of a high-tech biometric avatar. The central focus is on a stylized digital human profile surrounded by floating UI elements and glowing data points in emerald green. The aesthetic is clean, sharp, and highly sophisticated, fitting an elite fintech environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYLfS0oVkHgAvIRLpVVIu425QpQrxD80DsJJPoqnU8v8OLXWpff8DsoqJZYLgfJb3LlRvcu9t-37kzy08eNxMHBgTmZGpDzcO21vOq2ZjrjiV8xEp4wVLWDCLOAkGq-Sl-ErFCb1b8RoYSwdId1j4lMJMLRy89TbOOjrNATnjxdhpJhOJvI8SNrmh9oUd22gc1hXmAU5vZ6SRvg4Th-7quEsEKwsSnYyWqj3KB-f2MfywSGQZat0Pl_5O-vx_VEzOgkRveq7MblKi6"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary-container text-background p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="flex-1 space-y-2 text-center md:text-left">
+<div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
+<h3 class="font-headline-sm text-2xl">Alex Sterling</h3>
+<span class="bg-primary-container/10 text-primary-container border border-primary-container/30 px-3 py-0.5 rounded-full text-label-md font-bold emerald-glow">PLATINUM ELITE</span>
+</div>
+<p class="text-secondary flex items-center justify-center md:justify-start gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                alex.sterling@sphere.ai
+                            </p>
+<p class="text-secondary flex items-center justify-center md:justify-start gap-2">
+<span class="material-symbols-outlined text-sm">call</span>
+                                +1 (555) 012-3456
+                            </p>
+</div>
+<button class="px-6 py-2 border border-outline-variant hover:border-primary-container text-on-surface rounded-lg transition-colors font-semibold">Edit Details</button>
+</div>
+</section>
+<!-- Section 2: Security & Privacy -->
+<section>
+<h2 class="font-headline-md text-on-surface mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">verified_user</span>
+                        Security &amp; Privacy
+                    </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between group">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary-container text-3xl mb-2">lock</span>
+<h3 class="font-headline-sm text-lg">Two-Factor Auth</h3>
+<p class="text-body-sm text-secondary">Secure your account with multi-layer verification codes.</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-bold text-primary-container">ACTIVE</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-label w-11 h-6 bg-outline/30 rounded-full transition-colors">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+</div>
+</label>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary-container text-3xl mb-2">fingerprint</span>
+<h3 class="font-headline-sm text-lg">Biometric Login</h3>
+<p class="text-body-sm text-secondary">Use FaceID or TouchID for instant, secure access.</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-bold text-on-surface/40">INACTIVE</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-label w-11 h-6 bg-outline/30 rounded-full transition-colors">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+</div>
+</label>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary-container text-3xl mb-2">psychology</span>
+<h3 class="font-headline-sm text-lg">AI Privacy Mode</h3>
+<p class="text-body-sm text-secondary">End-to-end encryption for all AI-driven insights.</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-label-md font-bold text-primary-container">SECURED</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-label w-11 h-6 bg-outline/30 rounded-full transition-colors">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+</div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Connected Institutions -->
+<section>
+<h2 class="font-headline-md text-on-surface mb-6 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">account_balance</span>
+                            Connected Institutions
+                        </div>
+<button class="text-label-md text-primary-container hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span> Add New
+                        </button>
+</h2>
+<div class="glass-card rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/5 border-b border-white/10">
+<th class="px-6 py-4 font-label-md text-secondary">INSTITUTION</th>
+<th class="px-6 py-4 font-label-md text-secondary">SYNC STATUS</th>
+<th class="px-6 py-4 font-label-md text-secondary">LAST UPDATE</th>
+<th class="px-6 py-4 font-label-md text-secondary text-right">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-on-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">account_balance_wallet</span>
+</div>
+<span class="font-semibold">Chase Private Client</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-primary-container">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 text-secondary">2 mins ago</td>
+<td class="px-6 py-4 text-right space-x-3">
+<button class="text-on-surface/60 hover:text-primary-container"><span class="material-symbols-outlined">sync</span></button>
+<button class="text-on-surface/60 hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-on-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">credit_card</span>
+</div>
+<span class="font-semibold">Amex Centurion</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-2 text-primary-container">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                                            Active
+                                        </span>
+</td>
+<td class="px-6 py-4 text-secondary">15 mins ago</td>
+<td class="px-6 py-4 text-right space-x-3">
+<button class="text-on-surface/60 hover:text-primary-container"><span class="material-symbols-outlined">sync</span></button>
+<button class="text-on-surface/60 hover:text-error"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Section 4: Subscription Management -->
+<section>
+<h2 class="font-headline-md text-on-surface mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">loyalty</span>
+                        Subscription Management
+                    </h2>
+<div class="relative overflow-hidden p-8 rounded-2xl glass-card border-primary-container/20 border-2">
+<div class="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[160px] text-primary-container">diamond</span>
+</div>
+<div class="relative z-10">
+<div class="mb-8">
+<h3 class="font-headline-md text-3xl font-bold text-on-surface mb-2">Platinum Tier</h3>
+<p class="text-body-lg text-secondary max-w-lg">You are currently on our most exclusive plan. Enjoy unlimited AI processing power, priority node access, and 24/7 concierge support.</p>
+</div>
+<div class="flex flex-wrap gap-4 items-center">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center border-2 border-background"><span class="material-symbols-outlined text-primary-container text-sm">bolt</span></div>
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center border-2 border-background"><span class="material-symbols-outlined text-primary-container text-sm">hub</span></div>
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center border-2 border-background"><span class="material-symbols-outlined text-primary-container text-sm">support_agent</span></div>
+</div>
+<span class="text-label-md text-on-surface/60">Next billing date: Oct 12, 2024 ($499.00/mo)</span>
+</div>
+<div class="mt-8 flex gap-4">
+<button class="px-8 py-3 bg-primary-container text-background font-bold rounded-lg shadow-lg hover:emerald-glow transition-all">Manage Limits</button>
+<button class="px-8 py-3 bg-white/5 text-on-surface border border-white/10 rounded-lg hover:bg-white/10 transition-colors">Compare Plans</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Notification Preferences -->
+<section>
+<h2 class="font-headline-md text-on-surface mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container">notifications</span>
+                        Notification Preferences
+                    </h2>
+<div class="glass-card rounded-xl divide-y divide-white/5">
+<div class="p-6 flex items-center justify-between">
+<div>
+<h4 class="font-bold text-on-surface">Push Notifications</h4>
+<p class="text-body-sm text-secondary">Real-time alerts for market movements and AI signals.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-label w-11 h-6 bg-outline/30 rounded-full transition-colors">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+</div>
+</label>
+</div>
+<div class="p-6 flex items-center justify-between">
+<div>
+<h4 class="font-bold text-on-surface">Email Summaries</h4>
+<p class="text-body-sm text-secondary">Daily and weekly digest of your portfolio performance.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-label w-11 h-6 bg-outline/30 rounded-full transition-colors">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+</div>
+</label>
+</div>
+<div class="p-6 flex items-center justify-between">
+<div>
+<h4 class="font-bold text-on-surface">AI Risk Alerts</h4>
+<p class="text-body-sm text-secondary">High-priority warnings when AI detects potential risk shifts.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-checkbox" type="checkbox"/>
+<div class="toggle-label w-11 h-6 bg-outline/30 rounded-full transition-colors">
+<div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform"></div>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Footer Action -->
+<div class="pt-10 pb-20 flex justify-between items-center border-t border-white/10">
+<button class="text-error font-semibold flex items-center gap-2 hover:opacity-80">
+<span class="material-symbols-outlined">logout</span> Log out from all sessions
+                    </button>
+<div class="flex gap-4">
+<button class="px-6 py-2 text-secondary font-semibold">Discard</button>
+<button class="px-10 py-2 bg-primary-container text-background font-bold rounded-lg shadow-lg">Save Changes</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-primary-container/5 rounded-full blur-[120px]"></div>
+<div class="absolute -bottom-1/2 -left-1/4 w-[600px] h-[600px] bg-primary-container/5 rounded-full blur-[100px]"></div>
+</div>
+<script>
+        // Micro-interactions for toggles and buttons
+        document.querySelectorAll('.toggle-checkbox').forEach(toggle => {
+            toggle.addEventListener('change', (e) => {
+                const parent = e.target.closest('.glass-card');
+                if(e.target.checked) {
+                    parent?.classList.add('emerald-glow');
+                } else {
+                    parent?.classList.remove('emerald-glow');
+                }
+            });
+        });
+
+        // Sticky Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('bg-surface/90', 'shadow-2xl');
+            } else {
+                header.classList.remove('bg-surface/90', 'shadow-2xl');
+            }
+        });
+    </script>
+</body></html>
