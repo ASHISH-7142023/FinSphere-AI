@@ -243,13 +243,6 @@ export default function Home() {
         style={{ width: `${sidebarWidth}px` }}
         className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] sidebar-scrollbar select-none"
       >
-        {/* Resizing Drag Handle Overlay over Scrollbar */}
-        <div
-          onMouseDown={startResizing}
-          className="absolute right-0 top-0 bottom-0 w-2.5 cursor-col-resize hover:bg-[#42e5b0]/25 active:bg-[#42e5b0]/40 transition-colors z-[100]"
-          title="Drag scrollbar to resize sidebar"
-        />
-
         <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <div className="flex flex-col">
             <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">FinSphere AI |</span>
@@ -343,6 +336,14 @@ export default function Home() {
           </div>
         </div>
       </aside>
+
+      {/* Resizing Drag Handle Overlay over Scrollbar */}
+      <div
+        onMouseDown={startResizing}
+        style={{ left: `${sidebarWidth - 5}px` }}
+        className="hidden lg:block fixed top-0 bottom-0 w-2.5 cursor-col-resize hover:bg-[#42e5b0]/20 active:bg-[#42e5b0]/40 transition-colors z-[100]"
+        title="Drag scrollbar to resize sidebar"
+      />
 
       {/* Main Container */}
       <section style={{ marginLeft: `${sidebarWidth}px` }} className="min-h-screen relative z-10 flex flex-col transition-none">
