@@ -328,7 +328,7 @@ export default function Home() {
               />
               <div className="overflow-hidden">
                 <p className="font-label-md text-label-md text-on-surface truncate font-semibold">{session.user.name}</p>
-                <p className="text-[10px] text-on-surface-variant truncate">ID: #{session.user.id.substring(0, 6)}</p>
+                <p className="text-[10px] text-on-surface-variant truncate">ID: #{session.user.id}</p>
               </div>
             </div>
             <button
