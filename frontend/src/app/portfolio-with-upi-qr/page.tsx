@@ -69,6 +69,46 @@ const navItems = [
   { id: "settings", label: "Settings", icon: "settings" }
 ] as const;
 
+const getHeaderLines = (view: View) => {
+  switch (view) {
+    case "dashboard":
+      return { line1: "Dashboard", line2: "Overview" };
+    case "expenses":
+      return { line1: "Expenses", line2: "Overview" };
+    case "budgets":
+      return { line1: "Budget", line2: "Planner" };
+    case "goals":
+      return { line1: "Savings", line2: "Goals" };
+    case "investments":
+      return { line1: "Investments", line2: "Overview" };
+    case "mutual-funds":
+      return { line1: "Mutual Funds", line2: "Overview" };
+    case "sip-setup":
+      return { line1: "SIP Setup", line2: "Overview" };
+    case "credit":
+      return { line1: "Credit", line2: "Engine" };
+    case "insurance":
+      return { line1: "Insurance", line2: "Hub" };
+    case "merchant-khata":
+      return { line1: "Merchant", line2: "Khata" };
+    case "rewards":
+      return { line1: "Rewards", line2: "Offers" };
+    case "reports":
+      return { line1: "Reports", line2: "Charts" };
+    case "settings":
+      return { line1: "System", line2: "Settings" };
+    case "ai-advisor":
+      return { line1: "AI Advisor", line2: "Chat" };
+    case "utilities":
+      return { line1: "Utilities", line2: "Hub" };
+    case "features":
+      return { line1: "Features", line2: "Explorer" };
+    case "pricing":
+      return { line1: "Premium", line2: "Tiers" };
+    default:
+      return { line1: "Dashboard", line2: "Overview" };
+  }
+};
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null);
@@ -245,6 +285,8 @@ export default function Home() {
     fontSize: `${Math.max(10, Math.min(18, 11 * scale))}px`,
   };
 
+  const headerLines = getHeaderLines(view);
+
   return (
     <main className="min-h-screen bg-background text-on-background selection:bg-primary/30">
       
@@ -262,8 +304,8 @@ export default function Home() {
         <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <div className="flex flex-col">
             <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">FinSphere AI |</span>
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">Dashboard</span>
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">Overview</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line1}</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line2}</span>
           </div>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
