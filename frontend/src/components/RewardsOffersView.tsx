@@ -157,11 +157,19 @@ export default function RewardsOffersView() {
             </div>
           </div>
           <div className="flex gap-4">
-            <button className="px-5 py-2.5 bg-primary text-background font-bold text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 shadow-lg shadow-primary/10">
+            <button onClick={() => {
+              if (fscCoins < 10000) {
+                alert("Redemption requires at least 10,000 FSC!");
+                return;
+              }
+              setFscCoins(prev => prev - 10000);
+              setClaimedCashback(prev => prev + 100);
+              alert("FSC Coin Redemption Successful! Converted 10,000 FSC to $100.00 Cashback balance credit.");
+            }} className="px-5 py-2.5 bg-primary text-background font-bold text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 shadow-lg shadow-primary/10">
               <span className="material-symbols-outlined text-sm font-bold">redeem</span>
               Redeem for Assets
             </button>
-            <button className="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-on-surface font-semibold text-xs rounded-xl transition-all">
+            <button onClick={() => alert("FSC Valuation Trend: Coins valuation has increased by +12.4% this quarter, backed by partner sponsorship liquidity.")} className="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-on-surface font-semibold text-xs rounded-xl transition-all">
               View Valuation Trends
             </button>
           </div>

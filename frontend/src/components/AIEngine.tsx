@@ -15,6 +15,30 @@ export default function AIEngine() {
   const [latency, setLatency] = useState(14);
   const [synapseLoad, setSynapseLoad] = useState(42);
   const [harvesterSaving, setHarvesterSaving] = useState(4120);
+  const [forecastRange, setForecastRange] = useState<5 | 10>(5);
+
+  const forecastData5 = [
+    { year: 2024, height: "40%", fillHeight: "50%" },
+    { year: 2025, height: "55%", fillHeight: "60%" },
+    { year: 2026, height: "70%", fillHeight: "70%" },
+    { year: 2027, height: "85%", fillHeight: "80%" },
+    { year: 2028, height: "98%", fillHeight: "100%" },
+  ];
+
+  const forecastData10 = [
+    { year: 2024, height: "35%", fillHeight: "45%" },
+    { year: 2025, height: "42%", fillHeight: "50%" },
+    { year: 2026, height: "49%", fillHeight: "55%" },
+    { year: 2027, height: "56%", fillHeight: "60%" },
+    { year: 2028, height: "63%", fillHeight: "65%" },
+    { year: 2029, height: "70%", fillHeight: "70%" },
+    { year: 2030, height: "77%", fillHeight: "75%" },
+    { year: 2031, height: "84%", fillHeight: "80%" },
+    { year: 2032, height: "91%", fillHeight: "85%" },
+    { year: 2033, height: "98%", fillHeight: "95%" },
+  ];
+
+  const currentForecast = forecastRange === 5 ? forecastData5 : forecastData10;
 
   const [processes] = useState<Process[]>([
     { id: "1", name: "Scraping SEC Filings", status: "ONGOING", active: true },
@@ -177,9 +201,13 @@ export default function AIEngine() {
                 <h3 className="font-headline-sm text-lg font-bold text-white">Predictive Forecasting</h3>
                 <p className="text-xs text-on-surface-variant mt-0.5">Wealth projection based on current spending velocity</p>
               </div>
-              <select className="bg-surface-container border border-white/10 rounded-xl text-xs px-3 py-1.5 text-on-surface outline-none cursor-pointer">
-                <option>Next 5 Years</option>
-                <option>Next 10 Years</option>
+              <select
+                value={forecastRange}
+                onChange={(e) => setForecastRange(Number(e.target.value) as 5 | 10)}
+                className="bg-surface-container border border-white/10 rounded-xl text-xs px-3 py-1.5 text-on-surface outline-none cursor-pointer focus:ring-1 focus:ring-primary/45"
+              >
+                <option value={5}>Next 5 Years</option>
+                <option value={10}>Next 10 Years</option>
               </select>
             </div>
 
@@ -187,10 +215,11 @@ export default function AIEngine() {
               {/* Projection Line (SVG Overlay) */}
               <svg className="absolute inset-0 w-full h-[80%] pointer-events-none z-10" preserveAspectRatio="none">
                 <motion.path
+                  key={forecastRange}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 2, ease: "easeOut" }}
-                  d="M 50 180 Q 200 130 400 80 T 800 20"
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  d={forecastRange === 5 ? "M 50 160 Q 250 115 500 70 T 950 20" : "M 25 180 Q 250 135 500 90 T 975 25"}
                   fill="none"
                   stroke="#00C896"
                   strokeWidth="2"
@@ -198,35 +227,21 @@ export default function AIEngine() {
                 />
               </svg>
 
-              {/* Bar 1 */}
-              <div className="w-full h-[40%] bg-primary/5 rounded-t-xl relative group border-t border-x border-white/5 flex flex-col justify-end">
-                <div className="absolute inset-x-0 bottom-0 bg-primary/20 h-[50%] rounded-t-xl group-hover:bg-primary/40 transition-all duration-300"></div>
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-on-surface-variant">2024</span>
-              </div>
-
-              {/* Bar 2 */}
-              <div className="w-full h-[55%] bg-primary/5 rounded-t-xl relative group border-t border-x border-white/5 flex flex-col justify-end">
-                <div className="absolute inset-x-0 bottom-0 bg-primary/20 h-[60%] rounded-t-xl group-hover:bg-primary/40 transition-all duration-300"></div>
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-on-surface-variant">2025</span>
-              </div>
-
-              {/* Bar 3 */}
-              <div className="w-full h-[70%] bg-primary/5 rounded-t-xl relative group border-t border-x border-white/5 flex flex-col justify-end">
-                <div className="absolute inset-x-0 bottom-0 bg-primary/20 h-[70%] rounded-t-xl group-hover:bg-primary/40 transition-all duration-300"></div>
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-on-surface-variant">2026</span>
-              </div>
-
-              {/* Bar 4 */}
-              <div className="w-full h-[85%] bg-primary/5 rounded-t-xl relative group border-t border-x border-white/5 flex flex-col justify-end">
-                <div className="absolute inset-x-0 bottom-0 bg-primary/20 h-[80%] rounded-t-xl group-hover:bg-primary/40 transition-all duration-300"></div>
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-on-surface-variant">2027</span>
-              </div>
-
-              {/* Bar 5 */}
-              <div className="w-full h-[98%] bg-primary/5 rounded-t-xl relative group border-t border-x border-white/5 flex flex-col justify-end">
-                <div className="absolute inset-x-0 bottom-0 bg-primary/25 h-full rounded-t-xl group-hover:bg-primary/40 transition-all duration-300"></div>
-                <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-on-surface-variant">2028</span>
-              </div>
+              {currentForecast.map((bar) => (
+                <div
+                  key={bar.year}
+                  style={{ height: bar.height }}
+                  className="w-full bg-primary/5 rounded-t-xl relative group border-t border-x border-white/5 flex flex-col justify-end transition-all duration-500"
+                >
+                  <div
+                    style={{ height: bar.fillHeight }}
+                    className="absolute inset-x-0 bottom-0 bg-primary/20 rounded-t-xl group-hover:bg-primary/40 transition-all duration-300"
+                  ></div>
+                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] font-bold text-on-surface-variant">
+                    {bar.year}
+                  </span>
+                </div>
+              ))}
 
             </div>
           </div>

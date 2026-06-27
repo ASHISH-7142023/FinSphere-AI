@@ -87,6 +87,7 @@ export default function Home() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
 
   useEffect(() => {
@@ -398,8 +399,48 @@ export default function Home() {
             <div className="relative w-full max-w-md hidden md:block">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
               <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const q = searchQuery.toLowerCase().trim();
+                    if (!q) return;
+                    if (q.includes("credit") || q.includes("score")) {
+                      setView("credit");
+                    } else if (q.includes("invest") || q.includes("stock") || q.includes("asset")) {
+                      setView("investments");
+                    } else if (q.includes("mutual")) {
+                      setView("mutual-funds");
+                    } else if (q.includes("sip")) {
+                      setView("sip-setup");
+                    } else if (q.includes("chat") || q.includes("advisor") || q.includes("ai")) {
+                      setView("ai-advisor");
+                    } else if (q.includes("bill") || q.includes("utility") || q.includes("pay")) {
+                      setView("utilities");
+                    } else if (q.includes("budget")) {
+                      setView("budgets");
+                    } else if (q.includes("expense") || q.includes("spend") || q.includes("transaction")) {
+                      setView("expenses");
+                    } else if (q.includes("goal") || q.includes("save")) {
+                      setView("goals");
+                    } else if (q.includes("report") || q.includes("chart")) {
+                      setView("reports");
+                    } else if (q.includes("insurance")) {
+                      setView("insurance");
+                    } else if (q.includes("khata") || q.includes("merchant")) {
+                      setView("merchant-khata");
+                    } else if (q.includes("reward") || q.includes("offer")) {
+                      setView("rewards");
+                    } else if (q.includes("demo")) {
+                      setView("demo");
+                    } else {
+                      alert(`Search results for "${searchQuery}": No direct feature match. Try searching 'credit', 'budget', 'advisor', 'utilities', 'mutual funds', or 'expenses'.`);
+                    }
+                    setSearchQuery("");
+                  }
+                }}
                 className="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50"
-                placeholder="Search financial assets..."
+                placeholder="Search features (e.g. credit, advisor, bills)..."
                 type="text"
               />
             </div>

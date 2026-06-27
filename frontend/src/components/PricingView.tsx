@@ -241,7 +241,7 @@ export default function PricingView() {
           <p className="text-on-surface-variant text-sm leading-relaxed">
             Have specific business requirements or customized capital deployments? Our private banking team is available for custom setups.
           </p>
-          <div className="glass-card p-6 rounded-2xl flex items-center gap-4">
+          <div onClick={() => alert("Personal Support: Feel free to schedule a direct consult call with our HNW specialist at support@finsphere.ai.")} className="glass-card p-6 rounded-2xl flex items-center gap-4 cursor-pointer hover:border-primary/30 transition-all">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
               <span className="material-symbols-outlined text-2xl">support_agent</span>
             </div>

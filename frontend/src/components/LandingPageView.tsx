@@ -15,6 +15,23 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
   const [authModal, setAuthModal] = useState<"login" | "register" | "forgot" | "verify" | "reset" | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["home", "features", "ai-engine", "pricing"];
+      const scrollPos = window.scrollY + 200;
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el && scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+          setActiveSection(section);
+          break;
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // OTP inputs state
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -84,10 +101,10 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
           <span className="font-headline-md text-lg font-extrabold text-primary tracking-tight">FinSphere AI</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold">
-          <a className="text-primary border-b-2 border-primary pb-1" href="#home">Home</a>
-          <a className="text-on-surface-variant hover:text-primary transition-colors" href="#features">Features</a>
-          <a className="text-on-surface-variant hover:text-primary transition-colors" href="#ai-engine">AI Engine</a>
-          <a className="text-on-surface-variant hover:text-primary transition-colors" href="#pricing">Pricing</a>
+          <a className={activeSection === "home" ? "text-primary border-b-2 border-primary pb-1" : "text-on-surface-variant hover:text-primary transition-colors"} href="#home">Home</a>
+          <a className={activeSection === "features" ? "text-primary border-b-2 border-primary pb-1" : "text-on-surface-variant hover:text-primary transition-colors"} href="#features">Features</a>
+          <a className={activeSection === "ai-engine" ? "text-primary border-b-2 border-primary pb-1" : "text-on-surface-variant hover:text-primary transition-colors"} href="#ai-engine">AI Engine</a>
+          <a className={activeSection === "pricing" ? "text-primary border-b-2 border-primary pb-1" : "text-on-surface-variant hover:text-primary transition-colors"} href="#pricing">Pricing</a>
         </nav>
         <div className="flex items-center gap-4">
           <button 
@@ -122,7 +139,10 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
                 Get Started
                 <span className="material-symbols-outlined text-base">arrow_forward</span>
               </button>
-              <button className="glass-card hover:bg-white/10 text-white px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95">
+              <button 
+                onClick={() => router.push("/watch-demo")}
+                className="glass-card hover:bg-white/10 text-white px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95"
+              >
                 <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
                 Watch Demo
               </button>
@@ -197,15 +217,15 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
             </p>
           </div>
           <div className="flex gap-4">
-            <a className="p-2.5 rounded-full glass-card hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center" href="#"><span className="material-symbols-outlined text-base">public</span></a>
-            <a className="p-2.5 rounded-full glass-card hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center" href="#"><span className="material-symbols-outlined text-base">alternate_email</span></a>
+            <a className="p-2.5 rounded-full glass-card hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center" href="https://github.com/ASHISH-7142023/FinSphere-AI" target="_blank" rel="noopener noreferrer"><span className="material-symbols-outlined text-base">public</span></a>
+            <a className="p-2.5 rounded-full glass-card hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center" href="mailto:support@finsphere.ai"><span className="material-symbols-outlined text-base">alternate_email</span></a>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-on-surface-variant">
           <p>© 2026 FinSphere AI. All rights reserved.</p>
           <div className="flex gap-6">
-            <a className="hover:text-on-surface" href="#">Privacy Policy</a>
-            <a className="hover:text-on-surface" href="#">Terms of Service</a>
+            <a className="hover:text-on-surface cursor-pointer" onClick={(e) => { e.preventDefault(); alert("Privacy Policy: All FinSphere AI sessions, simulated accounts, and database integrations are processed client-side. No sensitive credentials or credit score parameters are permanently stored or shared."); }}>Privacy Policy</a>
+            <a className="hover:text-on-surface cursor-pointer" onClick={(e) => { e.preventDefault(); alert("Terms of Service: This sandbox platform simulates artificial intelligence credit modeling and asset trading for demo purposes. Users assume full responsibility for inputting mock parameters."); }}>Terms of Service</a>
           </div>
         </div>
       </footer>

@@ -190,7 +190,10 @@ export default function CreditCardBillCenter() {
                   Your current spending on HDFC Regalia earns 2x reward points. Swapping to AMEX for groceries could net up to <strong className="text-primary font-bold">5x points</strong>.
                 </p>
               </div>
-              <button className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl text-white text-xs font-bold transition-all">
+              <button
+                onClick={() => alert("FinSphere AI Optimization Strategy:\n- Grocery transactions: swap HDFC Regalia for AMEX (earns 5x points, equivalent to 5% return).\n- Flights & luxury travel: continue using HDFC Regalia (earns 4x multiplier + Lounge vouchers).\n- Local utility bills: route via SBI Cashback card to secure direct 5% cash back statement credits.")}
+                className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl text-white text-xs font-bold transition-all"
+              >
                 View Optimization Strategy
               </button>
             </div>

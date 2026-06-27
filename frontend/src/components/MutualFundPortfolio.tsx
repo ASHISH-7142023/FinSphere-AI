@@ -149,7 +149,7 @@ export default function MutualFundPortfolio() {
       <div className="glass-card rounded-3xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="font-headline-md text-lg font-bold text-on-surface">Top Performing Funds</h3>
-          <button className="text-primary font-label-md text-xs hover:underline font-semibold">View All Holdings</button>
+          <button onClick={() => alert("Full Mutual Fund Holdings List:\n1. Vanguard S&P 500 Index ($148,200)\n2. Fidelity Blue Chip Growth ($112,400)\n3. PIMCO Income Fund ($54,100)\n4. Schwab International Index ($48,900)\n5. BlackRock Short-Term Bond ($25,000)")} className="text-primary font-label-md text-xs hover:underline font-semibold">View All Holdings</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -264,7 +264,7 @@ export default function MutualFundPortfolio() {
                 <span className="px-2.5 py-0.5 bg-white/5 rounded-lg text-[10px] text-on-surface-variant font-medium">High Risk</span>
                 <span className="px-2.5 py-0.5 bg-white/5 rounded-lg text-[10px] text-on-surface-variant font-medium">Thematic</span>
               </div>
-              <button className="w-full py-2.5 bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 hover:border-primary rounded-xl font-bold transition-all text-xs">
+              <button onClick={() => alert("Green Energy Index: High-conviction focus on clean hydrogen production, offshore wind farms, and lithium recycling. Recommended SIP holding period: 3+ years.")} className="w-full py-2.5 bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 hover:border-primary rounded-xl font-bold transition-all text-xs">
                 Learn More
               </button>
             </div>
@@ -292,7 +292,7 @@ export default function MutualFundPortfolio() {
                 <span className="px-2.5 py-0.5 bg-white/5 rounded-lg text-[10px] text-on-surface-variant font-medium">Aggressive</span>
                 <span className="px-2.5 py-0.5 bg-white/5 rounded-lg text-[10px] text-on-surface-variant font-medium">Tech</span>
               </div>
-              <button className="w-full py-2.5 bg-primary text-on-primary hover:brightness-110 rounded-xl font-bold transition-all text-xs shadow-md shadow-primary/20">
+              <button onClick={() => alert("NextGen AI Tech Fund: Concentrated positions in ASML, Nvidia, TSMC, and emerging LLM infrastructure startups. Expected volatility: High.")} className="w-full py-2.5 bg-primary text-on-primary hover:brightness-110 rounded-xl font-bold transition-all text-xs shadow-md shadow-primary/20">
                 Learn More
               </button>
             </div>
@@ -320,7 +320,7 @@ export default function MutualFundPortfolio() {
                 <span className="px-2.5 py-0.5 bg-white/5 rounded-lg text-[10px] text-on-surface-variant font-medium">Low Risk</span>
                 <span className="px-2.5 py-0.5 bg-white/5 rounded-lg text-[10px] text-on-surface-variant font-medium">Income</span>
               </div>
-              <button className="w-full py-2.5 bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 hover:border-primary rounded-xl font-bold transition-all text-xs">
+              <button onClick={() => alert("Urban REIT Advantage Fund: Core real estate trust owning premium Class-A commercial towers. Strong hedge against inflation with recurring monthly rental yields.")} className="w-full py-2.5 bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 hover:border-primary rounded-xl font-bold transition-all text-xs">
                 Learn More
               </button>
             </div>

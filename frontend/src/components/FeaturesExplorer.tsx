@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function FeaturesExplorer() {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   return (
@@ -21,11 +23,14 @@ export default function FeaturesExplorer() {
           Sophisticated tools integrated into a singular glass interface, designed for speed and clarity. Explore the neural engine powering your financial future.
         </p>
         <div className="flex items-center justify-center gap-4">
-          <button className="bg-primary text-on-primary px-6 py-3.5 rounded-xl font-bold hover:brightness-110 transition-all flex items-center gap-2 shadow-lg shadow-primary/20 text-xs">
+          <button onClick={() => router.push("/login?signup=true")} className="bg-primary text-on-primary px-6 py-3.5 rounded-xl font-bold hover:brightness-110 transition-all flex items-center gap-2 shadow-lg shadow-primary/20 text-xs">
             <span>Get Started</span>
             <span className="material-symbols-outlined text-sm">trending_flat</span>
           </button>
-          <button className="glass-card px-6 py-3.5 rounded-xl font-bold hover:bg-white/5 transition-all flex items-center gap-2 text-xs text-white">
+          <button onClick={() => {
+            const el = document.getElementById("ai-engine");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }} className="glass-card px-6 py-3.5 rounded-xl font-bold hover:bg-white/5 transition-all flex items-center gap-2 text-xs text-white">
             <span>View Live Performance</span>
             <span className="material-symbols-outlined text-primary text-sm">insights</span>
           </button>
@@ -185,10 +190,10 @@ export default function FeaturesExplorer() {
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 blur-[100px] rounded-full"></div>
         <h2 className="text-2xl md:text-3xl font-bold mb-6 text-white">Ready to Transcend Traditional Finance?</h2>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="bg-primary text-on-primary px-8 py-3.5 rounded-xl font-bold hover:brightness-110 transition-all text-xs w-full sm:w-auto">
+          <button onClick={() => router.push("/login?signup=true")} className="bg-primary text-on-primary px-8 py-3.5 rounded-xl font-bold hover:brightness-110 transition-all text-xs w-full sm:w-auto">
             Open Premium Account
           </button>
-          <button className="px-8 py-3.5 border border-white/10 rounded-xl font-bold hover:bg-white/5 transition-all text-xs text-white w-full sm:w-auto">
+          <button onClick={() => alert("Partner Support: Drop a query to partners@finsphere.ai. Our team will get back to you within 24 hours.")} className="px-8 py-3.5 border border-white/10 rounded-xl font-bold hover:bg-white/5 transition-all text-xs text-white w-full sm:w-auto">
             Talk to a Partner
           </button>
         </div>
