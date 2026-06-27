@@ -63,8 +63,7 @@ const navItems = [
   { id: "insurance", label: "Insurance Hub", icon: "shield" },
   { id: "merchant-khata", label: "Merchant Khata", icon: "receipt_long" },
   { id: "rewards", label: "Rewards & Offers", icon: "military_tech" },
-  { id: "reports", label: "Reports", icon: "bar_chart_4_bars" },
-  { id: "demo", label: "Product Demo", icon: "play_circle" }
+  { id: "reports", label: "Reports", icon: "bar_chart_4_bars" }
 ] as const;
 
 
