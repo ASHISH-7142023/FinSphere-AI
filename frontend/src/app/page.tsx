@@ -61,8 +61,6 @@ const navItems = [
   { id: "sip-setup", label: "SIP Setup", icon: "toll" },
   { id: "credit", label: "Credit Engine", icon: "credit_score" },
   { id: "credit-simulator", label: "Credit Simulator", icon: "speed" },
-  { id: "features", label: "Features Explorer", icon: "explore" },
-  { id: "pricing", label: "Premium Tiers", icon: "workspace_premium" },
   { id: "insurance", label: "Insurance Hub", icon: "shield" },
   { id: "merchant-khata", label: "Merchant Khata", icon: "receipt_long" },
   { id: "rewards", label: "Rewards & Offers", icon: "military_tech" },
@@ -88,6 +86,34 @@ export default function Home() {
   const [activeModal, setActiveModal] = useState<"expense" | "budget" | "goal" | "investment" | null>(null);
   const [utilityTab, setUtilityTab] = useState<"mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" | "upi-qr">("mobile");
 
+  const [sidebarWidth, setSidebarWidth] = useState(256);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResizing = (mouseDownEvent: React.MouseEvent) => {
+    mouseDownEvent.preventDefault();
+    setIsResizing(true);
+  };
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const newWidth = Math.max(200, Math.min(450, e.clientX));
+      setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
 
   useEffect(() => {
     const raw = localStorage.getItem("finsphere.session");
@@ -187,6 +213,22 @@ export default function Home() {
     await refreshAll();
   };
 
+  const scale = sidebarWidth / 256;
+  const buttonStyle = {
+    padding: `${Math.max(6, Math.min(18, 12 * scale))}px ${Math.max(8, Math.min(24, 16 * scale))}px`,
+    fontSize: `${Math.max(10, Math.min(18, 12 * scale))}px`,
+    gap: `${Math.max(6, Math.min(16, 12 * scale))}px`,
+  };
+  const iconStyle = {
+    fontSize: `${Math.max(16, Math.min(28, 20 * scale))}px`,
+  };
+  const titleStyle = {
+    fontSize: `${Math.max(16, Math.min(32, 24 * scale))}px`,
+  };
+  const subtitleStyle = {
+    fontSize: `${Math.max(8, Math.min(14, 10 * scale))}px`,
+  };
+
   return (
     <main className="min-h-screen bg-background text-on-background selection:bg-primary/30">
       
@@ -197,16 +239,27 @@ export default function Home() {
       </div>
 
       {/* Side Navigation Bar */}
-      <aside className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 w-64 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] custom-scrollbar">
-        <div className="mb-10 px-2">
+      <aside 
+        style={{ width: `${sidebarWidth}px` }}
+        className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] custom-scrollbar select-none"
+      >
+        {/* Drag handle grabber line */}
+        <div
+          onMouseDown={startResizing}
+          className="absolute right-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-primary/50 bg-white/5 hover:w-2 transition-all z-[100] group/handle flex items-center justify-center"
+        >
+          <div className="w-[1px] h-8 bg-white/20 group-hover/handle:bg-white/60 rounded"></div>
+        </div>
+
+        <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <div className="flex flex-col">
-            <span className="text-2xl font-extrabold font-heading text-primary tracking-tight leading-tight">FinSphere AI |</span>
-            <span className="text-2xl font-extrabold font-heading text-primary tracking-tight leading-tight">Dashboard</span>
-            <span className="text-2xl font-extrabold font-heading text-primary tracking-tight leading-tight">Overview</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">FinSphere AI |</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">Dashboard</span>
+            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-tight transition-all">Overview</span>
           </div>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-            <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Elite Tier</span>
+            <span style={subtitleStyle} className="font-semibold uppercase tracking-widest text-on-surface-variant">Elite Tier</span>
           </div>
         </div>
         
@@ -217,16 +270,17 @@ export default function Home() {
               <button
                 key={item.id}
                 onClick={() => setView(item.id)}
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all ${
+                style={buttonStyle}
+                className={`flex w-full items-center rounded-xl text-left transition-all ${
                   isActive
                     ? "bg-primary-container text-on-primary-container font-bold shadow-lg shadow-primary/10 scale-[0.98]"
                     : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
                 }`}
               >
-                <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0", ...iconStyle }}>
                   {item.icon}
                 </span>
-                <span className="font-label-md text-label-md">{item.label}</span>
+                <span className="font-semibold">{item.label}</span>
               </button>
             );
           })}
@@ -292,10 +346,10 @@ export default function Home() {
       </aside>
 
       {/* Main Container */}
-      <section className="lg:ml-64 min-h-screen relative z-10 flex flex-col">
+      <section style={{ marginLeft: `${sidebarWidth}px` }} className="min-h-screen relative z-10 flex flex-col transition-none">
         
         {/* TopNavBar */}
-        <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25">
+        <header style={{ left: `${sidebarWidth}px` }} className="fixed top-0 right-0 z-50 flex justify-between items-center px-6 h-16 bg-surface/40 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/25 transition-none">
           <div className="flex items-center gap-4 flex-1">
             <div className="relative w-full max-w-md hidden md:block">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
