@@ -47,7 +47,7 @@ model Expense {
   id          String          @id @default(uuid())
   userId      String
   amount      Decimal
-  category    ExpenseCategory
+  category    String
   description String
   date        DateTime
   createdAt   DateTime        @default(now())
@@ -61,7 +61,7 @@ model Expense {
 model Budget {
   id          String          @id @default(uuid())
   userId      String
-  category    ExpenseCategory
+  category    String
   limitAmount Decimal
   month       String
   createdAt   DateTime        @default(now())
