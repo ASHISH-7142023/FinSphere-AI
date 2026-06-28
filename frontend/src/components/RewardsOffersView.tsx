@@ -37,11 +37,11 @@ export default function RewardsOffersView() {
     {
       id: "2",
       title: "Neural Hardware Pro",
-      desc: "Exclusive early access and $500 off the new FinSphere Workstation.",
+      desc: "Exclusive early access and ₹40,000 off the new FinSphere Workstation.",
       category: "Tech Elite",
       badgeColor: "text-tertiary bg-tertiary/20 border-tertiary/40",
       valLabel: "Savings",
-      value: "$500",
+      value: "₹40,000",
       bgUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBzHaQxPKf9DDexnSMrClYr4kze2RtdJ7ntP8QmznpwGOSxLsZuBgukJxh9I7_LXIMWhAfOOT3eKpVqqBw6cME1Y6xF8ei-lXOGqqvjlmaZUl0_MMuhEs7q2LLG8bjKFexlZ_-5rRpPkv9WiqeR3ZukKZMJgPl4wjVm9TUtvu-wyxi80Gwq2TWBeEjUD6OxNWQ60cVwSm5d0lC25HcsdmuCKc3e721ri5Ncrn_gIzkPaEoEpagFNVJGuesQw6FvRQAIm-jMGEHsCIID",
       claimed: false,
     },
@@ -59,7 +59,7 @@ export default function RewardsOffersView() {
   ]);
 
   const [activities, setActivities] = useState([
-    { title: "Michelin Dining Credit", type: "Cashback", val: "+$200.00", time: "Claimed 2 days ago", icon: "restaurant", color: "text-primary bg-primary/10" },
+    { title: "Michelin Dining Credit", type: "Cashback", val: "+₹16,000.00", time: "Claimed 2 days ago", icon: "restaurant", color: "text-primary bg-primary/10" },
     { title: "FSC Conversion", type: "Redeemed", val: "-5,000 FSC", time: "Oct 12, 2023", icon: "toll", color: "text-tertiary bg-tertiary/10" },
     { title: "First Class Upgrade", type: "Applied", val: "Verified", time: "Oct 05, 2023", icon: "flight_takeoff", color: "text-secondary bg-secondary/10" },
   ]);
@@ -111,7 +111,7 @@ export default function RewardsOffersView() {
       {
         title: "AI Optimization Sweep",
         type: "Cashback Swap",
-        val: "+$450.00",
+        val: "+₹37,000.00",
         time: "Just now",
         icon: "auto_awesome",
         color: "text-primary bg-primary/10",
@@ -164,7 +164,7 @@ export default function RewardsOffersView() {
               }
               setFscCoins(prev => prev - 10000);
               setClaimedCashback(prev => prev + 100);
-              alert("FSC Coin Redemption Successful! Converted 10,000 FSC to $100.00 Cashback balance credit.");
+              alert("FSC Coin Redemption Successful! Converted 10,000 FSC to ₹8,000.00 Cashback balance credit.");
             }} className="px-5 py-2.5 bg-primary text-background font-bold text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 shadow-lg shadow-primary/10">
               <span className="material-symbols-outlined text-sm font-bold">redeem</span>
               Redeem for Assets
@@ -302,7 +302,7 @@ export default function RewardsOffersView() {
               </div>
               <div className="flex justify-between items-center p-2.5 bg-white/5 rounded-lg">
                 <span className="text-on-surface-variant">Projected Cashback Profit</span>
-                <span className="text-tertiary font-bold">+$450.00 Saved</span>
+                <span className="text-tertiary font-bold">+₹37,000 Saved</span>
               </div>
             </div>
           </div>

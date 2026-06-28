@@ -17,15 +17,25 @@ interface Policy {
 }
 
 export default function InsuranceHubView() {
+  const [session] = useState(() => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("finsphere.session");
+      if (raw) return JSON.parse(raw);
+    }
+    return null;
+  });
+
+  const income = session?.user?.monthlyIncome || 150000;
+
   const [policies, setPolicies] = useState<Policy[]>([
     {
       id: "1",
       title: "Global Elite Health Plan",
       provider: "BlueShield Prestige",
-      premium: 1240,
+      premium: Math.round(income * 0.00826), // e.g. 1240 for 150000 salary
       policyNo: "FS-HL-88291",
       renewalDate: "2026-10-14",
-      deductible: 500,
+      deductible: Math.round(income * 0.0033), // e.g. 500 for 150000 salary
       type: "Health",
       status: "Active",
       bgUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuDO2FaJfvGpOekFmomir5p4x0E5ckM30273TKxvOZ0dR-h_ckiZ3iLPjMa0gHu-efQJrkqp--G3KxSyD38ZNVJDF2StNkq38yGDnOgU2Ib0Qqr5Otqk6jWaTaZYF8ChVVgQoB73vsVhB2ija4ejZoV3MWoXrX-JoToEdf-G4rd0BsQIjL-SQWAYPHxIF2VqXvASjs8qEF_so1ccYyeNp-K0muIqsoDeOliTWBhlllpQ9ogbxhY7cge8Ul7JZcxOsjIoJyyLFEnYBbYP",
@@ -34,7 +44,7 @@ export default function InsuranceHubView() {
       id: "2",
       title: "Prestige Term Life Shield",
       provider: "MetLife Prime",
-      premium: 620,
+      premium: Math.round(income * 0.00413), // e.g. 620 for 150000 salary
       policyNo: "FS-LF-77289",
       renewalDate: "2026-11-20",
       deductible: 0,
@@ -47,7 +57,7 @@ export default function InsuranceHubView() {
   const [activeTab, setActiveTab] = useState<"all" | "Health" | "Life" | "Motor">("all");
   const [calculatorState, setCalculatorState] = useState({
     type: "Health" as "Health" | "Life" | "Motor",
-    coverAmount: 5000000, // ₹50L
+    coverAmount: Math.round(income * 33.33), // e.g. 5000000 (50L) for 150000 salary
     age: 28,
     smoker: false,
   });

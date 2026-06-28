@@ -23,7 +23,7 @@ export default function MutualFundPortfolio() {
         <div className="flex gap-4">
           <div className="glass-card px-6 py-3 rounded-2xl flex flex-col justify-center">
             <span className="font-label-sm text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Portfolio Value</span>
-            <span className="font-headline-lg text-2xl font-bold text-on-surface mt-0.5">$482,904.50</span>
+            <span className="font-headline-lg text-2xl font-bold text-on-surface mt-0.5">₹4,82,904.50</span>
           </div>
           <div className="glass-card px-6 py-3 rounded-2xl flex flex-col justify-center border border-primary/20">
             <span className="font-label-sm text-primary text-[11px] uppercase tracking-wider font-semibold">Current XIRR</span>
@@ -123,7 +123,7 @@ export default function MutualFundPortfolio() {
             <div className="text-center md:text-left mb-4 md:mb-0">
               <div className="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Action Recommended</div>
               <div className={`font-headline-md text-lg font-extrabold ${isRebalanced ? "text-on-surface-variant line-through" : "text-primary"}`}>
-                Shift $24,500.00
+                Shift ₹24,500.00
               </div>
               <div className="font-label-sm text-xs text-on-surface-variant mt-0.5">From Growth to Debt Funds</div>
             </div>
@@ -149,7 +149,7 @@ export default function MutualFundPortfolio() {
       <div className="glass-card rounded-3xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="font-headline-md text-lg font-bold text-on-surface">Top Performing Funds</h3>
-          <button onClick={() => alert("Full Mutual Fund Holdings List:\n1. Vanguard S&P 500 Index ($148,200)\n2. Fidelity Blue Chip Growth ($112,400)\n3. PIMCO Income Fund ($54,100)\n4. Schwab International Index ($48,900)\n5. BlackRock Short-Term Bond ($25,000)")} className="text-primary font-label-md text-xs hover:underline font-semibold">View All Holdings</button>
+          <button onClick={() => alert("Full Mutual Fund Holdings List:\n1. Vanguard S&P 500 Index (₹1,48,200)\n2. Fidelity Blue Chip Growth (₹1,12,400)\n3. PIMCO Income Fund (₹54,100)\n4. Schwab International Index (₹48,900)\n5. BlackRock Short-Term Bond (₹25,000)")} className="text-primary font-label-md text-xs hover:underline font-semibold">View All Holdings</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -175,8 +175,8 @@ export default function MutualFundPortfolio() {
                   </div>
                 </td>
                 <td className="py-4 text-on-surface-variant">Equity</td>
-                <td className="py-4 text-on-surface">$120,000</td>
-                <td className="py-4 text-on-surface">$148,200</td>
+                <td className="py-4 text-on-surface">₹1,20,000</td>
+                <td className="py-4 text-on-surface">₹1,48,200</td>
                 <td className="py-4 text-primary font-bold">+23.5%</td>
                 <td className="py-4 text-right">
                   <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -197,8 +197,8 @@ export default function MutualFundPortfolio() {
                   </div>
                 </td>
                 <td className="py-4 text-on-surface-variant">Equity</td>
-                <td className="py-4 text-on-surface">$85,000</td>
-                <td className="py-4 text-on-surface">$112,400</td>
+                <td className="py-4 text-on-surface">₹85,000</td>
+                <td className="py-4 text-on-surface">₹1,12,400</td>
                 <td className="py-4 text-primary font-bold">+32.2%</td>
                 <td className="py-4 text-right">
                   <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -219,8 +219,8 @@ export default function MutualFundPortfolio() {
                   </div>
                 </td>
                 <td className="py-4 text-on-surface-variant">Fixed Income</td>
-                <td className="py-4 text-on-surface">$50,000</td>
-                <td className="py-4 text-on-surface">$54,100</td>
+                <td className="py-4 text-on-surface">₹50,000</td>
+                <td className="py-4 text-on-surface">₹54,100</td>
                 <td className="py-4 text-on-surface-variant font-bold">+8.2%</td>
                 <td className="py-4 text-right">
                   <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">

@@ -245,9 +245,9 @@ export default function InvestmentsView({ investments, onOpenAddModal }: Investm
                     </div>
                   </div>
                 </td>
-                <td className="py-4 font-bold text-white">$182.52</td>
-                <td className="py-4 text-primary font-bold">+$3.12 (1.8%)</td>
-                <td className="py-4 font-semibold text-primary">+$12,450.00</td>
+                <td className="py-4 font-bold text-white">₹182.52</td>
+                <td className="py-4 text-primary font-bold">+₹3.12 (1.8%)</td>
+                <td className="py-4 font-semibold text-primary">+₹12,450.00</td>
                 <td className="py-4 text-right">
                   <button className="bg-primary/10 text-primary px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-background transition-colors">
                     Buy More
@@ -269,9 +269,9 @@ export default function InvestmentsView({ investments, onOpenAddModal }: Investm
                     </div>
                   </div>
                 </td>
-                <td className="py-4 font-bold text-white">$460.18</td>
-                <td className="py-4 text-primary font-bold">+$12.45 (2.7%)</td>
-                <td className="py-4 font-semibold text-primary">+$42,100.00</td>
+                <td className="py-4 font-bold text-white">₹460.18</td>
+                <td className="py-4 text-primary font-bold">+₹12.45 (2.7%)</td>
+                <td className="py-4 font-semibold text-primary">+₹42,100.00</td>
                 <td className="py-4 text-right">
                   <button className="bg-primary/10 text-primary px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-background transition-colors">
                     Buy More

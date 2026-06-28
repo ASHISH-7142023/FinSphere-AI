@@ -2,13 +2,24 @@
 
 import React, { useState } from "react";
 
-export default function CreditCardBillCenter() {
-  const [hdfcBalance, setHdfcBalance] = useState(142850.20);
-  const [amexBalance, setAmexBalance] = useState(82100.00);
+export default function CreditCardBillCenter({ session: propSession }: { session?: any }) {
+  const [session] = useState(() => {
+    if (propSession) return propSession;
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("finsphere.session");
+      if (raw) return JSON.parse(raw);
+    }
+    return null;
+  });
+
+  const income = session?.user?.monthlyIncome || 150000;
+
+  const [hdfcBalance, setHdfcBalance] = useState(Math.round(income * 0.952)); // e.g. 142850 for 150000 salary
+  const [amexBalance, setAmexBalance] = useState(Math.round(income * 0.547)); // e.g. 82100 for 150000 salary
   const [timeline, setTimeline] = useState([
-    { id: 1, title: "HDFC Regalia Gold Bill Due", desc: "Due in 4 days", amount: 142850.20, type: "upcoming", color: "border-emerald-500" },
-    { id: 2, title: "Amex Platinum Bill Generation", desc: "Scheduled", amount: 82100.00, type: "scheduled", color: "border-white/5" },
-    { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: 12400.00, type: "settled", color: "border-white/5" },
+    { id: 1, title: "HDFC Regalia Gold Bill Due", desc: "Due in 4 days", amount: Math.round(income * 0.952), type: "upcoming", color: "border-emerald-500" },
+    { id: 2, title: "Amex Platinum Bill Generation", desc: "Scheduled", amount: Math.round(income * 0.547), type: "scheduled", color: "border-white/5" },
+    { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: Math.round(income * 0.082), type: "settled", color: "border-white/5" },
   ]);
   const [toastMsg, setToastMsg] = useState("");
 

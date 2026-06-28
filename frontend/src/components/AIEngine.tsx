@@ -50,7 +50,7 @@ export default function AIEngine() {
   const [logs, setLogs] = useState<string[]>([
     "[02:44:01] SEC scraper: Node #12 connected. Fetching Q3 balance sheets...",
     "[02:44:15] Crypto rebalancer: Tranche 3/4 execution matching Uniswap pools...",
-    "[02:44:30] Harvest engine: Tax brackets recalculated. Current savings: +$4,120",
+    "[02:44:30] Harvest engine: Tax brackets recalculated. Current savings: +₹3,40,000",
     "[02:44:48] Synapse supervisor: Resource distribution optimized. Latency at 14ms.",
     "[02:45:02] Model validator: Weights validated successfully. Drift score: 0.002",
   ]);
@@ -345,7 +345,7 @@ export default function AIEngine() {
                 Smart Insight
               </h4>
               <p className="text-xs leading-relaxed text-on-surface-variant">
-                "Based on current market volatility, transferring $2,400 to your Emerald Growth fund today could yield an additional 1.2% by EOM."
+                "Based on current market volatility, transferring ₹2,00,000 to your Emerald Growth fund today could yield an additional 1.2% by EOM."
               </p>
             </div>
 
@@ -353,7 +353,7 @@ export default function AIEngine() {
               onClick={() => {
                 setHarvesterSaving(prev => prev + 240);
                 setLogs(prev => [
-                  `[${new Date().toLocaleTimeString()}] Insight executed: Transferring $2,400 to Emerald Growth... Done.`,
+                  `[${new Date().toLocaleTimeString()}] Insight executed: Transferring ₹2,00,000 to Emerald Growth... Done.`,
                   ...prev
                 ]);
                 alert("Tactical reallocation shift executed successfully!");

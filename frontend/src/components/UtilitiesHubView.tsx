@@ -19,6 +19,16 @@ interface UtilitiesHubViewProps {
 }
 
 export default function UtilitiesHubView({ initialTab = "mobile", user }: UtilitiesHubViewProps) {
+  const [session] = useState(() => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("finsphere.session");
+      if (raw) return JSON.parse(raw);
+    }
+    return null;
+  });
+
+  const income = session?.user?.monthlyIncome || 150000;
+
   const [activeTab, setActiveTab] = useState<UtilityTab>(initialTab);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [successAmount, setSuccessAmount] = useState(0);
@@ -49,26 +59,26 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
   // Water Bill State
   const [waterProvider, setWaterProvider] = useState("Delhi Jal Board (DJB)");
   const [waterConsumerId, setWaterConsumerId] = useState("");
-  const [waterDue] = useState(2450);
+  const [waterDue] = useState(Math.round(income * 0.0163)); // e.g. 2450 for 150000 salary
   const [waterVerified, setWaterVerified] = useState(false);
   const [waterAutoPay, setWaterAutoPay] = useState(true);
 
   // Electricity State
   const [elecProvider, setElecProvider] = useState("BESCOM (Bengaluru)");
   const [elecConsumerId, setElecConsumerId] = useState("");
-  const [elecDue] = useState(4890);
+  const [elecDue] = useState(Math.round(income * 0.0326)); // e.g. 4890 for 150000 salary
   const [elecVerified, setElecVerified] = useState(false);
 
   // Mobile Recharge State
   const [mobileNumber, setMobileNumber] = useState("");
   const [mobileOperator, setMobileOperator] = useState("Jio");
   const [mobileCircle, setMobileCircle] = useState("Karnataka");
-  const [selectedPlan, setSelectedPlan] = useState<number | null>(599);
+  const [selectedPlan, setSelectedPlan] = useState<number | null>(Math.round(income * 0.00399)); // e.g. 599 for 150000 salary
 
   // DTH State
   const [dthOperator, setDthOperator] = useState("Tata Play");
   const [dthSubscriberId, setDthSubscriberId] = useState("");
-  const [dthPack, setDthPack] = useState(450);
+  const [dthPack, setDthPack] = useState(Math.round(income * 0.003)); // e.g. 450 for 150000 salary
 
   // Gas Booking State
   const [gasOperator, setGasOperator] = useState("Indane Gas");
@@ -77,7 +87,7 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
   // FASTag State
   const [vehicleNo, setVehicleNo] = useState("");
   const [fastagBank, setFastagBank] = useState("HDFC Bank");
-  const [fastagAmount, setFastagAmount] = useState(500);
+  const [fastagAmount, setFastagAmount] = useState(Math.round(income * 0.0033)); // e.g. 500 for 150000 salary
 
   const tabs: Array<{ id: UtilityTab; label: string; icon: string }> = [
     { id: "mobile", label: "Mobile Recharge", icon: "smartphone" },

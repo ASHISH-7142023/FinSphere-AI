@@ -16,6 +16,7 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
   const [name, setName] = useState(session?.user?.name || "Alex Sterling");
   const [email, setEmail] = useState(session?.user?.email || "alex.sterling@sphere.ai");
   const [phone, setPhone] = useState("+1 (555) 012-3456");
+  const [monthlyIncome, setMonthlyIncome] = useState(session?.user?.monthlyIncome || 150000);
   const [isEditingDetails, setIsEditingDetails] = useState(false);
 
   // Security toggles
@@ -51,6 +52,7 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
         ...session.user,
         name,
         email,
+        monthlyIncome: Number(monthlyIncome),
       });
     }
     setIsEditingDetails(false);
@@ -157,6 +159,10 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                 <p className="text-on-surface-variant text-xs mt-0.5 font-medium flex items-center justify-center md:justify-start gap-1.5 font-mono">
                   <span className="material-symbols-outlined text-sm">phone</span>
                   {phone}
+                </p>
+                <p className="text-on-surface-variant text-xs mt-0.5 font-medium flex items-center justify-center md:justify-start gap-1.5 font-mono">
+                  <span className="material-symbols-outlined text-sm">payments</span>
+                  Monthly Salary: ₹{Number(monthlyIncome).toLocaleString()}
                 </p>
               </div>
             </div>
@@ -346,7 +352,6 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                   You are currently on our most exclusive plan. Enjoy unlimited AI processing power, priority node access, and 24/7 concierge support.
                 </p>
               </div>
-
               <div className="flex items-center gap-4 flex-wrap">
                 <div className="flex gap-2">
                   <span className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary"><span className="material-symbols-outlined text-sm">bolt</span></span>
@@ -354,7 +359,7 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                   <span className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary"><span className="material-symbols-outlined text-sm">shield</span></span>
                 </div>
                 <span className="text-[11px] text-on-surface-variant font-semibold">
-                  Next billing date: Oct 12, 2024 ($499.00/mo)
+                  Next billing date: Oct 12, 2024 (₹499.00/mo)
                 </span>
               </div>
             </div>
@@ -371,7 +376,7 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                 </button>
                 <button
                   type="button"
-                  onClick={() => alert("Subscriptions details: Free Core, Pro ($499/mo), and Platinum Elite ($1,499/mo). Consult plans inside general pricing tab.")}
+                  onClick={() => alert("Subscriptions details: Free Core, Pro (₹499/mo), and Platinum Elite (₹1,499/mo). Consult plans inside general pricing tab.")}
                   className="px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-on-surface font-semibold text-xs rounded-xl transition-all"
                 >
                   Compare Plans
@@ -522,6 +527,16 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  className="w-full bg-[#0e1511] border border-white/10 rounded-xl px-4 py-2.5 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-on-surface-variant font-semibold">Monthly Salary (INR)</label>
+                <input
+                  type="number"
+                  value={monthlyIncome}
+                  onChange={(e) => setMonthlyIncome(Number(e.target.value))}
                   className="w-full bg-[#0e1511] border border-white/10 rounded-xl px-4 py-2.5 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                   required
                 />

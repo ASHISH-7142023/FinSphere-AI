@@ -8,6 +8,16 @@ interface CreditViewProps {
 }
 
 export default function CreditView({ token }: CreditViewProps) {
+  const [session] = useState(() => {
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem("finsphere.session");
+      if (raw) return JSON.parse(raw);
+    }
+    return null;
+  });
+
+  const income = session?.user?.monthlyIncome || 150000;
+
   const [utilization, setUtilization] = useState(24);
   const [paymentHistory, setPaymentHistory] = useState(98);
   const [creditAge, setCreditAge] = useState(6);
@@ -179,7 +189,7 @@ export default function CreditView({ token }: CreditViewProps) {
           </span>
           <h3 className="font-headline-md text-base font-bold text-white mb-2">Instant Pre-Approved Loan</h3>
           <p className="text-on-surface-variant text-xs leading-relaxed mb-6 font-medium">
-            Eligible credit limit up to ₹5,00,000
+            Eligible credit limit up to ₹{(income * 3.33).toLocaleString(undefined, { maximumFractionDigits: 0 })}
           </p>
           <div className="space-y-3 text-xs">
             <div className="flex justify-between items-center text-on-surface-variant">

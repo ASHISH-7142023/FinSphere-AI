@@ -177,7 +177,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (session) void refreshAll(session.token);
+    if (session) {
+      localStorage.setItem("finsphere.session", JSON.stringify(session));
+      void refreshAll(session.token);
+    }
   }, [session]);
 
   async function refreshAll(token = session?.token) {
