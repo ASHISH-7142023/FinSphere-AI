@@ -218,114 +218,162 @@
 </div>
 <!-- Expense List Container -->
 <div class="glass-panel rounded-xl overflow-hidden border border-outline-variant/20" id="ledger-container">
-<!-- Table Header (Desktop) -->
-<div class="hidden md:grid grid-cols-12 gap-base px-md py-sm bg-surface-container-highest/10 border-b border-outline-variant/30 text-on-surface-variant font-label-md uppercase tracking-wider">
-<div class="col-span-1">Icon</div>
-<div class="col-span-4">Item / Merchant</div>
-<div class="col-span-2">Date</div>
-<div class="col-span-2">Method</div>
-<div class="col-span-2 text-right">Amount</div>
-<div class="col-span-1 text-center">Action</div>
-</div>
-<!-- Ledger Entries -->
-<div class="divide-y divide-outline-variant/20" id="expense-list">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-body-md">
+<thead>
+<tr class="bg-surface-container-highest/10 border-b border-outline-variant/30 text-on-surface-variant font-label-md uppercase tracking-wider">
+<th class="px-md py-sm w-20 text-center">Icon</th>
+<th class="px-md py-sm text-left">Item / Merchant</th>
+<th class="px-md py-sm text-left hidden md:table-cell">Date</th>
+<th class="px-md py-sm text-left hidden md:table-cell">Method</th>
+<th class="px-md py-sm text-right">Amount</th>
+<th class="px-md py-sm text-center w-20">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20" id="expense-list">
 <!-- Entry 1 -->
-<div class="grid grid-cols-4 md:grid-cols-12 gap-base md:gap-base px-md py-md items-center hover:bg-white/5 transition-colors group">
-<div class="col-span-1 flex justify-center md:justify-start">
-<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-md py-md w-20 text-center">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container mx-auto">
 <span class="material-symbols-outlined">restaurant</span>
 </div>
+</td>
+<td class="px-md py-md text-left">
+<div class="font-headline-sm text-on-surface leading-tight">Le Bernardin</div>
+<div class="text-body-sm text-on-surface-variant mt-xs md:hidden">Fine Dining</div>
+<div class="flex items-center gap-xs mt-xs md:hidden">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">credit_card</span>
+<span class="text-body-sm text-on-surface-variant">Amex Centurion</span>
 </div>
-<div class="col-span-3 md:col-span-4">
-<div class="font-headline-sm text-on-surface">Le Bernardin</div>
-<div class="text-body-sm text-on-surface-variant">Fine Dining</div>
-</div>
-<div class="hidden md:block col-span-2 text-body-md text-on-surface-variant">Oct 12, 2023</div>
-<div class="hidden md:flex col-span-2 items-center gap-xs">
+</td>
+<td class="px-md py-md text-left text-body-md text-on-surface-variant hidden md:table-cell">Oct 12, 2023</td>
+<td class="px-md py-md text-left hidden md:table-cell">
+<div class="flex flex-col justify-center">
+<span class="text-body-md text-on-surface font-medium">Fine Dining</span>
+<div class="flex items-center gap-xs mt-xs">
 <span class="material-symbols-outlined text-sm text-on-surface-variant">credit_card</span>
 <span class="text-body-md text-on-surface-variant">Amex Centurion</span>
 </div>
-<div class="col-span-3 md:col-span-2 text-right font-display-lg text-primary-container">$842.00</div>
-<div class="col-span-1 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+</div>
+</td>
+<td class="px-md py-md text-right font-display-lg text-primary-container whitespace-nowrap">$842.00</td>
+<td class="px-md py-md w-20 text-center">
+<div class="md:opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
 <button class="p-xs rounded-full hover:bg-error/20 text-error transition-all" title="Remove Entry">
 <span class="material-symbols-outlined">delete</span>
 </button>
 </div>
-</div>
+</td>
+</tr>
 <!-- Entry 2 -->
-<div class="grid grid-cols-4 md:grid-cols-12 gap-base px-md py-md items-center hover:bg-white/5 transition-colors group">
-<div class="col-span-1 flex justify-center md:justify-start">
-<div class="w-10 h-10 rounded-lg bg-tertiary-fixed/20 flex items-center justify-center text-tertiary-fixed-dim">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-md py-md w-20 text-center">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed/20 flex items-center justify-center text-tertiary-fixed-dim mx-auto">
 <span class="material-symbols-outlined">flight_takeoff</span>
 </div>
+</td>
+<td class="px-md py-md text-left">
+<div class="font-headline-sm text-on-surface leading-tight">Emirates Airways</div>
+<div class="text-body-sm text-on-surface-variant mt-xs md:hidden">Business Travel</div>
+<div class="flex items-center gap-xs mt-xs md:hidden">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">payments</span>
+<span class="text-body-sm text-on-surface-variant">Wire Transfer</span>
 </div>
-<div class="col-span-3 md:col-span-4">
-<div class="font-headline-sm text-on-surface">Emirates Airways</div>
-<div class="text-body-sm text-on-surface-variant">Business Travel</div>
-</div>
-<div class="hidden md:block col-span-2 text-body-md text-on-surface-variant">Oct 10, 2023</div>
-<div class="hidden md:flex col-span-2 items-center gap-xs">
+</td>
+<td class="px-md py-md text-left text-body-md text-on-surface-variant hidden md:table-cell">Oct 10, 2023</td>
+<td class="px-md py-md text-left hidden md:table-cell">
+<div class="flex flex-col justify-center">
+<span class="text-body-md text-on-surface font-medium">Business Travel</span>
+<div class="flex items-center gap-xs mt-xs">
 <span class="material-symbols-outlined text-sm text-on-surface-variant">payments</span>
 <span class="text-body-md text-on-surface-variant">Wire Transfer</span>
 </div>
-<div class="col-span-3 md:col-span-2 text-right font-display-lg text-primary-container">$4,200.00</div>
-<div class="col-span-1 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-<button class="p-xs rounded-full hover:bg-error/20 text-error transition-all">
+</div>
+</td>
+<td class="px-md py-md text-right font-display-lg text-primary-container whitespace-nowrap">$4,200.00</td>
+<td class="px-md py-md w-20 text-center">
+<div class="md:opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
+<button class="p-xs rounded-full hover:bg-error/20 text-error transition-all" title="Remove Entry">
 <span class="material-symbols-outlined">delete</span>
 </button>
 </div>
-</div>
+</td>
+</tr>
 <!-- Entry 3 -->
-<div class="grid grid-cols-4 md:grid-cols-12 gap-base px-md py-md items-center hover:bg-white/5 transition-colors group">
-<div class="col-span-1 flex justify-center md:justify-start">
-<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-md py-md w-20 text-center">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container mx-auto">
 <span class="material-symbols-outlined">electric_bolt</span>
 </div>
+</td>
+<td class="px-md py-md text-left">
+<div class="font-headline-sm text-on-surface leading-tight">Tesla Supercharger</div>
+<div class="text-body-sm text-on-surface-variant mt-xs md:hidden">Automotive</div>
+<div class="flex items-center gap-xs mt-xs md:hidden">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">account_balance_wallet</span>
+<span class="text-body-sm text-on-surface-variant">Apple Pay</span>
 </div>
-<div class="col-span-3 md:col-span-4">
-<div class="font-headline-sm text-on-surface">Tesla Supercharger</div>
-<div class="text-body-sm text-on-surface-variant">Automotive</div>
-</div>
-<div class="hidden md:block col-span-2 text-body-md text-on-surface-variant">Oct 08, 2023</div>
-<div class="hidden md:flex col-span-2 items-center gap-xs">
+</td>
+<td class="px-md py-md text-left text-body-md text-on-surface-variant hidden md:table-cell">Oct 08, 2023</td>
+<td class="px-md py-md text-left hidden md:table-cell">
+<div class="flex flex-col justify-center">
+<span class="text-body-md text-on-surface font-medium">Automotive</span>
+<div class="flex items-center gap-xs mt-xs">
 <span class="material-symbols-outlined text-sm text-on-surface-variant">account_balance_wallet</span>
 <span class="text-body-md text-on-surface-variant">Apple Pay</span>
 </div>
-<div class="col-span-3 md:col-span-2 text-right font-display-lg text-primary-container">$42.50</div>
-<div class="col-span-1 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-<button class="p-xs rounded-full hover:bg-error/20 text-error transition-all">
+</div>
+</td>
+<td class="px-md py-md text-right font-display-lg text-primary-container whitespace-nowrap">$42.50</td>
+<td class="px-md py-md w-20 text-center">
+<div class="md:opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
+<button class="p-xs rounded-full hover:bg-error/20 text-error transition-all" title="Remove Entry">
 <span class="material-symbols-outlined">delete</span>
 </button>
 </div>
-</div>
+</td>
+</tr>
 <!-- Entry 4 -->
-<div class="grid grid-cols-4 md:grid-cols-12 gap-base px-md py-md items-center hover:bg-white/5 transition-colors group">
-<div class="col-span-1 flex justify-center md:justify-start">
-<div class="w-10 h-10 rounded-lg bg-secondary-fixed/20 flex items-center justify-center text-on-secondary-fixed-variant">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-md py-md w-20 text-center">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed/20 flex items-center justify-center text-on-secondary-fixed-variant mx-auto">
 <span class="material-symbols-outlined">fitness_center</span>
 </div>
+</td>
+<td class="px-md py-md text-left">
+<div class="font-headline-sm text-on-surface leading-tight">Equinox Membership</div>
+<div class="text-body-sm text-on-surface-variant mt-xs md:hidden">Wellness</div>
+<div class="flex items-center gap-xs mt-xs md:hidden">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">credit_card</span>
+<span class="text-body-sm text-on-surface-variant">Visa Infinite</span>
 </div>
-<div class="col-span-3 md:col-span-4">
-<div class="font-headline-sm text-on-surface">Equinox Membership</div>
-<div class="text-body-sm text-on-surface-variant">Wellness</div>
-</div>
-<div class="hidden md:block col-span-2 text-body-md text-on-surface-variant">Oct 01, 2023</div>
-<div class="hidden md:flex col-span-2 items-center gap-xs">
+</td>
+<td class="px-md py-md text-left text-body-md text-on-surface-variant hidden md:table-cell">Oct 01, 2023</td>
+<td class="px-md py-md text-left hidden md:table-cell">
+<div class="flex flex-col justify-center">
+<span class="text-body-md text-on-surface font-medium">Wellness</span>
+<div class="flex items-center gap-xs mt-xs">
 <span class="material-symbols-outlined text-sm text-on-surface-variant">credit_card</span>
 <span class="text-body-md text-on-surface-variant">Visa Infinite</span>
 </div>
-<div class="col-span-3 md:col-span-2 text-right font-display-lg text-primary-container">$315.00</div>
-<div class="col-span-1 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-<button class="p-xs rounded-full hover:bg-error/20 text-error transition-all">
+</div>
+</td>
+<td class="px-md py-md text-right font-display-lg text-primary-container whitespace-nowrap">$315.00</td>
+<td class="px-md py-md w-20 text-center">
+<div class="md:opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
+<button class="p-xs rounded-full hover:bg-error/20 text-error transition-all" title="Remove Entry">
 <span class="material-symbols-outlined">delete</span>
 </button>
 </div>
-</div>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <!-- Empty State Pattern (Hidden by default) -->
 <div class="hidden flex-col items-center justify-center py-xl px-md text-center space-y-md" id="empty-state">
 <div class="w-24 h-24 rounded-full bg-surface-container-highest/10 flex items-center justify-center mb-md border border-outline-variant/20">
-<span class="material-symbols-outlined text-primary-container !text-5xl opacity-40">drafts</span>
+<span class="material-symbols-outlined text-primary-container !text-5xl opacity-40">mail</span>
 </div>
 <div class="max-w-xs space-y-sm">
 <h3 class="font-headline-md text-on-surface">No entries found</h3>
@@ -394,7 +442,7 @@
         function toggleEmptyState() {
             const list = document.getElementById('expense-list');
             const empty = document.getElementById('empty-state');
-            const desktopHeader = document.querySelector('.bg-surface-container-highest\\/10');
+            const desktopHeader = document.querySelector('thead');
             
             if (list.classList.contains('hidden')) {
                 list.classList.remove('hidden');
@@ -410,14 +458,14 @@
         // Simple row deletion micro-interaction simulation
         document.querySelectorAll('button[title="Remove Entry"]').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const row = e.target.closest('.grid');
+                const row = e.target.closest('tr');
                 row.style.opacity = '0';
                 row.style.transform = 'translateX(20px)';
                 row.style.transition = 'all 0.4s ease';
                 setTimeout(() => {
                     row.remove();
                     // Check if last one removed to show empty state
-                    if (document.querySelectorAll('#expense-list > div').length === 0) {
+                    if (document.querySelectorAll('#expense-list > tr').length === 0) {
                         toggleEmptyState();
                     }
                 }, 400);

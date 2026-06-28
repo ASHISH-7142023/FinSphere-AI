@@ -152,9 +152,9 @@ export default function PersonalExpenseLedger({
             <thead>
               <tr className="bg-white/[0.02] border-b border-white/5 text-on-surface-variant text-[11px] font-bold uppercase tracking-wider">
                 <th className="px-6 py-4 w-20 text-center">Icon</th>
-                <th className="px-6 py-4">Item / Description</th>
-                <th className="px-6 py-4 hidden md:table-cell">Date</th>
-                <th className="px-6 py-4 hidden md:table-cell">Category</th>
+                <th className="px-6 py-4 text-left">Item / Description</th>
+                <th className="px-6 py-4 text-left hidden md:table-cell">Date</th>
+                <th className="px-6 py-4 text-left hidden md:table-cell">Category</th>
                 <th className="px-6 py-4 text-right">Amount</th>
                 <th className="px-6 py-4 text-center w-20">Action</th>
               </tr>
@@ -171,14 +171,14 @@ export default function PersonalExpenseLedger({
                     }`}
                   >
                     {/* Category Icon */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 w-20 text-center">
                       <div className={`w-9 h-9 rounded-lg ${config.bg} flex items-center justify-center ${config.color} mx-auto`}>
                         <span className="material-symbols-outlined text-sm">{config.icon}</span>
                       </div>
                     </td>
 
                     {/* Description & Method (Mobile details) */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 text-left">
                       <div className="font-bold text-xs text-white leading-tight">{item.description}</div>
                       <div className="flex items-center gap-1 mt-0.5 md:hidden">
                         <span className="material-symbols-outlined text-[10px] text-on-surface-variant">{config.methodIcon}</span>
@@ -187,10 +187,10 @@ export default function PersonalExpenseLedger({
                     </td>
 
                     {/* Date */}
-                    <td className="px-6 py-4 text-on-surface-variant hidden md:table-cell">{item.date}</td>
+                    <td className="px-6 py-4 text-left text-on-surface-variant hidden md:table-cell">{item.date}</td>
 
                     {/* Category & Method (Desktop details) */}
-                    <td className="px-6 py-4 hidden md:table-cell">
+                    <td className="px-6 py-4 text-left hidden md:table-cell">
                       <div className="flex flex-col justify-center gap-0.5">
                         <span className="text-xs text-white font-medium">{item.category}</span>
                         <div className="flex items-center gap-1">
@@ -206,7 +206,7 @@ export default function PersonalExpenseLedger({
                     </td>
 
                     {/* Action Delete */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 w-20 text-center">
                       <div className="md:opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
                         <button
                           onClick={() => handleDelete(item.id)}
@@ -228,7 +228,7 @@ export default function PersonalExpenseLedger({
                   <td colSpan={6} className="py-16 px-6 text-center">
                     <div className="flex flex-col items-center justify-center space-y-4">
                       <div className="w-16 h-16 rounded-full bg-white/[0.02] flex items-center justify-center border border-white/5">
-                        <span className="material-symbols-outlined text-primary text-3xl opacity-60">drafts</span>
+                        <span className="material-symbols-outlined text-primary text-3xl opacity-60">mail</span>
                       </div>
                       <div className="max-w-xs space-y-1 mx-auto">
                         <h3 className="font-headline-md text-sm font-bold text-white">No entries found</h3>
