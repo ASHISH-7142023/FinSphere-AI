@@ -10,6 +10,7 @@ interface ExpensesViewProps {
   summary: DashboardSummary | null;
   onOpenAddModal: () => void;
   onDeleteExpense: (id: string) => Promise<void>;
+  monthlySalary: number;
 }
 
 export default function ExpensesView({
@@ -17,6 +18,7 @@ export default function ExpensesView({
   summary,
   onOpenAddModal,
   onDeleteExpense,
+  monthlySalary,
 }: ExpensesViewProps) {
   const [activeSubTab, setActiveSubTab] = useState<"analysis" | "ledger">("analysis");
   const [search, setSearch] = useState("");
@@ -75,6 +77,7 @@ export default function ExpensesView({
           expenses={expenses}
           onOpenAddModal={onOpenAddModal}
           onDeleteExpense={onDeleteExpense}
+          monthlySalary={monthlySalary}
         />
       ) : (
         /* Original Expense Analysis View Content */

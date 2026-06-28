@@ -650,6 +650,7 @@ export default function Home() {
               summary={summary}
               onOpenAddModal={() => setActiveModal("expense")}
               onDeleteExpense={handleDeleteExpense}
+              monthlySalary={session?.user?.monthlyIncome ?? 150000}
             />
           )}
 

@@ -9,6 +9,7 @@ interface PersonalExpenseLedgerProps {
   expenses: Expense[];
   onOpenAddModal: () => void;
   onDeleteExpense: (id: string) => Promise<void>;
+  monthlySalary: number;
 }
 
 // Category configuration for icons and color accents
@@ -37,6 +38,7 @@ export default function PersonalExpenseLedger({
   expenses,
   onOpenAddModal,
   onDeleteExpense,
+  monthlySalary,
 }: PersonalExpenseLedgerProps) {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -51,6 +53,7 @@ export default function PersonalExpenseLedger({
 
   // Calculate total monthly spending based on all loaded expenses
   const totalMonthlySpending = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const updatedSalary = monthlySalary - totalMonthlySpending;
 
   const handleDelete = async (id: string) => {
     setDeletingIds((prev) => ({ ...prev, [id]: true }));
@@ -68,19 +71,36 @@ export default function PersonalExpenseLedger({
       
       {/* Header & KPI Summary Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-        <div className="md:col-span-2 space-y-1">
+        <div className="space-y-1">
           <span className="text-primary font-bold text-xs uppercase tracking-widest">Financial Overview</span>
-          <h2 className="font-display-lg text-4xl font-extrabold tracking-tight text-white leading-tight">Track your wealth flow.</h2>
-          <p className="text-on-surface-variant text-sm">Real-time ledger of lifestyle expenditures and corporate transactions.</p>
+          <h2 className="font-display-lg text-3xl font-extrabold tracking-tight text-white leading-tight">Track your wealth flow.</h2>
+          <p className="text-on-surface-variant text-xs">Real-time ledger of lifestyle expenditures and corporate transactions.</p>
         </div>
-        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-32 relative overflow-hidden conic-border">
+        
+        {/* Monthly Spending Card */}
+        <div className="glass-card p-5 rounded-2xl flex flex-col justify-between h-32 relative overflow-hidden border border-white/5">
           <div className="flex justify-between items-start">
-            <span className="text-on-surface-variant text-[11px] font-bold tracking-wider uppercase">MONTHLY SPENDING</span>
-            <span className="material-symbols-outlined text-primary text-lg">trending_down</span>
+            <span className="text-on-surface-variant text-[10px] font-bold tracking-wider uppercase">MONTHLY SPENDING</span>
+            <span className="material-symbols-outlined text-red-400 text-base">trending_down</span>
           </div>
           <div className="flex items-baseline gap-1 mt-auto">
-            <span className="text-3xl font-extrabold text-white font-display-lg">{currency(totalMonthlySpending)}</span>
-            <span className="text-xs text-on-surface-variant font-bold">INR</span>
+            <span className="text-2xl font-extrabold text-white font-display-lg">{currency(totalMonthlySpending)}</span>
+            <span className="text-[10px] text-on-surface-variant font-bold">INR</span>
+          </div>
+        </div>
+
+        {/* Updated Salary Card */}
+        <div className="glass-card p-5 rounded-2xl flex flex-col justify-between h-32 relative overflow-hidden conic-border">
+          <div className="flex justify-between items-start">
+            <span className="text-on-surface-variant text-[10px] font-bold tracking-wider uppercase">UPDATED SALARY</span>
+            <span className="material-symbols-outlined text-primary text-base">payments</span>
+          </div>
+          <div className="flex flex-col mt-auto">
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-extrabold text-primary font-display-lg">{currency(updatedSalary)}</span>
+              <span className="text-[10px] text-primary font-bold">INR</span>
+            </div>
+            <span className="text-[10px] text-on-surface-variant font-semibold mt-1">Base Salary: {currency(monthlySalary)}</span>
           </div>
         </div>
       </div>
