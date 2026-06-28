@@ -147,97 +147,107 @@ export default function PersonalExpenseLedger({
 
       {/* Expense List Table Container */}
       <div className="glass-card rounded-[2rem] overflow-hidden border border-white/5" id="ledger-container">
-        
-        {/* Table Header (Desktop) */}
-        <div className="hidden md:grid grid-cols-12 gap-2 px-6 py-4 bg-white/[0.02] border-b border-white/5 text-on-surface-variant text-[11px] font-bold uppercase tracking-wider">
-          <div className="col-span-1">Icon</div>
-          <div className="col-span-4">Item / Description</div>
-          <div className="col-span-2">Date</div>
-          <div className="col-span-2">Category</div>
-          <div className="col-span-2 text-right">Amount</div>
-          <div className="col-span-1 text-center">Action</div>
-        </div>
-
-        {/* Ledger Entries */}
-        <div className="divide-y divide-white/5" id="expense-list">
-          {filteredExpenses.map((item) => {
-            const config = getCategoryConfig(item.category);
-            const isDeleting = !!deletingIds[item.id];
-            return (
-              <div
-                key={item.id}
-                className={`grid grid-cols-4 md:grid-cols-12 gap-2 px-6 py-4 items-center hover:bg-white/[0.02] transition-all group ${
-                  isDeleting ? "opacity-30 transform translate-x-2 pointer-events-none" : ""
-                }`}
-              >
-                {/* Category Icon */}
-                <div className="col-span-1 flex justify-start">
-                  <div className={`w-9 h-9 rounded-lg ${config.bg} flex items-center justify-center ${config.color}`}>
-                    <span className="material-symbols-outlined text-sm">{config.icon}</span>
-                  </div>
-                </div>
-
-                {/* Description & Method (Mobile details) */}
-                <div className="col-span-2 md:col-span-4 flex flex-col justify-center">
-                  <div className="font-bold text-xs text-white leading-tight">{item.description}</div>
-                  <div className="flex items-center gap-1 mt-0.5 md:hidden">
-                    <span className="material-symbols-outlined text-[10px] text-on-surface-variant">{config.methodIcon}</span>
-                    <span className="text-[10px] text-on-surface-variant font-medium">{config.method}</span>
-                  </div>
-                </div>
-
-                {/* Date */}
-                <div className="hidden md:block col-span-2 text-xs text-on-surface-variant">{item.date}</div>
-
-                {/* Category & Method (Desktop details) */}
-                <div className="hidden md:flex col-span-2 flex-col justify-center gap-0.5">
-                  <span className="text-xs text-white font-medium">{item.category}</span>
-                  <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[10px] text-on-surface-variant">{config.methodIcon}</span>
-                    <span className="text-[10px] text-on-surface-variant">{config.method}</span>
-                  </div>
-                </div>
-
-                {/* Amount */}
-                <div className="col-span-1 md:col-span-2 text-right font-display-lg font-bold text-primary text-xs">
-                  {currency(item.amount)}
-                </div>
-
-                {/* Action Delete */}
-                <div className="col-span-1 flex justify-center md:opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="p-1.5 rounded-lg hover:bg-red-500/10 text-red-500 hover:text-red-400 transition-all"
-                    title="Remove Entry"
-                    disabled={isDeleting}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-white/[0.02] border-b border-white/5 text-on-surface-variant text-[11px] font-bold uppercase tracking-wider">
+                <th className="px-6 py-4 w-20 text-center">Icon</th>
+                <th className="px-6 py-4">Item / Description</th>
+                <th className="px-6 py-4 hidden md:table-cell">Date</th>
+                <th className="px-6 py-4 hidden md:table-cell">Category</th>
+                <th className="px-6 py-4 text-right">Amount</th>
+                <th className="px-6 py-4 text-center w-20">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5" id="expense-list">
+              {filteredExpenses.map((item) => {
+                const config = getCategoryConfig(item.category);
+                const isDeleting = !!deletingIds[item.id];
+                return (
+                  <tr
+                    key={item.id}
+                    className={`hover:bg-white/[0.02] transition-all group ${
+                      isDeleting ? "opacity-30 pointer-events-none" : ""
+                    }`}
                   >
-                    <span className="material-symbols-outlined text-base">delete</span>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+                    {/* Category Icon */}
+                    <td className="px-6 py-4">
+                      <div className={`w-9 h-9 rounded-lg ${config.bg} flex items-center justify-center ${config.color} mx-auto`}>
+                        <span className="material-symbols-outlined text-sm">{config.icon}</span>
+                      </div>
+                    </td>
 
-          {/* Empty State Pattern */}
-          {filteredExpenses.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-16 px-6 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-white/[0.02] flex items-center justify-center border border-white/5">
-                <span className="material-symbols-outlined text-primary text-3xl opacity-60">drafts</span>
-              </div>
-              <div className="max-w-xs space-y-1">
-                <h3 className="font-headline-md text-sm font-bold text-white">No entries found</h3>
-                <p className="text-on-surface-variant text-xs">
-                  Your expense ledger is empty or matches no filters. Start tracking your investments and lifestyle spending.
-                </p>
-              </div>
-              <button
-                onClick={onOpenAddModal}
-                className="px-5 py-2 bg-primary/10 border border-primary/20 text-primary text-xs font-bold rounded-xl hover:bg-primary/20 transition-all"
-              >
-                Add My First Expense
-              </button>
-            </div>
-          )}
+                    {/* Description & Method (Mobile details) */}
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-xs text-white leading-tight">{item.description}</div>
+                      <div className="flex items-center gap-1 mt-0.5 md:hidden">
+                        <span className="material-symbols-outlined text-[10px] text-on-surface-variant">{config.methodIcon}</span>
+                        <span className="text-[10px] text-on-surface-variant font-medium">{config.method}</span>
+                      </div>
+                    </td>
+
+                    {/* Date */}
+                    <td className="px-6 py-4 text-on-surface-variant hidden md:table-cell">{item.date}</td>
+
+                    {/* Category & Method (Desktop details) */}
+                    <td className="px-6 py-4 hidden md:table-cell">
+                      <div className="flex flex-col justify-center gap-0.5">
+                        <span className="text-xs text-white font-medium">{item.category}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[10px] text-on-surface-variant">{config.methodIcon}</span>
+                          <span className="text-[10px] text-on-surface-variant">{config.method}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Amount */}
+                    <td className="px-6 py-4 text-right font-display-lg font-bold text-primary text-xs whitespace-nowrap">
+                      {currency(item.amount)}
+                    </td>
+
+                    {/* Action Delete */}
+                    <td className="px-6 py-4">
+                      <div className="md:opacity-0 group-hover:opacity-100 transition-opacity flex justify-center">
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="p-1.5 rounded-lg hover:bg-red-500/10 text-red-500 hover:text-red-400 transition-all"
+                          title="Remove Entry"
+                          disabled={isDeleting}
+                        >
+                          <span className="material-symbols-outlined text-base">delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {/* Empty State Pattern inside table */}
+              {filteredExpenses.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="py-16 px-6 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="w-16 h-16 rounded-full bg-white/[0.02] flex items-center justify-center border border-white/5">
+                        <span className="material-symbols-outlined text-primary text-3xl opacity-60">drafts</span>
+                      </div>
+                      <div className="max-w-xs space-y-1 mx-auto">
+                        <h3 className="font-headline-md text-sm font-bold text-white">No entries found</h3>
+                        <p className="text-on-surface-variant text-xs">
+                          Your expense ledger is empty or matches no filters. Start tracking your investments and lifestyle spending.
+                        </p>
+                      </div>
+                      <button
+                        onClick={onOpenAddModal}
+                        className="px-5 py-2 bg-primary/10 border border-primary/20 text-primary text-xs font-bold rounded-xl hover:bg-primary/20 transition-all"
+                      >
+                        Add My First Expense
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
