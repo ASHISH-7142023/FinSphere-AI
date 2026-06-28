@@ -20,7 +20,16 @@ export class InMemoryStore implements IStore {
   }
 
   private seed() {
-    // Start with a clean database/store with no pre-populated records or users.
+    // Seed default demo user for seamless local development fallback
+    const hashedPassword = bcrypt.hashSync("Demo@12345", 10);
+    this.users.push({
+      id: "user_demo",
+      name: "Demo User",
+      email: "demo@finsphere.ai",
+      monthlyIncome: 150000,
+      passwordHash: hashedPassword,
+      createdAt: new Date().toISOString()
+    });
   }
 
   async getUserByEmail(email: string): Promise<StoredUser | null> {
