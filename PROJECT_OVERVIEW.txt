@@ -1,0 +1,104 @@
+========================================================================
+FINSPHERE AI SUPER APP - COMPREHENSIVE PROJECT OVERVIEW & PRESENTATION GUIDE
+========================================================================
+
+FinSphere AI is an institutional-grade, cinematic personal finance super-app MVP. It features sleek glassmorphism styling, a dynamic WebGL 3D interface, responsive sidebar and margins, and connected, interactive AI simulation widgets.
+
+------------------------------------------------------------------------
+1. TECHNOLOGY STACK
+------------------------------------------------------------------------
+The project is structured as a modern monorepo workspace containing separate frontend and backend segments:
+
+A. Frontend Web Client (/frontend)
+* Core Framework: Next.js 15 (App Router) & React 19.
+* Styling (CSS): Vanilla CSS with Custom Theme Tokens & utility classes, integrated with Tailwind CSS for glassmorphic layouts.
+* 3D Animation: Three.js (WebGL renderer) for the interactive 3D hero assets.
+* Analytics & Graphs: Recharts for custom SVG Bezier curve rendering.
+* Animations: Framer Motion for smooth modal popups, sliding drawers, and fade transitions.
+
+B. Backend Rest API (/backend)
+* Core Server: Node.js, Express, and TypeScript.
+* Database Layer: PostgreSQL (primary) with fallbacks.
+* ORM Engine: Prisma ORM with structured models.
+* Authentication: JSON Web Token (JWT) secure authorization loops.
+
+------------------------------------------------------------------------
+2. PAGE-BY-PAGE FEATURE TOUR
+------------------------------------------------------------------------
+
+A. Landing & Navigation Page
+* WebGL Hero Scene: A responsive, mouse-reactive 3D FinSphere Credit Card with front-face gold chips, cardholder engraving details, specular points-lights reflection, and glass emerald particle spheres drifting on sinusoidal paths.
+* Scroll-Linked Header Menu: Navigation options (Home, Features, AI Engine, Pricing) highlight dynamically as the user scrolls past sections.
+* Premium Pricing Tiers: A comparison table with Monthly/Yearly toggle sliders supporting simulation triggers.
+
+B. Split Authentication Gate (/login)
+* Auth Switching: Dynamically handles login and registration parameters (?signup=true).
+* Profile Chooser: Custom Google Account Chooser overlays and Apple ID prompts that allow users to select preset profiles (e.g. demo@finsphere.ai) or input custom registration details.
+* Visual Backdrop: Utilizes visual overlay backdrops of high-fidelity dashboard screenshots.
+
+C. Core Workspace Dashboard (Overview)
+* Interactive Summary Cards: Total wealth holdings, monthly expense charts, active budget limits, and savings goals.
+* Connected Institutions Ledger: Tracks active banking partners, synchronization status loops, and disconnection (delete) buttons.
+
+D. Interactive AI Chat Advisor
+* Full-Height Interface: Occupies the full layout width and viewport height to maximize room for data visualization.
+* Simulated Prompts: Contextual prompt helpers (e.g., Q4 Tax planning, SIP allocation shifts) to populate context queries.
+
+E. Utilities Hub
+* Multi-Category Payments: Tab selectors to configure Mobile, Electricity, Water, Gas, DTH, and FASTag bills.
+* UPI QR Simulator: Renders a dynamic payment QR code and copies VPA addresses to the clipboard on click.
+
+F. Credit Card Bill Center
+* Dues Manager: Outstanding balances, payment targets, and minimum payment options.
+* AI Routing Advisor: Suggests card swaps (e.g. routing grocery spends to Amex Platinum) to optimize cashbacks and points.
+
+G. Credit Engine & Simulator
+* Dynamic score gauge: SVG-rendered speedometer displaying real-time FICO metrics.
+* Checklist & Events: Interactive checkboxes to simulate financial actions (paying off debt, inquiries) which save log entries to the server.
+
+H. Thematic Mutual Funds & SIPs
+* XIRR Trackers: Custom Bezier performance curves.
+* AI Rebalancer: Dynamic reallocations (Growth to Debt) with one-click rebalance execution buttons.
+* Expected Returns Calculator: Interactive calculators to forecast long-term compound wealth growth.
+
+I. Insurance Hub
+* Claim Form: An interactive claims filing checklist.
+* Premium Calculator: Dynamic sliders to calculate premiums based on age, lifestyle habits, and sum assured.
+
+J. Small Business Merchant Khata
+* Ledger Entries: Dynamic lists showing transactions, custom invoice creations, and copyable payment link sharing.
+
+------------------------------------------------------------------------
+3. DYNAMIC SYSTEM INTERACTIONS & DATA FLOW
+------------------------------------------------------------------------
+
+A. Salary-Based Metric Scaling
+All mock numerical limits, outstanding bills, pre-approved loans, and insurance premium values scale dynamically relative to the user's Monthly Salary setting (saved in Settings > Edit Profile).
+* Credit Limit: Eligible credit range scales at 3.33 x Salary.
+* Card Balances: Calculated dynamically as direct fractions of the salary.
+* Utilities Hub: Billing rates scale proportionally to represent relative household utility costs.
+
+B. Active Subscription Tiers Syncing
+* Changing plans inside the Pricing card or settings upgrades updates the user's profile parameter (free, pro, elite) globally.
+* Active plan tags (Core Tier, Pro Tier, or Elite Tier) render instantly across the sidebar header and mobile layouts.
+* The Settings page updates its description copy and premium monthly fee details to match the selected plan.
+
+------------------------------------------------------------------------
+4. EXECUTION & RUNNING THE PROJECT
+------------------------------------------------------------------------
+
+Prerequisites:
+* Node.js (v18 or higher recommended)
+* npm (v9 or higher)
+
+Setup & Run Steps:
+1. From root workspace directory, run command to install packages:
+   npm install
+
+2. Start the development environment (starts frontend on port 3000 and backend on port 4000 concurrently):
+   npm run dev
+
+3. Presenter Sandbox Credentials:
+   * Email Address: demo@finsphere.ai
+   * Password: Demo@12345
+========================================================================

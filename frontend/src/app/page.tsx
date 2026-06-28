@@ -15,7 +15,7 @@ import SIPSetupView from "@/components/SIPSetupView";
 import InsuranceHubView from "@/components/InsuranceHubView";
 import DemoPlayerView from "@/components/DemoPlayerView";
 import LandingPageView from "@/components/LandingPageView";
-import ExpensesView from "@/components/ExpensesView";
+import ExpensesView from "@/components/Expense/ExpensesView";
 import BudgetsView from "@/components/BudgetsView";
 import GoalsView from "@/components/GoalsView";
 import InvestmentsView from "@/components/InvestmentsView";
@@ -241,6 +241,14 @@ export default function Home() {
         description: data.description,
         date: data.date
       })
+    }, session.token);
+    await refreshAll();
+  };
+
+  const handleDeleteExpense = async (id: string) => {
+    if (!session?.token) return;
+    await apiRequest(`/expenses/${id}`, {
+      method: "DELETE"
     }, session.token);
     await refreshAll();
   };
@@ -646,6 +654,7 @@ export default function Home() {
               expenses={expenses}
               summary={summary}
               onOpenAddModal={() => setActiveModal("expense")}
+              onDeleteExpense={handleDeleteExpense}
             />
           )}
 
