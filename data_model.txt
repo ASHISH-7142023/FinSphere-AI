@@ -1,0 +1,204 @@
+================================================================================
+FINSPHERE AI SUPER APP - DATABASE DATA MODEL
+================================================================================
+
+This document outlines the relational database structure, fields, constraints, 
+data types, and entity relationships of the FinSphere AI system. 
+The backend architecture uses Prisma ORM mapped onto a PostgreSQL database.
+
+--------------------------------------------------------------------------------
+1. ENTITY RELATIONSHIP MAP (VISUAL REPRESENTATION)
+--------------------------------------------------------------------------------
+
+   +------------------+             +------------------+
+   |   CREDIT_PROFILE |             |  FINANCIAL_HEALTH|
+   +------------------+             +------------------+
+   | id (PK)          |             | id (PK)          |
+   | userId (FK, UK)  |-- 1 ----- 1 | userId (FK, UK)  |
+   +------------------+             +------------------+
+            |                                |
+            1                                1
+            |                                |
+   +------------------+                      |
+   |       USER       |----------------------+
+   +------------------+
+   | id (PK)          |-- 1 ----+
+   | name             |         |
+   | email (UK)       |         |
+   | passwordHash     |         |
+   | monthlyIncome    |         |
+   +------------------+         |
+     |      |      |            |
+     1      1      1            1
+     |      |      |            |
+     *      *      *            *
+   +----+ +----+ +----+      +------------+
+   |EXP | |BUD | |GOAL|      | INVESTMENT |
+   +----+ +----+ +----+      +------------+
+   |id  | |id  | |id  |      | id (PK)    |
+   |uId | |uId | |uId |      | userId (FK)|
+   +----+ +----+ +----+      +------------+
+
+* Legend:
+  - 1 --- 1: One-to-One relationship
+  - 1 --- *: One-to-Many relationship
+  - PK: Primary Key
+  - FK: Foreign Key
+  - UK: Unique Key
+
+
+--------------------------------------------------------------------------------
+2. DATABASE ENUMS
+--------------------------------------------------------------------------------
+
+A. ExpenseCategory
+   Supported transaction categories:
+   - Food
+   - Travel
+   - Shopping
+   - Bills
+   - Entertainment
+   - Education
+   - Health
+   - Other
+
+B. InvestmentType
+   Supported asset types:
+   - Stock
+   - MutualFund
+   - SIP
+   - Gold
+   - Crypto
+   - Other
+
+
+--------------------------------------------------------------------------------
+3. MODEL SCHEMA TABLES
+--------------------------------------------------------------------------------
+
+A. User
+   Account credentials, user profiles, and active tier designations.
+   
+   - id (String, Primary Key)
+     * Unique identifier (UUID).
+   - name (String)
+     * User's display name.
+   - email (String, Unique)
+     * Registered login email address.
+   - passwordHash (String)
+     * Encrypted/hashed password value.
+   - monthlyIncome (Decimal, Default: 150000.00)
+     * Base monthly salary parameter used for scaling targets.
+   - createdAt (DateTime, Default: current timestamp)
+     * Entry creation time.
+   - updatedAt (DateTime, Automatic update)
+     * Timestamp of last change.
+
+B. Expense
+   Individual transaction ledger entries.
+   
+   - id (String, Primary Key)
+     * Unique transaction identifier (UUID).
+   - userId (String, Foreign Key)
+     * References User.id (Cascade on delete).
+   - amount (Decimal)
+     * Transaction spending value.
+   - category (ExpenseCategory Enum)
+     * Category of the expense.
+   - description (String)
+     * Merchant info or description.
+   - date (DateTime)
+     * Calendar date of expenditure.
+   - createdAt (DateTime, Default: current timestamp)
+   - updatedAt (DateTime, Automatic update)
+   
+   * Database Indices:
+     - Composite index: [userId, date]
+     - Composite index: [userId, category]
+
+C. Budget
+   Spending limits configured per category and month.
+   
+   - id (String, Primary Key)
+     * Unique budget identifier (UUID).
+   - userId (String, Foreign Key)
+     * References User.id (Cascade on delete).
+   - category (ExpenseCategory Enum)
+     * Spending category.
+   - limitAmount (Decimal)
+     * Maximum allowed budget limit.
+   - month (String)
+     * Target month (Format: "YYYY-MM").
+   - createdAt (DateTime, Default: current timestamp)
+   - updatedAt (DateTime, Automatic update)
+   
+   * Unique Constraints:
+     - Unique combination: [userId, category, month]
+
+D. Goal
+   Target savings and progress markers.
+   
+   - id (String, Primary Key)
+     * Unique goal identifier (UUID).
+   - userId (String, Foreign Key)
+     * References User.id (Cascade on delete).
+   - title (String)
+     * User title for target (e.g. "House Downpayment").
+   - targetAmount (Decimal)
+     * Target funding goal.
+   - currentAmount (Decimal)
+     * Current saved amount.
+   - targetDate (DateTime)
+     * Deadline for goal.
+   - createdAt (DateTime, Default: current timestamp)
+   - updatedAt (DateTime, Automatic update)
+
+E. Investment
+   Securities, stocks, and mutual funds holdings.
+   
+   - id (String, Primary Key)
+     * Unique asset identifier (UUID).
+   - userId (String, Foreign Key)
+     * References User.id (Cascade on delete).
+   - assetType (InvestmentType Enum)
+     * Classification of the security.
+   - name (String)
+     * Asset display name (e.g. "Vanguard S&P 500 ETF").
+   - investedAmount (Decimal)
+     * Total cost basis/principal.
+   - currentValue (Decimal)
+     * Live market value.
+   - createdAt (DateTime, Default: current timestamp)
+   - updatedAt (DateTime, Automatic update)
+
+F. CreditProfile
+   Credit scoring variables.
+   
+   - id (String, Primary Key)
+     * Unique profile identifier (UUID).
+   - userId (String, Foreign Key, Unique)
+     * References User.id (Cascade on delete, 1-to-1 relationship).
+   - utilization (Decimal)
+     * Credit utilization percentage.
+   - paymentHistory (Decimal)
+     * Rate of on-time credit card payments.
+   - creditAge (Decimal)
+     * Average age of credit lines in years.
+   - createdAt (DateTime, Default: current timestamp)
+   - updatedAt (DateTime, Automatic update)
+
+G. FinancialHealth
+   Health metrics generated by the analytics advisor engine.
+   
+   - id (String, Primary Key)
+     * Unique health entry identifier (UUID).
+   - userId (String, Foreign Key, Unique)
+     * References User.id (Cascade on delete, 1-to-1 relationship).
+   - score (Integer)
+     * Aggregated score scale (0 - 100).
+   - grade (String)
+     * Grade label (e.g., "Excellent", "Fair").
+   - createdAt (DateTime, Default: current timestamp)
+   - updatedAt (DateTime, Automatic update)
+
+================================================================================
