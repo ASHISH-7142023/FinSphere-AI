@@ -1011,21 +1011,8 @@ function ModalForm({ onSubmit, onClose, children }: { onSubmit: (data: Record<st
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.key === "Enter" && (e.target as HTMLElement).tagName === "INPUT") {
-      e.preventDefault();
-      const form = e.currentTarget;
-      if (typeof form.requestSubmit === "function") {
-        form.requestSubmit();
-      } else {
-        const submitEvent = new Event("submit", { cancelable: true, bubbles: true });
-        form.dispatchEvent(submitEvent);
-      }
-    }
-  };
-
   return (
-    <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {error && <p className="text-xs text-danger">{error}</p>}
       {children}
       <div className="flex gap-4 pt-4">

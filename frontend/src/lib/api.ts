@@ -24,12 +24,6 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}, tok
     }
   });
   if (!response.ok) {
-    if (response.status === 401) {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("finsphere.session");
-        window.location.href = "/";
-      }
-    }
     const body = await response.json().catch(() => ({ message: "Request failed" }));
     throw new Error(body.message ?? "Request failed");
   }
