@@ -15,13 +15,13 @@ export const loginSchema = z.object({
 
 export const expenseSchema = z.object({
   amount: z.coerce.number().positive(),
-  category: z.string().min(1),
+  category: z.enum(EXPENSE_CATEGORIES),
   description: z.string().min(2).max(120),
   date: z.string().min(8)
 });
 
 export const budgetSchema = z.object({
-  category: z.string().min(1),
+  category: z.enum(EXPENSE_CATEGORIES),
   limitAmount: z.coerce.number().positive(),
   month: z.string().regex(/^\d{4}-\d{2}$/)
 });

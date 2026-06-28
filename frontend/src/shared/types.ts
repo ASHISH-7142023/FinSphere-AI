@@ -6,10 +6,6 @@ export const EXPENSE_CATEGORIES = [
   "Entertainment",
   "Education",
   "Health",
-  "Groceries",
-  "Utilities",
-  "Investment",
-  "Business",
   "Other"
 ] as const;
 

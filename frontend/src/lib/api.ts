@@ -25,14 +25,7 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}, tok
   });
   if (!response.ok) {
     const body = await response.json().catch(() => ({ message: "Request failed" }));
-    const errorMsg = body.message ?? "Request failed";
-    if (response.status === 401 || errorMsg === "Invalid token" || errorMsg.includes("bearer token")) {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("finsphere.session");
-        window.location.reload();
-      }
-    }
-    throw new Error(errorMsg);
+    throw new Error(body.message ?? "Request failed");
   }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;

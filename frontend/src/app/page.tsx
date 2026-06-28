@@ -131,8 +131,6 @@ export default function Home() {
   
   // Modal states for creating/editing resources
   const [activeModal, setActiveModal] = useState<"expense" | "budget" | "goal" | "investment" | null>(null);
-  const [selectedModalCategory, setSelectedModalCategory] = useState("Food");
-  const [selectedBudgetModalCategory, setSelectedBudgetModalCategory] = useState("Food");
   const [utilityTab, setUtilityTab] = useState<"mobile" | "electricity" | "water" | "dth" | "gas" | "fastag" | "upi-qr">("mobile");
 
   const [sidebarWidth, setSidebarWidth] = useState(256);
@@ -235,14 +233,11 @@ export default function Home() {
   }
 
   const handleCreateExpense = async (data: Record<string, any>) => {
-    const finalCategory = data.category === "Other" && data.customCategory 
-      ? data.customCategory 
-      : data.category;
     await apiRequest("/expenses", {
       method: "POST",
       body: JSON.stringify({
         amount: Number(data.amount),
-        category: finalCategory,
+        category: data.category,
         description: data.description,
         date: data.date
       })
@@ -259,13 +254,10 @@ export default function Home() {
   };
 
   const handleCreateBudget = async (data: Record<string, any>) => {
-    const finalCategory = data.category === "Other" && data.customCategory 
-      ? data.customCategory 
-      : data.category;
     await apiRequest("/budgets", {
       method: "POST",
       body: JSON.stringify({
-        category: finalCategory,
+        category: data.category,
         limitAmount: Number(data.limitAmount),
         month: data.month
       })
@@ -817,29 +809,12 @@ export default function Home() {
               </div>
               <div className="space-y-xs">
                 <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Category</label>
-                <select 
-                  name="category" 
-                  value={selectedModalCategory}
-                  onChange={(e) => setSelectedModalCategory(e.target.value)}
-                  className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]"
-                >
+                <select name="category" className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]">
                   {EXPENSE_CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
               </div>
-              {selectedModalCategory === "Other" && (
-                <div className="space-y-xs">
-                  <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Custom Category</label>
-                  <input
-                    type="text"
-                    name="customCategory"
-                    placeholder="Enter custom category name..."
-                    className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
-                    required
-                  />
-                </div>
-              )}
               <div className="space-y-xs">
                 <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Description</label>
                 <input
@@ -869,29 +844,12 @@ export default function Home() {
             <ModalForm onSubmit={handleCreateBudget} onClose={() => setActiveModal(null)}>
               <div className="space-y-xs">
                 <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Category</label>
-                <select 
-                  name="category" 
-                  value={selectedBudgetModalCategory}
-                  onChange={(e) => setSelectedBudgetModalCategory(e.target.value)}
-                  className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]"
-                >
+                <select name="category" className="input-glass w-full px-4 py-3 rounded-xl text-white bg-[#0e1511]">
                   {EXPENSE_CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
               </div>
-              {selectedBudgetModalCategory === "Other" && (
-                <div className="space-y-xs">
-                  <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Custom Category</label>
-                  <input
-                    type="text"
-                    name="customCategory"
-                    placeholder="Enter custom category name..."
-                    className="input-glass w-full px-4 py-3 rounded-xl text-white placeholder:text-outline/40"
-                    required
-                  />
-                </div>
-              )}
               <div className="space-y-xs">
                 <label className="font-label-sm text-on-surface-variant uppercase tracking-wider text-xs">Limit Amount (₹)</label>
                 <input
