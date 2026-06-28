@@ -347,9 +347,15 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-4 max-w-xl">
               <div>
-                <h3 className="text-3xl font-extrabold text-white">Platinum Tier</h3>
+                <h3 className="text-3xl font-extrabold text-white">
+                  {session?.user?.tier === "free" ? "Core Tier" : session?.user?.tier === "pro" ? "Pro Tier" : "Platinum Elite Tier"}
+                </h3>
                 <p className="text-on-surface-variant text-xs mt-2 leading-relaxed">
-                  You are currently on our most exclusive plan. Enjoy unlimited AI processing power, priority node access, and 24/7 concierge support.
+                  {session?.user?.tier === "free" 
+                    ? "You are currently on our entry-level plan. Track basic expenses, setup simple goals, and keep your financial data organized." 
+                    : session?.user?.tier === "pro" 
+                    ? "You are currently on our professional plan. Enjoy advanced analytics, multi-bank secure accounts synchronization, and automatic budget trackers." 
+                    : "You are currently on our most exclusive plan. Enjoy unlimited AI processing power, priority node access, and 24/7 concierge support."}
                 </p>
               </div>
               <div className="flex items-center gap-4 flex-wrap">
@@ -359,7 +365,9 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                   <span className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary"><span className="material-symbols-outlined text-sm">shield</span></span>
                 </div>
                 <span className="text-[11px] text-on-surface-variant font-semibold">
-                  Next billing date: Oct 12, 2024 (₹499.00/mo)
+                  {session?.user?.tier === "free"
+                    ? "No next billing date (Free Plan)"
+                    : `Next billing date: Oct 12, 2024 (${session?.user?.tier === "pro" ? "₹499.00" : "₹1,499.00"}/mo)`}
                 </span>
               </div>
             </div>

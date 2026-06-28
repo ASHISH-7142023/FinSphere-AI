@@ -214,8 +214,16 @@ export default function Home() {
     return (
       <LandingPageView
         onSession={(next) => {
-          localStorage.setItem("finsphere.session", JSON.stringify(next));
-          setSession(next);
+          const savedTier = localStorage.getItem("finsphere.selectedPlan") as "free" | "pro" | "elite" | null;
+          const updatedSession = {
+            ...next,
+            user: {
+              ...next.user,
+              tier: savedTier ?? (next as any).user?.tier ?? "elite"
+            }
+          };
+          localStorage.setItem("finsphere.session", JSON.stringify(updatedSession));
+          setSession(updatedSession as any);
         }}
       />
     );
@@ -312,7 +320,9 @@ export default function Home() {
           </div>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-            <span style={subtitleStyle} className="font-semibold uppercase tracking-widest text-on-surface-variant">Elite Tier</span>
+            <span style={subtitleStyle} className="font-semibold uppercase tracking-widest text-on-surface-variant">
+              {((session as any)?.user?.tier === "free") ? "Core Tier" : ((session as any)?.user?.tier === "pro") ? "Pro Tier" : "Elite Tier"}
+            </span>
           </div>
         </div>
         
@@ -429,7 +439,9 @@ export default function Home() {
               <div className="flex justify-between items-center mb-8 px-2">
                 <div className="flex flex-col">
                   <span className="text-xl font-extrabold font-heading text-primary tracking-tight leading-tight">FinSphere AI</span>
-                  <span className="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Elite Tier</span>
+                  <span className="text-xs text-on-surface-variant uppercase tracking-widest mt-1">
+                    {((session as any)?.user?.tier === "free") ? "Core Tier" : ((session as any)?.user?.tier === "pro") ? "Pro Tier" : "Elite Tier"}
+                  </span>
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -703,7 +715,23 @@ export default function Home() {
           )}
 
           {view === "pricing" && (
-            <PricingView />
+            <PricingView
+              currentTier={(session as any)?.user?.tier ?? "elite"}
+              onTierChange={(newTier) => {
+                setSession((prev) => {
+                  if (!prev) return null;
+                  const updated = {
+                    ...prev,
+                    user: {
+                      ...prev.user,
+                      tier: newTier,
+                    },
+                  };
+                  localStorage.setItem("finsphere.session", JSON.stringify(updated));
+                  return updated;
+                });
+              }}
+            />
           )}
 
           {view === "merchant-khata" && (

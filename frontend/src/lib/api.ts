@@ -10,6 +10,7 @@ export interface Session {
     createdAt: string;
     upiId?: string;
     upiQr?: string;
+    tier?: "free" | "pro" | "elite";
   };
 }
 

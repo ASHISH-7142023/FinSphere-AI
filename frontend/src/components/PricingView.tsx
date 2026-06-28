@@ -1,14 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function PricingView() {
+interface PricingViewProps {
+  currentTier?: "free" | "pro" | "elite";
+  onTierChange?: (tier: "free" | "pro" | "elite") => void;
+}
+
+export default function PricingView({ currentTier: propTier, onTierChange }: PricingViewProps = {}) {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
-  const [currentTier, setCurrentTier] = useState<"free" | "pro" | "elite">("pro");
+  const [localTier, setLocalTier] = useState<"free" | "pro" | "elite">("pro");
   const [successMsg, setSuccessMsg] = useState("");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("finsphere.selectedPlan") as "free" | "pro" | "elite";
+      if (saved) setLocalTier(saved);
+    }
+  }, []);
+
+  const activeTier = propTier ?? localTier;
+
   const handleUpgrade = (tier: "free" | "pro" | "elite") => {
-    setCurrentTier(tier);
+    if (onTierChange) {
+      onTierChange(tier);
+    } else {
+      setLocalTier(tier);
+      localStorage.setItem("finsphere.selectedPlan", tier);
+    }
     setSuccessMsg(`Successfully simulated upgrade to the ${tier.toUpperCase()} tier!`);
     setTimeout(() => setSuccessMsg(""), 4000);
   };
@@ -84,12 +103,12 @@ export default function PricingView() {
           <button
             onClick={() => handleUpgrade("free")}
             className={`w-full py-3 rounded-xl border font-bold text-xs transition-all ${
-              currentTier === "free"
+              activeTier === "free"
                 ? "bg-white/5 border-primary text-primary cursor-default"
                 : "border-outline hover:bg-white/5 text-white"
             }`}
           >
-            {currentTier === "free" ? "Active Plan" : "Get Started"}
+            {activeTier === "free" ? "Active Plan" : "Get Started"}
           </button>
         </div>
 
@@ -135,12 +154,12 @@ export default function PricingView() {
           <button
             onClick={() => handleUpgrade("elite")}
             className={`w-full py-3 rounded-xl font-bold text-xs transition-all shadow-md ${
-              currentTier === "elite"
+              activeTier === "elite"
                 ? "bg-white/5 border border-primary text-primary cursor-default"
                 : "bg-primary text-on-primary hover:brightness-110 shadow-primary/20"
             }`}
           >
-            {currentTier === "elite" ? "Active Plan" : "Upgrade to Elite"}
+            {activeTier === "elite" ? "Active Plan" : "Upgrade to Elite"}
           </button>
         </div>
 
@@ -158,15 +177,15 @@ export default function PricingView() {
               <span className="text-on-surface-variant text-xs">/mo</span>
             </div>
             <ul className="space-y-4 mb-8">
-              <li className="flex items-center gap-3 text-xs text-on-surface-variant">
+              <li className="flex items-center gap-3 text-xs text-white">
                 <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-                AI Financial Chat Advisor (unlimited)
+                <strong>Advanced Analytics Core</strong>
               </li>
-              <li className="flex items-center gap-3 text-xs text-on-surface-variant">
+              <li className="flex items-center gap-3 text-xs text-white">
                 <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-                Auto-budgeting simulator engine
+                Automated budget monitoring
               </li>
-              <li className="flex items-center gap-3 text-xs text-on-surface-variant">
+              <li className="flex items-center gap-3 text-xs text-white">
                 <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
                 Multi-bank secure account sync
               </li>
@@ -179,12 +198,12 @@ export default function PricingView() {
           <button
             onClick={() => handleUpgrade("pro")}
             className={`w-full py-3 rounded-xl border font-bold text-xs transition-all ${
-              currentTier === "pro"
+              activeTier === "pro"
                 ? "bg-white/5 border-primary text-primary cursor-default"
                 : "border-outline hover:bg-white/5 text-white"
             }`}
           >
-            {currentTier === "pro" ? "Active Plan" : "Upgrade to Pro"}
+            {activeTier === "pro" ? "Active Plan" : "Upgrade to Pro"}
           </button>
         </div>
       </div>
