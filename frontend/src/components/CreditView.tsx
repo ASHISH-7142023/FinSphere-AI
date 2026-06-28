@@ -163,7 +163,7 @@ export default function CreditView({ token }: CreditViewProps) {
                 strokeWidth="3"
               ></circle>
             </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center rotate-90">
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-on-surface font-bold text-xl">{simulatedScore || 782}</span>
               <span className="text-primary text-[8px] font-bold uppercase tracking-wider">FICO SCORE</span>
             </div>
