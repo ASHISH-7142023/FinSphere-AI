@@ -20,6 +20,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${jakarta.variable} ${inter.variable} ${geist.variable} font-body antialiased`}>
         {children}
+         <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+         <script src="https://files.bpcontent.cloud/2026/06/29/07/20260629071552-AO9LM9N8.js" defer></script>
       </body>
     </html>
   );
