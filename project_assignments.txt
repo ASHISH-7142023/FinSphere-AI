@@ -1,0 +1,152 @@
+================================================================================
+                    FinSphere AI Super App - Project Assignments
+================================================================================
+This document lists the official work assignments for all 15 team members,
+mapping every file in the codebase.
+
+--------------------------------------------------------------------------------
+Project Leader Assignment -----
+--------------------------------------------------------------------------------
+Person 1- ASHISH RANJAN SINGH - (Project Leader): System Settings, Profile & Global Layout
+- Primary Responsibilities: Build settings views, user profile settings, monthly salary input, subscription level overrides.
+
+- Files Assigned:
+  * frontend/src/components/SettingsView.tsx
+  * frontend/src/app/layout.tsx
+  * frontend/src/app/globals.css
+  * frontend/src/app/not-found.tsx
+
+--------------------------------------------------------------------------------
+Frontend Client Assignments
+--------------------------------------------------------------------------------
+Person 2: Authentication Gate, Account Chooser & Auth subpages
+- Primary Responsibilities: Login backdrop overlays, Presets Profile Switcher, signups.
+
+- Files Assigned:
+  * frontend/src/components/LandingPageView.tsx
+  * frontend/src/app/login/page.tsx
+  * frontend/src/app/forgot-password/page.tsx
+  * frontend/src/app/reset-password/page.tsx
+  * frontend/src/app/verify-otp/page.tsx
+------------------------------------------------------------------------
+Person 3: Dashboard Overview & Core Workspace Visuals
+- Primary Responsibilities: Dashboard metrics summary grids, syncing indicators, demo watch screens.
+
+- Files Assigned:
+  * frontend/src/app/page.tsx
+  * frontend/src/app/portfolio-with-upi-qr/page.tsx
+  * frontend/src/app/watch-demo/page.tsx
+------------------------------------------------------------------------
+Person 4: Interactive AI Chat Advisor UI
+- Primary Responsibilities: Full height advisor chat dialogue, contextual helper prompt chips.
+
+- Files Assigned:
+  * frontend/src/components/AIAdvisorView.tsx
+  * frontend/src/components/AIEngine.tsx
+  * frontend/src/components/DemoPlayerView.tsx
+-----------------------------------------------------------------------
+Person 5: Utilities Billing Hub & Feature Explanations
+- Primary Responsibilities: Tabbed bill categories setups, payment QR clipboard copiers, marketing sliders.
+
+- Files Assigned:
+  * frontend/src/components/UtilitiesHubView.tsx
+  * frontend/src/components/BillPaymentDetail.tsx
+  * frontend/src/components/FeaturesExplorer.tsx
+----------------------------------------------------------------------
+Person 6: Credit Card Bill Center & Cashback Router
+- Primary Responsibilities: Balance dues panels, swap card optimizer advices, min payment triggers.
+
+- Files Assigned:
+  * frontend/src/components/CreditCardBillCenter.tsx
+-------------------------------------------------------------------
+Person 7: Credit Simulator speedometers & FICO Gauge
+- Primary Responsibilities: Speedometer SVGs, simulator checkboxes checklist log.
+- Files Assigned:
+  * frontend/src/components/CreditView.tsx
+  * frontend/src/components/CreditScoreSimulator.tsx
+------------------------------------------------------------------
+Person 8: Mutual Funds, SIP & Category Budgets
+- Primary Responsibilities: Compounding calculator sliders, SIP setup forms, budget categories rules.
+
+- Files Assigned:
+  * frontend/src/components/MutualFundPortfolio.tsx
+  * frontend/src/components/SIPSetupView.tsx
+  * frontend/src/components/BudgetsView.tsx
+------------------------------------------------------------------
+Person 9: Insurance claims, Assets & Savings Goals
+- Primary Responsibilities: Claim submission step checklists, target metrics indicators.
+
+- Files Assigned:
+  * frontend/src/components/InsuranceHubView.tsx
+  * frontend/src/components/GoalsView.tsx
+  * frontend/src/components/InvestmentsView.tsx
+------------------------------------------------------------------------------
+Person 10: Small Business Merchant Khata, Ledger & Expenses
+- Primary Responsibilities: Transactions mapping tables, billing invoice drawers, discount lists.
+- Files Assigned:
+  * frontend/src/components/MerchantKhataView.tsx
+  * frontend/src/components/Expense/ExpensesView.tsx
+  * frontend/src/components/Expense/PersonalExpenseLedger.tsx
+  * frontend/src/components/RewardsOffersView.tsx
+  * frontend/src/components/PricingView.tsx
+  * frontend/src/components/ui.tsx
+
+--------------------------------------------------------------------------------
+Visual & Quality Assurance Assignments
+--------------------------------------------------------------------------------
+Person 11: WebGL 3D Hero Scene & Design Tokens
+- Primary Responsibilities: Three.js WebGL credit card animation rendering, point lighting, style tokens.
+
+- Files Assigned:
+  * frontend/src/components/ThreeJsHeroVisual.tsx
+  * src/design-system/tokens.ts
+-------------------------------------------------------
+Person 12: Custom SVG Curves, Client Utils & Playwright E2E Tests
+- Primary Responsibilities: Analytics graphs bezier curves, fetch APIs wrappers, E2E spec suites.
+
+- Files Assigned:
+  * frontend/src/components/ReportsView.tsx
+  * frontend/src/lib/api.ts
+  * frontend/src/lib/utils.ts
+  * frontend/tests/mvp.spec.ts
+
+--------------------------------------------------------------------------------
+DevOps, Docker & Database Assignments
+--------------------------------------------------------------------------------
+
+Person 13: Docker Containerization & Express endpoints
+- Primary Responsibilities: DevOps docker configuration scripts, backend routes setup, server integration tests.
+
+- Files Assigned:
+  * docker-compose.yml
+  * backend/Dockerfile
+  * frontend/Dockerfile
+  * backend/src/app.ts
+  * backend/src/app.test.ts
+----------------------------------------
+Person 14: Database Infrastructure, Schema Design & PostgreSQL Server Administration
+- Primary Responsibilities: DB schema architecture, seeder files scripting, ORM connections pooling setup.
+
+- Files Assigned:
+  * backend/prisma/schema.prisma
+  * backend/prisma/seed.ts
+  * backend/src/store-prisma.ts
+  * backend/src/store.interface.ts
+  * backend/src/auth.ts
+-------------------------------------------
+Person 15: Express API Core Router, Memory Fallback Store & Shared typings
+- Primary Responsibilities: Server express routes configs, local dev memory database adapters, index exports, zod validation rules, typings definitions.
+
+- Files Assigned:
+  * backend/src/server.ts
+  * backend/src/store-inmemory.ts
+  * frontend/src/shared/finance.ts
+  * backend/src/shared/finance.ts
+  * frontend/src/shared/index.ts
+  * backend/src/shared/index.ts
+  * frontend/src/shared/schemas.ts
+  * backend/src/shared/schemas.ts
+  * frontend/src/shared/types.ts
+  * backend/src/shared/types.ts
+
+================================================================================

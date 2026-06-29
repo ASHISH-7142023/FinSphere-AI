@@ -49,6 +49,13 @@ export class InMemoryStore implements IStore {
     return newUser;
   }
 
+  async updateUserPassword(email: string, passwordHash: string): Promise<StoredUser | null> {
+    const user = this.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+    if (!user) return null;
+    user.passwordHash = passwordHash;
+    return user;
+  }
+
   async getExpenses(userId: string, filter?: { search?: string; category?: string }): Promise<Expense[]> {
     return this.expenses.filter((item) => {
       if (item.userId !== userId) return false;

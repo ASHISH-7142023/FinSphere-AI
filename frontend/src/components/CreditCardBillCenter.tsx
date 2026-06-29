@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-export default function CreditCardBillCenter({ session: propSession }: { session?: any }) {
+export default function CreditCardBillCenter({ session: propSession, onAddExpense }: { session?: any; onAddExpense?: (amount: number, category: string, description: string) => Promise<void> }) {
   const [session] = useState(() => {
     if (propSession) return propSession;
     if (typeof window !== "undefined") {
@@ -33,6 +33,10 @@ export default function CreditCardBillCenter({ session: propSession }: { session
     }
     setToastMsg(`Successfully paid ₹${amount.toLocaleString()} via FinSphere Pay!`);
     setTimeout(() => setToastMsg(""), 3500);
+
+    if (onAddExpense) {
+      onAddExpense(amount, "Bills", `Credit Card Bill Payment (${card === "hdfc" ? "HDFC" : "Amex"})`);
+    }
   };
 
   return (

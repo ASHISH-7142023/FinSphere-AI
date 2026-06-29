@@ -16,9 +16,10 @@ interface UtilitiesHubViewProps {
     upiId?: string;
     upiQr?: string;
   } | null;
+  onAddExpense?: (amount: number, category: string, description: string) => Promise<void>;
 }
 
-export default function UtilitiesHubView({ initialTab = "mobile", user }: UtilitiesHubViewProps) {
+export default function UtilitiesHubView({ initialTab = "mobile", user, onAddExpense }: UtilitiesHubViewProps) {
   const [session] = useState(() => {
     if (typeof window !== "undefined") {
       const raw = localStorage.getItem("finsphere.session");
@@ -100,9 +101,12 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
     { id: "upi-qr", label: "Scan & Pay", icon: "qr_code_scanner" },
   ];
 
-  const triggerPayment = (amount: number) => {
+  const triggerPayment = (amount: number, category = "Bills", description = "Utility Payment") => {
     setSuccessAmount(amount);
     setPaymentSuccess(true);
+    if (onAddExpense) {
+      onAddExpense(amount, category, description);
+    }
   };
 
   const handleReset = () => {
@@ -173,7 +177,7 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
         <div className="grid grid-cols-12 gap-6">
           {activeTab === "credit-card" ? (
             <div className="col-span-12">
-              <CreditCardBillCenter />
+              <CreditCardBillCenter onAddExpense={onAddExpense} />
             </div>
           ) : (
             <>
@@ -388,10 +392,36 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
                       onChange={(e) => setMobileCircle(e.target.value)}
                       className="w-full bg-[#0e1511] border border-white/10 rounded-xl px-4 py-3 text-sm text-on-surface focus:ring-1 focus:ring-primary"
                     >
-                      <option>Karnataka</option>
+                      <option>Andhra Pradesh</option>
+                      <option>Arunachal Pradesh</option>
+                      <option>Assam</option>
+                      <option>Bihar</option>
+                      <option>Chhattisgarh</option>
                       <option>Delhi NCR</option>
+                      <option>Goa</option>
+                      <option>Gujarat</option>
+                      <option>Haryana</option>
+                      <option>Himachal Pradesh</option>
+                      <option>Jammu & Kashmir</option>
+                      <option>Jharkhand</option>
+                      <option>Karnataka</option>
+                      <option>Kerala</option>
+                      <option>Madhya Pradesh</option>
                       <option>Maharashtra</option>
+                      <option>Manipur</option>
+                      <option>Meghalaya</option>
+                      <option>Mizoram</option>
+                      <option>Nagaland</option>
+                      <option>Odisha</option>
+                      <option>Punjab</option>
+                      <option>Rajasthan</option>
+                      <option>Sikkim</option>
                       <option>Tamil Nadu</option>
+                      <option>Telangana</option>
+                      <option>Tripura</option>
+                      <option>Uttar Pradesh</option>
+                      <option>Uttarakhand</option>
+                      <option>West Bengal</option>
                     </select>
                   </div>
                 </div>
@@ -426,7 +456,7 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              triggerPayment(plan.price);
+                              triggerPayment(plan.price, "Bills", `Mobile Recharge (${mobileOperator} - ${mobileNumber || "Self"})`);
                             }}
                             className="mt-4 w-full py-1.5 bg-primary text-background rounded-lg font-bold text-xs hover:scale-102"
                           >
@@ -659,7 +689,7 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
                       Place merchant/UPI QR code inside camera frame during live deployment tests.
                     </p>
                     <button
-                      onClick={() => triggerPayment(1250)}
+                      onClick={() => triggerPayment(1250, "Food", "Scan & Pay QR Payment")}
                       className="mt-6 px-5 py-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 rounded-xl text-xs font-bold transition-all"
                     >
                       Simulate Scan Success (₹1,250)
@@ -763,7 +793,11 @@ export default function UtilitiesHubView({ initialTab = "mobile", user }: Utilit
         consumerId={billDetailConsumerId}
         dueAmount={billDetailAmount}
         dueDate={billDetailDueDate}
-        onPaymentSuccess={(paidAmount) => triggerPayment(paidAmount)}
+        onPaymentSuccess={(paidAmount) => {
+          const category = billDetailType === "fastag" ? "Travel" : "Bills";
+          const desc = `${billDetailType.toUpperCase()} Bill (${billDetailProvider} - ${billDetailConsumerId || "Self"})`;
+          triggerPayment(paidAmount, category, desc);
+        }}
       />
 
     </div>

@@ -3,6 +3,8 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import fs from "fs";
+import path from "path";
 import {
   budgetSchema,
   calculateBudgetUsage,
@@ -58,6 +60,37 @@ export function createApp(store: IStore) {
 
     const { passwordHash: _passwordHash, ...baseUser } = user;
     const safeUser = { ...baseUser, ...generateUpiDetails(user) };
+
+    // Log welcome email notification
+    try {
+      const timestamp = new Date().toISOString();
+      const emailTemplate = `
+================================================================================
+FROM: welcome@finsphere.ai
+TO: ${user.email}
+SUBJECT: Welcome to FinSphere AI!
+DATE: ${timestamp}
+--------------------------------------------------------------------------------
+Dear ${user.name},
+
+Welcome to FinSphere AI, the cinematic personal finance super-app! 
+
+Your account has been successfully registered. You are currently on the Free Tier 
+by default. You can track your wealth flow, analyze your expenses, and rebalance 
+your mutual fund SIP investments.
+
+Thank you for choosing FinSphere AI to guide your financial journey.
+
+Warm regards,
+FinSphere AI Welcome & Onboarding Team
+================================================================================
+\n`;
+      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      fs.appendFileSync(logPath, emailTemplate, "utf8");
+    } catch (err) {
+      console.error("Failed to write mock email log:", err);
+    }
+
     return res.status(201).json({ token: signToken(user.id), user: safeUser });
   });
 
@@ -72,7 +105,152 @@ export function createApp(store: IStore) {
     
     const { passwordHash: _passwordHash, ...baseUser } = user;
     const safeUser = { ...baseUser, ...generateUpiDetails(user) };
+
+    // Log login email notification
+    try {
+      const timestamp = new Date().toISOString();
+      const ipAddress = req.ip ?? req.socket.remoteAddress ?? "127.0.0.1";
+      const userAgent = req.headers["user-agent"] ?? "Unknown Device";
+      
+      const emailTemplate = `
+================================================================================
+FROM: security@finsphere.ai
+TO: ${user.email}
+SUBJECT: FinSphere AI - Account Logged In
+DATE: ${timestamp}
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new login to your FinSphere AI account was detected.
+
+Access Details:
+- Date/Time: ${timestamp}
+- IP Address: ${ipAddress}
+- Device Details (User Agent): ${userAgent}
+
+If this activity was you, no action is required. If this login was unauthorized, 
+please change your password immediately.
+
+Warm regards,
+FinSphere AI Security & Systems Team
+================================================================================
+\n`;
+      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      fs.appendFileSync(logPath, emailTemplate, "utf8");
+    } catch (err) {
+      console.error("Failed to write mock email log:", err);
+    }
+
     return res.json({ token: signToken(user.id), user: safeUser });
+  });
+
+  const activeOtps = new Map<string, { otp: string; expiresAt: number }>();
+  const resetTokens = new Map<string, { email: string; expiresAt: number }>();
+
+  app.post("/api/auth/forgot-password", async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    const user = await store.getUserByEmail(email);
+    if (!user) return res.status(404).json({ message: "Email not registered" });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    activeOtps.set(email.toLowerCase(), { otp, expiresAt: Date.now() + 5 * 60 * 1000 });
+
+    try {
+      const timestamp = new Date().toISOString();
+      const emailTemplate = `
+================================================================================
+FROM: security@finsphere.ai
+TO: ${email}
+SUBJECT: FinSphere AI - Password Reset Verification Code
+DATE: ${timestamp}
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+We received a request to reset your password. Please use the following 
+6-digit One-Time Password (OTP) code to complete your verification:
+
+                          ======================
+                              [   ${otp}   ]
+                          ======================
+
+This code is active for 5 minutes. If you did not request this, please 
+ignore this email.
+
+Warm regards,
+FinSphere AI Security & Systems Team
+================================================================================
+\n`;
+      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      fs.appendFileSync(logPath, emailTemplate, "utf8");
+    } catch (err) {
+      console.error("Failed to write mock email log:", err);
+    }
+
+    return res.json({ message: "OTP sent successfully" });
+  });
+
+  app.post("/api/auth/verify-otp", async (req, res) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) return res.status(400).json({ message: "Email and OTP are required" });
+
+    const entry = activeOtps.get(email.toLowerCase());
+    if (!entry || entry.expiresAt < Date.now() || entry.otp !== otp) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    activeOtps.delete(email.toLowerCase());
+    const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    resetTokens.set(email.toLowerCase(), { email, expiresAt: Date.now() + 10 * 60 * 1000 });
+
+    return res.json({ token: resetToken });
+  });
+
+  app.post("/api/auth/reset-password", async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ message: "Email and new password are required" });
+
+    const entry = resetTokens.get(email.toLowerCase());
+    if (!entry || entry.expiresAt < Date.now()) {
+      return res.status(400).json({ message: "Password reset session has expired. Please request another OTP." });
+    }
+
+    resetTokens.delete(email.toLowerCase());
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updated = await store.updateUserPassword(email, hashedPassword);
+    if (!updated) return res.status(404).json({ message: "User not found" });
+
+    // Log password reset success email
+    try {
+      const timestamp = new Date().toISOString();
+      const emailTemplate = `
+================================================================================
+FROM: security@finsphere.ai
+TO: ${email}
+SUBJECT: FinSphere AI - Password Reset Successful
+DATE: ${timestamp}
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+Your password has been successfully reset. 
+
+Date/Time of change: ${timestamp}
+
+You can now log in using your new credentials. If you did not authorize this, 
+please contact security@finsphere.ai immediately.
+
+Warm regards,
+FinSphere AI Security & Systems Team
+================================================================================
+\n`;
+      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      fs.appendFileSync(logPath, emailTemplate, "utf8");
+    } catch (err) {
+      console.error("Failed to write mock email log:", err);
+    }
+
+    return res.json({ message: "Password reset successfully" });
   });
 
   const requireAuth = authMiddleware(store);
@@ -135,6 +313,41 @@ export function createApp(store: IStore) {
       if (!parsed.success) return res.status(400).json({ message: "Invalid expense", issues: parsed.error.issues });
       
       const expense = await store.createExpense({ userId: res.locals.user.id, ...parsed.data });
+
+      // Log payment confirmation email
+      try {
+        const timestamp = new Date().toISOString();
+        const user = res.locals.user;
+        const emailTemplate = `
+================================================================================
+FROM: transactions@finsphere.ai
+TO: ${user.email}
+SUBJECT: FinSphere AI - Transaction Alert: ${parsed.data.description}
+DATE: ${timestamp}
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new payment of Rs. ${parsed.data.amount} has been successfully charged 
+to your account.
+
+Transaction Details:
+- Description: ${parsed.data.description}
+- Category: ${parsed.data.category}
+- Date: ${parsed.data.date}
+- Status: SUCCESSFUL
+
+Thank you for choosing FinSphere AI to track and manage your finances.
+
+Warm regards,
+FinSphere AI Transactions Team
+================================================================================
+\n`;
+        const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+        fs.appendFileSync(logPath, emailTemplate, "utf8");
+      } catch (err) {
+        console.error("Failed to write mock email log:", err);
+      }
+
       res.status(201).json({ expense });
     });
 

@@ -8,18 +8,34 @@ export default function ForgotPasswordPage() {
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState(false);
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBusy(true);
-    // Simulate sending OTP
-    setTimeout(() => {
-      setBusy(false);
+    setError("");
+    try {
+      const response = await fetch("http://localhost:4000/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({ message: "Request failed" }));
+        throw new Error(body.message ?? "Request failed");
+      }
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("reset_email", email);
+      }
       setSuccess(true);
       setTimeout(() => {
-        router.push("/verify-otp");
+        router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
       }, 1000);
-    }, 1200);
+    } catch (err: any) {
+      setError(err.message ?? "Failed to send reset OTP. Please try again.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -44,6 +60,11 @@ export default function ForgotPasswordPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-xs text-center font-medium">
+                {error}
+              </div>
+            )}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-on-surface-variant" htmlFor="email">Email Address</label>
               <div className="relative">

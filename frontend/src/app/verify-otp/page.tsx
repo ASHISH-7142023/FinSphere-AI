@@ -9,7 +9,15 @@ export default function VerifyOtpPage() {
   const [success, setSuccess] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(45);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmail(sessionStorage.getItem("reset_email") || "");
+    }
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,17 +44,44 @@ export default function VerifyOtpPage() {
     }
   };
 
-  const handleVerifySubmit = (e: React.FormEvent) => {
+  const handleVerifySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    // Simulate OTP verify
-    setTimeout(() => {
-      setBusy(false);
+    setError("");
+    try {
+      const response = await fetch("http://localhost:4000/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp: otp.join("") })
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({ message: "Request failed" }));
+        throw new Error(body.message ?? "Request failed");
+      }
       setSuccess(true);
       setTimeout(() => {
         router.push("/reset-password");
       }, 1000);
-    }, 1200);
+    } catch (err: any) {
+      setError(err.message ?? "Invalid OTP code. Please check sent_emails.log.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (!email) return;
+    setTimer(45);
+    setError("");
+    try {
+      await fetch("http://localhost:4000/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+    } catch (err) {
+      console.error("Failed to resend OTP:", err);
+    }
   };
 
   return (
@@ -71,6 +106,11 @@ export default function VerifyOtpPage() {
           </div>
 
           <form onSubmit={handleVerifySubmit} className="space-y-6">
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-xs text-center font-medium">
+                {error}
+              </div>
+            )}
             <div className="flex justify-between gap-2.5">
               {otp.map((digit, index) => (
                 <input
@@ -94,7 +134,7 @@ export default function VerifyOtpPage() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setTimer(45)}
+                  onClick={handleResendOtp}
                   className="text-primary font-bold hover:underline"
                 >
                   Resend OTP

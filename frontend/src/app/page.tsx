@@ -245,6 +245,20 @@ export default function Home() {
     await refreshAll();
   };
 
+  const handleAddExpenseDirect = async (amount: number, category: string, description: string) => {
+    if (!session?.token) return;
+    await apiRequest("/expenses", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: Number(amount),
+        category,
+        description,
+        date: new Date().toISOString().split("T")[0]
+      })
+    }, session.token);
+    await refreshAll();
+  };
+
   const handleDeleteExpense = async (id: string) => {
     if (!session?.token) return;
     await apiRequest(`/expenses/${id}`, {
@@ -718,11 +732,11 @@ export default function Home() {
           )}
 
           {view === "utilities" && (
-            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} user={session?.user} />
+            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} user={session?.user} onAddExpense={handleAddExpenseDirect} />
           )}
 
           {view === "credit-card-center" && (
-            <CreditCardBillCenter />
+            <CreditCardBillCenter onAddExpense={handleAddExpenseDirect} />
           )}
 
           {view === "mutual-funds" && (

@@ -9,6 +9,7 @@ export interface IStore {
   getUserByEmail(email: string): Promise<StoredUser | null>;
   getUserById(id: string): Promise<StoredUser | null>;
   createUser(user: Omit<StoredUser, "createdAt">): Promise<StoredUser>;
+  updateUserPassword(email: string, passwordHash: string): Promise<StoredUser | null>;
 
   // Expenses
   getExpenses(userId: string, filter?: { search?: string; category?: string }): Promise<Expense[]>;

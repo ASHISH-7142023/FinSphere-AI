@@ -69,6 +69,25 @@ export class PrismaStore implements IStore {
     };
   }
 
+  async updateUserPassword(email: string, passwordHash: string): Promise<StoredUser | null> {
+    try {
+      const user = await this.prisma.user.update({
+        where: { email: email.toLowerCase() },
+        data: { passwordHash }
+      });
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        monthlyIncome: Number(user.monthlyIncome),
+        passwordHash: user.passwordHash,
+        createdAt: user.createdAt.toISOString()
+      };
+    } catch {
+      return null;
+    }
+  }
+
   async getExpenses(userId: string, filter?: { search?: string; category?: string }): Promise<Expense[]> {
     const where: any = { userId };
     if (filter?.category) {

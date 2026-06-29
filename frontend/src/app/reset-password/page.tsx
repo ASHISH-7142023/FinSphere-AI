@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
@@ -11,8 +11,15 @@ export default function ResetPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmail(sessionStorage.getItem("reset_email") || "");
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -20,14 +27,28 @@ export default function ResetPasswordPage() {
     }
     setError("");
     setBusy(true);
-    // Simulate reset password
-    setTimeout(() => {
-      setBusy(false);
+    try {
+      const response = await fetch("http://localhost:4000/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({ message: "Request failed" }));
+        throw new Error(body.message ?? "Request failed");
+      }
       setSuccess(true);
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("reset_email");
+      }
       setTimeout(() => {
         router.push("/login");
       }, 1200);
-    }, 1200);
+    } catch (err: any) {
+      setError(err.message ?? "Failed to reset password. Please try again.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (

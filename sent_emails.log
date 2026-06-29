@@ -1,0 +1,70 @@
+
+================================================================================
+FROM: security@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Password Reset Verification Code
+DATE: 2026-06-29T09:17:49.778Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+We received a request to reset your password. Please use the following 
+6-digit One-Time Password (OTP) code to complete your verification:
+
+                          ======================
+                              [   678867   ]
+                          ======================
+
+This code is active for 5 minutes. If you did not request this, please 
+ignore this email.
+
+Warm regards,
+FinSphere AI Security & Systems Team
+================================================================================
+
+
+================================================================================
+FROM: security@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Password Reset Verification Code
+DATE: 2026-06-29T09:30:33.470Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+We received a request to reset your password. Please use the following 
+6-digit One-Time Password (OTP) code to complete your verification:
+
+                          ======================
+                              [   228707   ]
+                          ======================
+
+This code is active for 5 minutes. If you did not request this, please 
+ignore this email.
+
+Warm regards,
+FinSphere AI Security & Systems Team
+================================================================================
+
+
+================================================================================
+FROM: transactions@finsphere.ai
+TO: passworddemo@finsphere.ai
+SUBJECT: FinSphere AI - Transaction Alert: Uber Ride
+DATE: 2026-06-29T09:36:38.657Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new payment of Rs. 1500 has been successfully charged 
+to your account.
+
+Transaction Details:
+- Description: Uber Ride
+- Category: Travel
+- Date: 2026-06-29
+- Status: SUCCESSFUL
+
+Thank you for choosing FinSphere AI to track and manage your finances.
+
+Warm regards,
+FinSphere AI Transactions Team
+================================================================================
+
