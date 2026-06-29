@@ -14,13 +14,50 @@ export default function CreditCardBillCenter({ session: propSession, onAddExpens
 
   const income = session?.user?.monthlyIncome || 150000;
 
+  const getDaysRemainingText = (dueDateStr: string): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDate = new Date(dueDateStr);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return `Overdue by ${Math.abs(diffDays)} Day${Math.abs(diffDays) > 1 ? "s" : ""}`;
+    } else if (diffDays === 0) {
+      return "Due Today";
+    } else if (diffDays === 1) {
+      return "1 Day";
+    } else {
+      return `${diffDays} Days`;
+    }
+  };
+
+  const hdfcDaysText = getDaysRemainingText("2026-10-28");
+  const amexDaysText = getDaysRemainingText("2026-11-05");
+
   const [hdfcBalance, setHdfcBalance] = useState(Math.round(income * 0.952)); // e.g. 142850 for 150000 salary
   const [amexBalance, setAmexBalance] = useState(Math.round(income * 0.547)); // e.g. 82100 for 150000 salary
-  const [timeline, setTimeline] = useState([
-    { id: 1, title: "HDFC Regalia Gold Bill Due", desc: "Due in 4 days", amount: Math.round(income * 0.952), type: "upcoming", color: "border-emerald-500" },
-    { id: 2, title: "Amex Platinum Bill Generation", desc: "Scheduled", amount: Math.round(income * 0.547), type: "scheduled", color: "border-white/5" },
-    { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: Math.round(income * 0.082), type: "settled", color: "border-white/5" },
-  ]);
+  const [timeline, setTimeline] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const hdfcDue = new Date("2026-10-28");
+    hdfcDue.setHours(0, 0, 0, 0);
+    const hDiff = Math.ceil((hdfcDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    const amexDue = new Date("2026-11-05");
+    amexDue.setHours(0, 0, 0, 0);
+    const aDiff = Math.ceil((amexDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    const hText = hDiff < 0 ? `Overdue by ${Math.abs(hDiff)} days` : hDiff === 0 ? "Due Today" : `Due in ${hDiff} days`;
+    const aText = aDiff < 0 ? `Overdue by ${Math.abs(aDiff)} days` : aDiff === 0 ? "Due Today" : `Due in ${aDiff} days`;
+
+    return [
+      { id: 1, title: "HDFC Regalia Gold Bill Due", desc: hText, amount: Math.round(income * 0.952), type: "upcoming", color: "border-emerald-500" },
+      { id: 2, title: "Amex Platinum Bill Generation", desc: aText, amount: Math.round(income * 0.547), type: "scheduled", color: "border-white/5" },
+      { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: Math.round(income * 0.082), type: "settled", color: "border-white/5" },
+    ];
+  });
   const [toastMsg, setToastMsg] = useState("");
 
   const handlePayFull = (card: "hdfc" | "amex", amount: number) => {
@@ -78,7 +115,7 @@ export default function CreditCardBillCenter({ session: propSession, onAddExpens
             <div className="flex items-center justify-between border-t border-white/5 pt-4">
               <div>
                 <p className="text-on-surface-variant text-[10px] uppercase font-bold">Due Date</p>
-                <p className="text-white font-bold text-xs mt-0.5">{hdfcBalance > 0 ? "Oct 28, 2026 (4 Days)" : "No Dues Pending"}</p>
+                <p className="text-white font-bold text-xs mt-0.5">{hdfcBalance > 0 ? `Oct 28, 2026 (${hdfcDaysText})` : "No Dues Pending"}</p>
               </div>
               <div className="flex gap-2">
                 {hdfcBalance > 0 ? (
@@ -120,7 +157,7 @@ export default function CreditCardBillCenter({ session: propSession, onAddExpens
             <div className="flex items-center justify-between border-t border-white/5 pt-4">
               <div>
                 <p className="text-on-surface-variant text-[10px] uppercase font-bold">Due Date</p>
-                <p className="text-white font-bold text-xs mt-0.5">{amexBalance > 0 ? "Nov 05, 2026 (12 Days)" : "No Dues Pending"}</p>
+                <p className="text-white font-bold text-xs mt-0.5">{amexBalance > 0 ? `Nov 05, 2026 (${amexDaysText})` : "No Dues Pending"}</p>
               </div>
               <div className="flex gap-2">
                 {amexBalance > 0 ? (

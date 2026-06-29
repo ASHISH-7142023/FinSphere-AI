@@ -302,6 +302,34 @@ export default function Home() {
     await refreshAll();
   };
 
+  const handleBuyHolding = async (name: string, assetType: "Stock" | "MutualFund" | "SIP" | "Gold" | "Crypto" | "Other", amount: number) => {
+    if (!session?.token) return;
+    const existing = investments.find(i => i.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      await apiRequest(`/investments/${existing.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          assetType,
+          name,
+          investedAmount: existing.investedAmount + amount,
+          currentValue: existing.currentValue + amount
+        })
+      }, session.token);
+    } else {
+      await apiRequest("/investments", {
+        method: "POST",
+        body: JSON.stringify({
+          assetType,
+          name,
+          investedAmount: amount,
+          currentValue: amount
+        })
+      }, session.token);
+    }
+    await refreshAll();
+  };
+
+
   const scale = sidebarWidth / 256;
   const buttonStyle = {
     padding: `${Math.max(6, Math.min(18, 12 * scale))}px ${Math.max(8, Math.min(24, 16 * scale))}px`,
@@ -704,11 +732,12 @@ export default function Home() {
             <InvestmentsView
               investments={investments}
               onOpenAddModal={() => setActiveModal("investment")}
+              onBuyHolding={handleBuyHolding}
             />
           )}
 
           {view === "credit" && (
-            <CreditView token={session.token} />
+            <CreditView token={session.token} expenses={expenses} />
           )}
 
           {view === "reports" && (

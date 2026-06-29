@@ -7,13 +7,87 @@ import type { Investment } from "@/shared";
 interface InvestmentsViewProps {
   investments: Investment[];
   onOpenAddModal: () => void;
+  onBuyHolding?: (name: string, assetType: "Stock" | "MutualFund" | "SIP" | "Gold" | "Crypto" | "Other", amount: number) => Promise<void>;
 }
 
-export default function InvestmentsView({ investments, onOpenAddModal }: InvestmentsViewProps) {
+const TOP_HOLDINGS = [
+  {
+    symbol: "AAPL",
+    name: "Apple Inc (AAPL)",
+    assetType: "Stock" as const,
+    category: "Technology • Large Cap",
+    lastPrice: "₹182.52",
+    dayChange: "+₹3.12 (1.8%)",
+    returnsValuation: "+₹12,450.00",
+    bg: "bg-zinc-700",
+    avatar: "A",
+    imgUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuAHdykhZk8EcoLY7o17h7xvG74jTO7k8aMwj4rhQrZptWRYJ9nNpg_25m9Dm5t6eKWUwAmkilbn68n8XwyhjjwSifdzSUTEeDvMb17lLiuAUwCA3oxXaTf9YN27-3elnB0LhVjXxhfUfMMR2h597aqP1Vxq8a1qNW1UN-dbujMKq-xKrdWE6APLBi7DFwJASYKOvnMyj3NGT-o_nL0-nAVHu8GvKYokPJ3OIKwzBDovKuTP4jZp3nkwwVuQk0R6i7fWQaZkgvweTM-C"
+  },
+  {
+    symbol: "NVDA",
+    name: "Nvidia Corp (NVDA)",
+    assetType: "Stock" as const,
+    category: "Semiconductors • High Growth",
+    lastPrice: "₹460.18",
+    dayChange: "+₹12.45 (2.7%)",
+    returnsValuation: "+₹42,100.00",
+    bg: "bg-emerald-700",
+    avatar: "N",
+    imgUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBJwGH4yj86PhtEpNL93cLx-kf__7MYGSGl4Eahy1WxL413yfFwcIxG3F8O7jWpVE1nlSHtmsnDsgX0GGnqxD4R3WKVk84hulA1FTJXQOJHkeEAbyO7dRhHX_elBq77pZd3RGcHXV5FrO_xV530_kBIKc4CE8X4JumBHVsm0G7RATKbZAV8ubbhwf3yzJy_En9yNprs4XX2sTBLx0Q76QrulPgvOo5lk82KgGWjKY0LmRW3ci1Q24V4qfqDkeRFUk1mHxN_il7zi_6s"
+  },
+  {
+    symbol: "MSFT",
+    name: "Microsoft Corp (MSFT)",
+    assetType: "Stock" as const,
+    category: "Technology • Large Cap",
+    lastPrice: "₹415.50",
+    dayChange: "+₹4.20 (1.0%)",
+    returnsValuation: "+₹18,200.00",
+    bg: "bg-blue-600",
+    avatar: "M"
+  },
+  {
+    symbol: "RELIANCE",
+    name: "Reliance Industries (RELIANCE)",
+    assetType: "Stock" as const,
+    category: "Energy & Retail • Conglomerate",
+    lastPrice: "₹2,450.00",
+    dayChange: "-₹15.30 (-0.6%)",
+    returnsValuation: "+₹8,900.00",
+    bg: "bg-orange-600",
+    avatar: "R"
+  },
+  {
+    symbol: "HDFCBANK",
+    name: "HDFC Bank (HDFCBANK)",
+    assetType: "Stock" as const,
+    category: "Finance • Banking Leader",
+    lastPrice: "₹1,610.25",
+    dayChange: "+₹8.50 (0.5%)",
+    returnsValuation: "+₹11,400.00",
+    bg: "bg-blue-800",
+    avatar: "H"
+  }
+];
+
+export default function InvestmentsView({ investments, onOpenAddModal, onBuyHolding }: InvestmentsViewProps) {
   const investedVal = investments.reduce((acc, i) => acc + i.investedAmount, 0);
   const currentVal = investments.reduce((acc, i) => acc + i.currentValue, 0);
   const profitVal = currentVal - investedVal;
   const growthPct = investedVal > 0 ? (profitVal / investedVal) * 100 : 12.4;
+
+  const handleBuyClick = (holdingName: string, assetType: "Stock" | "MutualFund" | "SIP" | "Gold" | "Crypto" | "Other") => {
+    const amountStr = prompt(`Enter amount to invest in ${holdingName} (₹):`, "10000");
+    if (!amountStr) return;
+    const amount = Number(amountStr);
+    if (isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid positive amount.");
+      return;
+    }
+    if (onBuyHolding) {
+      onBuyHolding(holdingName, assetType, amount);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -231,53 +305,42 @@ export default function InvestmentsView({ investments, onOpenAddModal }: Investm
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-sm">
-              <tr className="group hover:bg-white/5 transition-all">
-                <td className="py-4">
-                  <div className="flex items-center gap-3">
-                    <img
-                      className="w-9 h-9 rounded-xl object-contain p-1 bg-white/5"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHdykhZk8EcoLY7o17h7xvG74jTO7k8aMwj4rhQrZptWRYJ9nNpg_25m9Dm5t6eKWUwAmkilbn68n8XwyhjjwSifdzSUTEeDvMb17lLiuAUwCA3oxXaTf9YN27-3elnB0LhVjXxhfUfMMR2h597aqP1Vxq8a1qNW1UN-dbujMKq-xKrdWE6APLBi7DFwJASYKOvnMyj3NGT-o_nL0-nAVHu8GvKYokPJ3OIKwzBDovKuTP4jZp3nkwwVuQk0R6i7fWQaZkgvweTM-C"
-                      alt="Apple"
-                    />
-                    <div>
-                      <p className="font-bold text-white">Apple Inc (AAPL)</p>
-                      <p className="text-xs text-on-surface-variant">Technology • Large Cap</p>
+              {TOP_HOLDINGS.map((item) => (
+                <tr key={item.symbol} className="group hover:bg-white/5 transition-all">
+                  <td className="py-4">
+                    <div className="flex items-center gap-3">
+                      {item.imgUrl ? (
+                        <img
+                          className="w-9 h-9 rounded-xl object-contain p-1 bg-white/5"
+                          src={item.imgUrl}
+                          alt={item.name}
+                        />
+                      ) : (
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-white text-sm ${item.bg}`}>
+                          {item.avatar}
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-bold text-white">{item.name}</p>
+                        <p className="text-xs text-on-surface-variant">{item.category}</p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="py-4 font-bold text-white">₹182.52</td>
-                <td className="py-4 text-primary font-bold">+₹3.12 (1.8%)</td>
-                <td className="py-4 font-semibold text-primary">+₹12,450.00</td>
-                <td className="py-4 text-right">
-                  <button className="bg-primary/10 text-primary px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-background transition-colors">
-                    Buy More
-                  </button>
-                </td>
-              </tr>
-
-              <tr className="group hover:bg-white/5 transition-all">
-                <td className="py-4">
-                  <div className="flex items-center gap-3">
-                    <img
-                      className="w-9 h-9 rounded-xl object-contain p-1 bg-white/5"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJwGH4yj86PhtEpNL93cLx-kf__7MYGSGl4Eahy1WxL413yfFwcIxG3F8O7jWpVE1nlSHtmsnDsgX0GGnqxD4R3WKVk84hulA1FTJXQOJHkeEAbyO7dRhHX_elBq77pZd3RGcHXV5FrO_xV530_kBIKc4CE8X4JumBHVsm0G7RATKbZAV8ubbhwf3yzJy_En9yNprs4XX2sTBLx0Q76QrulPgvOo5lk82KgGWjKY0LmRW3ci1Q24V4qfqDkeRFUk1mHxN_il7zi_6s"
-                      alt="Nvidia"
-                    />
-                    <div>
-                      <p className="font-bold text-white">Nvidia Corp (NVDA)</p>
-                      <p className="text-xs text-on-surface-variant">Semiconductors • High Growth</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 font-bold text-white">₹460.18</td>
-                <td className="py-4 text-primary font-bold">+₹12.45 (2.7%)</td>
-                <td className="py-4 font-semibold text-primary">+₹42,100.00</td>
-                <td className="py-4 text-right">
-                  <button className="bg-primary/10 text-primary px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-background transition-colors">
-                    Buy More
-                  </button>
-                </td>
-              </tr>
+                  </td>
+                  <td className="py-4 font-bold text-white">{item.lastPrice}</td>
+                  <td className={`py-4 font-bold ${item.dayChange.startsWith("-") ? "text-error" : "text-primary"}`}>
+                    {item.dayChange}
+                  </td>
+                  <td className="py-4 font-semibold text-primary">{item.returnsValuation}</td>
+                  <td className="py-4 text-right">
+                    <button
+                      onClick={() => handleBuyClick(item.name, item.assetType)}
+                      className="bg-primary/10 text-primary px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-background transition-colors"
+                    >
+                      Buy More
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

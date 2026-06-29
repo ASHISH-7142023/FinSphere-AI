@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/api";
+import type { Expense } from "@/shared";
 
 interface CreditScoreSimulatorProps {
   token: string;
+  expenses: Expense[];
 }
 
 interface CustomEvent {
@@ -19,9 +21,12 @@ interface HistoryLog {
   score: number;
 }
 
-export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProps) {
-  // Base score
-  const baseScore = 742;
+export default function CreditScoreSimulator({ token, expenses }: CreditScoreSimulatorProps) {
+  // Base score calculated dynamically from actual transactions (Shopping/Food spends minus Card payments)
+  const cardSpends = expenses.filter(e => e.category === "Shopping" || e.category === "Food" || e.category === "Entertainment").reduce((sum, e) => sum + e.amount, 0);
+  const cardPayments = expenses.filter(e => e.description.toLowerCase().includes("credit card")).reduce((sum, e) => sum + e.amount, 0);
+  const dynamicUtilization = Math.max(2, Math.min(95, 24 + Math.round((cardSpends - cardPayments) / 1000)));
+  const baseScore = Math.max(300, Math.min(850, Math.round(742 - (dynamicUtilization - 24) * 2)));
 
   // Simulation Scenarios States
   const [debtActive, setDebtActive] = useState(true);
@@ -44,13 +49,13 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
   const [showAddCustom, setShowAddCustom] = useState(false);
 
   // History log State
-  const [historyLogs, setHistoryLogs] = useState<HistoryLog[]>([
-    { timestamp: new Date().toLocaleTimeString(), action: "Simulator Initialized", score: 742 }
+  const [historyLogs, setHistoryLogs] = useState<HistoryLog[]>(() => [
+    { timestamp: new Date().toLocaleTimeString(), action: "Simulator Initialized", score: baseScore }
   ]);
   const [showHistory, setShowHistory] = useState(false);
 
   // Calculated simulated score
-  const [simulatedScore, setSimulatedScore] = useState(742);
+  const [simulatedScore, setSimulatedScore] = useState(baseScore);
   const [loading, setLoading] = useState(false);
 
   // Calculate impacts
@@ -223,7 +228,7 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
             </p>
             
             {/* Renders gauge */}
-            <div className="relative w-72 h-36 overflow-hidden mb-4">
+            <div className="relative w-72 h-[168px] mb-4">
               <svg className="w-full h-full" viewBox="0 0 100 58">
                 <path
                   className="fill-none stroke-[#2f3632] stroke-[15] stroke-linecap-round"
@@ -236,7 +241,7 @@ export default function CreditScoreSimulator({ token }: CreditScoreSimulatorProp
                   strokeDashoffset={strokeDashoffset}
                 ></path>
               </svg>
-              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 text-center">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center">
                 <span className="font-display-lg text-4xl sm:text-5xl font-extrabold text-primary">
                   {simulatedScore}
                 </span>

@@ -299,11 +299,38 @@ export default function Home() {
         assetType: data.assetType,
         name: data.name,
         investedAmount: Number(data.investedAmount),
-        currentValue: Number(data.currentValue)
       })
     }, session.token);
     await refreshAll();
   };
+
+  const handleBuyHolding = async (name: string, assetType: "Stock" | "MutualFund" | "SIP" | "Gold" | "Crypto" | "Other", amount: number) => {
+    if (!session?.token) return;
+    const existing = investments.find(i => i.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      await apiRequest(`/investments/${existing.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          assetType,
+          name,
+          investedAmount: existing.investedAmount + amount,
+          currentValue: existing.currentValue + amount
+        })
+      }, session.token);
+    } else {
+      await apiRequest("/investments", {
+        method: "POST",
+        body: JSON.stringify({
+          assetType,
+          name,
+          investedAmount: amount,
+          currentValue: amount
+        })
+      }, session.token);
+    }
+    await refreshAll();
+  };
+
 
   const scale = sidebarWidth / 256;
   const buttonStyle = {
@@ -709,15 +736,16 @@ export default function Home() {
             <InvestmentsView
               investments={investments}
               onOpenAddModal={() => setActiveModal("investment")}
+              onBuyHolding={handleBuyHolding}
             />
           )}
 
           {view === "credit" && (
-            <CreditView token={session.token} />
+            <CreditView token={session.token} expenses={expenses} />
           )}
 
           {view === "credit-simulator" && (
-            <CreditScoreSimulator token={session.token} />
+            <CreditScoreSimulator token={session.token} expenses={expenses} />
           )}
 
           {view === "reports" && (

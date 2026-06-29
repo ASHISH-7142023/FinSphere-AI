@@ -227,3 +227,10 @@ body {
   line-height: 1;
   vertical-align: middle;
 }
+
+/* Force dropdown options to have dark background and white text for legibility */
+select option {
+  background-color: #0e1511 !important;
+  color: #ffffff !important;
+}
+

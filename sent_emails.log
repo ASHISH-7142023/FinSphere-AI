@@ -68,3 +68,122 @@ Warm regards,
 FinSphere AI Transactions Team
 ================================================================================
 
+
+================================================================================
+FROM: security@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Account Logged In
+DATE: 2026-06-29T13:55:07.640Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new login to your FinSphere AI account was detected.
+
+Access Details:
+- Date/Time: 2026-06-29T13:55:07.640Z
+- IP Address: ::1
+- Device Details (User Agent): Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36
+
+If this activity was you, no action is required. If this login was unauthorized, 
+please change your password immediately.
+
+Warm regards,
+FinSphere AI Security & Systems Team
+================================================================================
+
+
+================================================================================
+FROM: transactions@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Transaction Alert: Mobile Recharge (Airtel - 46283163046)
+DATE: 2026-06-29T13:55:47.207Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new payment of Rs. 299 has been successfully charged 
+to your account.
+
+Transaction Details:
+- Description: Mobile Recharge (Airtel - 46283163046)
+- Category: Bills
+- Date: 2026-06-29
+- Status: SUCCESSFUL
+
+Thank you for choosing FinSphere AI to track and manage your finances.
+
+Warm regards,
+FinSphere AI Transactions Team
+================================================================================
+
+
+================================================================================
+FROM: transactions@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Transaction Alert: ELECTRICITY Bill (BESCOM (Bengaluru) - 46544354631)
+DATE: 2026-06-29T13:56:00.215Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new payment of Rs. 4219 has been successfully charged 
+to your account.
+
+Transaction Details:
+- Description: ELECTRICITY Bill (BESCOM (Bengaluru) - 46544354631)
+- Category: Bills
+- Date: 2026-06-29
+- Status: SUCCESSFUL
+
+Thank you for choosing FinSphere AI to track and manage your finances.
+
+Warm regards,
+FinSphere AI Transactions Team
+================================================================================
+
+
+================================================================================
+FROM: transactions@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Transaction Alert: WATER Bill (Bangalore Water Supply (BWSSB) - 146184156)
+DATE: 2026-06-29T13:56:15.296Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new payment of Rs. 2096.25 has been successfully charged 
+to your account.
+
+Transaction Details:
+- Description: WATER Bill (Bangalore Water Supply (BWSSB) - 146184156)
+- Category: Bills
+- Date: 2026-06-29
+- Status: SUCCESSFUL
+
+Thank you for choosing FinSphere AI to track and manage your finances.
+
+Warm regards,
+FinSphere AI Transactions Team
+================================================================================
+
+
+================================================================================
+FROM: transactions@finsphere.ai
+TO: demo@finsphere.ai
+SUBJECT: FinSphere AI - Transaction Alert: la
+DATE: 2026-06-29T13:58:34.375Z
+--------------------------------------------------------------------------------
+Dear FinSphere AI User,
+
+A new payment of Rs. 212 has been successfully charged 
+to your account.
+
+Transaction Details:
+- Description: la
+- Category: Food
+- Date: 2026-06-29
+- Status: SUCCESSFUL
+
+Thank you for choosing FinSphere AI to track and manage your finances.
+
+Warm regards,
+FinSphere AI Transactions Team
+================================================================================
+

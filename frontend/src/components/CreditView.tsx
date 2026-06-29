@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/api";
+import type { Expense } from "@/shared";
 
 interface CreditViewProps {
   token: string;
+  expenses: Expense[];
 }
 
-export default function CreditView({ token }: CreditViewProps) {
+export default function CreditView({ token, expenses }: CreditViewProps) {
   const [session] = useState(() => {
     if (typeof window !== "undefined") {
       const raw = localStorage.getItem("finsphere.session");
@@ -18,12 +20,27 @@ export default function CreditView({ token }: CreditViewProps) {
 
   const income = session?.user?.monthlyIncome || 150000;
 
-  const [utilization, setUtilization] = useState(24);
+  // Calculate dynamic utilization based on transactions (Shopping/Food spends minus Card payments)
+  const cardSpends = expenses.filter(e => e.category === "Shopping" || e.category === "Food" || e.category === "Entertainment").reduce((sum, e) => sum + e.amount, 0);
+  const cardPayments = expenses.filter(e => e.description.toLowerCase().includes("credit card")).reduce((sum, e) => sum + e.amount, 0);
+  const dynamicUtilization = Math.max(2, Math.min(95, 24 + Math.round((cardSpends - cardPayments) / 1000)));
+
+  const [utilization, setUtilization] = useState(dynamicUtilization);
   const [paymentHistory, setPaymentHistory] = useState(98);
   const [creditAge, setCreditAge] = useState(6);
   const [simulatedScore, setSimulatedScore] = useState<number | null>(null);
   const [recommendations, setRecommendations] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Sync state with calculated dynamic utilization
+  useEffect(() => {
+    setUtilization(dynamicUtilization);
+  }, [dynamicUtilization]);
+
+  // Run simulation automatically when credit parameters change
+  useEffect(() => {
+    runSimulation();
+  }, [utilization, paymentHistory, creditAge]);
 
   const runSimulation = async () => {
     setLoading(true);

@@ -133,9 +133,9 @@ export default function PersonalExpenseLedger({
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="bg-[#0e1511] border border-white/10 rounded-xl py-2 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/40 appearance-none cursor-pointer"
             >
-              <option value="All">All Categories</option>
+              <option value="All" className="bg-[#0e1511] text-white">All Categories</option>
               {EXPENSE_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat} className="bg-[#0e1511] text-white">{cat}</option>
               ))}
             </select>
             <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant text-base pointer-events-none">expand_more</span>

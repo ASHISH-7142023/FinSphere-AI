@@ -28,6 +28,49 @@ export default function BudgetsView({
     return acc;
   }, {} as Record<string, number>);
 
+  // Spending velocity trajectory calculations based on actual transactions
+  let spendW1 = 0;
+  let spendW2 = 0;
+  let spendW3 = 0;
+  let spendW4 = 0;
+
+  expenses.forEach((e) => {
+    const d = new Date(e.date).getDate();
+    if (isNaN(d)) return;
+    if (d <= 7) spendW1 += e.amount;
+    else if (d <= 14) spendW2 += e.amount;
+    else if (d <= 21) spendW3 += e.amount;
+    else spendW4 += e.amount;
+  });
+
+  const totalW0 = 0;
+  const totalW1 = spendW1;
+  const totalW2 = totalW1 + spendW2;
+  const totalW3 = totalW2 + spendW3;
+  const totalW4 = totalW3 + spendW4;
+
+  const totalBudgetLimit = budgets.reduce((sum, b) => sum + b.limitAmount, 0) || 100000;
+  const maxVal = Math.max(totalBudgetLimit, totalW4, 50000);
+  const getY = (v: number) => 180 - (v / maxVal) * 160;
+
+  const x0 = 40, y0 = getY(totalW0);
+  const x1 = 220, y1 = getY(totalW1);
+  const x2 = 400, y2 = getY(totalW2);
+  const x3 = 580, y3 = getY(totalW3);
+  const x4 = 760, y4 = getY(totalW4);
+
+  const actualPath = `M${x0},${y0} L${x1},${y1} L${x2},${y2} L${x3},${y3} L${x4},${y4}`;
+  const actualArea = `${actualPath} V180 H${x0} Z`;
+
+  const py0 = getY(0);
+  const py1 = getY(totalBudgetLimit * 0.25);
+  const py2 = getY(totalBudgetLimit * 0.50);
+  const py3 = getY(totalBudgetLimit * 0.75);
+  const py4 = getY(totalBudgetLimit);
+
+  const plannedPath = `M${x0},${py0} L${x1},${py1} L${x2},${py2} L${x3},${py3} L${x4},${py4}`;
+
+
   return (
     <div className="space-y-6">
       {/* View Header */}
@@ -130,7 +173,7 @@ export default function BudgetsView({
                 </defs>
                 {/* Planned path */}
                 <path
-                  d="M0,180 L100,165 L200,150 L300,140 L400,130 L500,115 L600,105 L700,95 L800,85"
+                  d={plannedPath}
                   fill="none"
                   stroke="rgba(255,255,255,0.1)"
                   strokeDasharray="4"
@@ -138,21 +181,22 @@ export default function BudgetsView({
                 ></path>
                 {/* Actual Area */}
                 <path
-                  d="M0,180 L100,170 L200,165 L300,145 L400,155 L500,130 L600,120 L700,100 L800,80 V200 H0 Z"
+                  d={actualArea}
                   fill="url(#areaGradient)"
                 ></path>
                 {/* Actual Line */}
                 <path
-                  d="M0,180 L100,170 L200,165 L300,145 L400,155 L500,130 L600,120 L700,100 L800,80"
+                  d={actualPath}
                   fill="none"
                   stroke="#42e5b0"
                   strokeLinecap="round"
                   strokeWidth="3"
                   className="chart-path"
                 ></path>
-                <circle cx="500" cy="130" fill="#42e5b0" r="4" className="pulsing-glow"></circle>
+                <circle cx={x4} cy={y4} fill="#42e5b0" r="4" className="pulsing-glow"></circle>
               </svg>
-              <div className="absolute bottom-0 left-0 right-0 flex justify-between px-2 text-[10px] text-on-surface-variant font-bold uppercase tracking-wider opacity-50">
+              <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[10px] text-on-surface-variant font-bold uppercase tracking-wider opacity-50" style={{ paddingLeft: "5%", paddingRight: "5%" }}>
+                <span>Start</span>
                 <span>Week 1</span>
                 <span>Week 2</span>
                 <span>Week 3</span>
