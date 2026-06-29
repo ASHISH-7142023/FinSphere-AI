@@ -141,12 +141,12 @@ function LoginCardContent() {
         <>
           {/* Brand Anchor */}
           <div className="mb-8 text-center lg:text-left">
-            <div className="flex items-center gap-3 mb-2 justify-center lg:justify-start">
-              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
-              <span className="font-heading text-lg font-extrabold text-primary tracking-tight">FinSphere AI | Login</span>
+            <div className="flex flex-col items-center gap-3.5 mb-5 text-center">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-16 h-16 object-contain rounded-2xl animate-pulse" />
+              <span className="font-heading text-xl font-extrabold text-primary tracking-tight">FinSphere AI | Login</span>
             </div>
-            <h2 className="font-heading text-2xl font-bold text-white mt-4">Welcome Back</h2>
-            <p className="text-on-surface-variant text-xs mt-1">Please enter your details to sign in.</p>
+            <h2 className="font-heading text-2xl font-bold text-white mt-4 text-center">Welcome Back</h2>
+            <p className="text-on-surface-variant text-xs mt-1 text-center">Please enter your details to sign in.</p>
           </div>
 
           {/* Form */}
@@ -271,12 +271,12 @@ function LoginCardContent() {
         <>
           {/* Brand Anchor */}
           <div className="mb-8 text-center lg:text-left">
-            <div className="flex items-center gap-3 mb-2 justify-center lg:justify-start">
-              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
-              <span className="font-heading text-lg font-extrabold text-primary tracking-tight">FinSphere AI | Register</span>
+            <div className="flex flex-col items-center gap-3.5 mb-5 text-center">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-16 h-16 object-contain rounded-2xl animate-pulse" />
+              <span className="font-heading text-xl font-extrabold text-primary tracking-tight">FinSphere AI | Register</span>
             </div>
-            <h2 className="font-heading text-2xl font-bold text-white mt-4">Create Account</h2>
-            <p className="text-on-surface-variant text-xs mt-1">Join the elite tier of institutional investors.</p>
+            <h2 className="font-heading text-2xl font-bold text-white mt-4 text-center">Create Account</h2>
+            <p className="text-on-surface-variant text-xs mt-1 text-center">Join the elite tier of institutional investors.</p>
           </div>
 
           {/* Form */}

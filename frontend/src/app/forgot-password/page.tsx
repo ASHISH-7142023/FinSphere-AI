@@ -49,12 +49,12 @@ export default function ForgotPasswordPage() {
       <main className="w-full max-w-md p-6 z-10 relative">
         <div className="glass-card p-8 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl space-y-6">
           <div className="text-center">
-            <div className="flex items-center gap-3 mb-2 justify-center">
-              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
-              <span className="font-heading text-lg font-extrabold text-primary tracking-tight">FinSphere AI</span>
+            <div className="flex flex-col items-center gap-3.5 mb-5 text-center">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-16 h-16 object-contain rounded-2xl animate-pulse" />
+              <span className="font-heading text-xl font-extrabold text-primary tracking-tight">FinSphere AI</span>
             </div>
-            <h2 className="font-heading text-2xl font-bold text-white mt-4">Forgot Password?</h2>
-            <p className="text-on-surface-variant text-xs mt-1">Enter your email and we'll send you a password reset OTP.</p>
+            <h2 className="font-heading text-2xl font-bold text-white mt-4 text-center">Forgot Password?</h2>
+            <p className="text-on-surface-variant text-xs mt-1 text-center">Enter your email and we'll send you a password reset OTP.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

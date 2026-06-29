@@ -98,7 +98,7 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-3 hover:opacity-90 active:scale-[0.98] transition-all text-left focus:outline-none"
         >
-          <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-8 h-8 object-contain rounded-lg" />
+          <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-11 h-11 object-contain rounded-xl" />
           <span className="font-headline-md text-lg font-extrabold text-primary tracking-tight">FinSphere AI</span>
         </button>
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold">
