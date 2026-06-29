@@ -141,10 +141,8 @@ function LoginCardContent() {
         <>
           {/* Brand Anchor */}
           <div className="mb-8 text-center lg:text-left">
-            <div className="flex items-center gap-2 mb-2 justify-center lg:justify-start">
-              <div className="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-primary-container font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>insights</span>
-              </div>
+            <div className="flex items-center gap-3 mb-2 justify-center lg:justify-start">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
               <span className="font-heading text-lg font-extrabold text-primary tracking-tight">FinSphere AI | Login</span>
             </div>
             <h2 className="font-heading text-2xl font-bold text-white mt-4">Welcome Back</h2>
@@ -273,10 +271,8 @@ function LoginCardContent() {
         <>
           {/* Brand Anchor */}
           <div className="mb-8 text-center lg:text-left">
-            <div className="flex items-center gap-2 mb-2 justify-center lg:justify-start">
-              <div className="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-primary-container font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>insights</span>
-              </div>
+            <div className="flex items-center gap-3 mb-2 justify-center lg:justify-start">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
               <span className="font-heading text-lg font-extrabold text-primary tracking-tight">FinSphere AI | Register</span>
             </div>
             <h2 className="font-heading text-2xl font-bold text-white mt-4">Create Account</h2>

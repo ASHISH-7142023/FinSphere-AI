@@ -363,11 +363,17 @@ export default function Home() {
         className="hidden lg:flex flex-col h-screen fixed left-0 top-0 overflow-y-auto p-6 border-r border-white/10 bg-surface/40 backdrop-blur-xl z-[60] sidebar-scrollbar select-none"
       >
         <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
-          <div className="flex flex-col">
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">FinSphere AI |</span>
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line1}</span>
-            <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line2}</span>
-          </div>
+          <button
+            onClick={() => setView("dashboard")}
+            className="flex items-center gap-3 mb-4 text-left hover:opacity-90 active:scale-[0.98] transition-all focus:outline-none"
+          >
+            <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
+            <div className="flex flex-col">
+              <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">FinSphere AI |</span>
+              <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line1}</span>
+              <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line2}</span>
+            </div>
+          </button>
           <div className="mt-3 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
             <span style={subtitleStyle} className="font-semibold uppercase tracking-widest text-on-surface-variant">
@@ -487,12 +493,21 @@ export default function Home() {
               className="lg:hidden fixed left-0 top-0 bottom-0 w-72 bg-[#0e1511] border-r border-white/10 p-6 z-[80] overflow-y-auto flex flex-col sidebar-scrollbar"
             >
               <div className="flex justify-between items-center mb-8 px-2">
-                <div className="flex flex-col">
-                  <span className="text-xl font-extrabold font-heading text-primary tracking-tight leading-tight">FinSphere AI</span>
-                  <span className="text-xs text-on-surface-variant uppercase tracking-widest mt-1">
-                    {((session as any)?.user?.tier === "free") ? "Core Tier" : ((session as any)?.user?.tier === "pro") ? "Pro Tier" : "Elite Tier"}
-                  </span>
-                </div>
+                <button
+                  onClick={() => {
+                    setView("dashboard");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 text-left hover:opacity-90 active:scale-[0.98] transition-all focus:outline-none"
+                >
+                  <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-8 h-8 object-contain rounded-lg" />
+                  <div className="flex flex-col">
+                    <span className="text-xl font-extrabold font-heading text-primary tracking-tight leading-tight">FinSphere AI</span>
+                    <span className="text-xs text-on-surface-variant uppercase tracking-widest mt-1">
+                      {((session as any)?.user?.tier === "free") ? "Core Tier" : ((session as any)?.user?.tier === "pro") ? "Pro Tier" : "Elite Tier"}
+                    </span>
+                  </div>
+                </button>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="text-on-surface-variant hover:text-white transition-colors"

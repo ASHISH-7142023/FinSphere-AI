@@ -94,12 +94,13 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
 
       {/* Top Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-surface/40 backdrop-blur-xl border-b border-white/10 px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center">
-            <span className="material-symbols-outlined text-on-primary-container text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>insights</span>
-          </div>
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center gap-3 hover:opacity-90 active:scale-[0.98] transition-all text-left focus:outline-none"
+        >
+          <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-8 h-8 object-contain rounded-lg" />
           <span className="font-headline-md text-lg font-extrabold text-primary tracking-tight">FinSphere AI</span>
-        </div>
+        </button>
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold">
           <a className={activeSection === "home" ? "text-primary border-b-2 border-primary pb-1" : "text-on-surface-variant hover:text-primary transition-colors"} href="#home">Home</a>
           <a className={activeSection === "features" ? "text-primary border-b-2 border-primary pb-1" : "text-on-surface-variant hover:text-primary transition-colors"} href="#features">Features</a>
@@ -211,7 +212,10 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
       <footer className="py-20 px-6 border-t border-white/5 bg-surface-container-lowest text-xs">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="max-w-md space-y-3 text-center md:text-left">
-            <span className="font-headline-md text-lg font-extrabold text-primary block">FinSphere AI</span>
+            <div className="flex items-center gap-3 justify-center md:justify-start mb-2">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-6 h-6 object-contain rounded-md" />
+              <span className="font-headline-md text-lg font-extrabold text-primary">FinSphere AI</span>
+            </div>
             <p className="text-on-surface-variant leading-relaxed">
               Redefining the financial ecosystem through intelligence and transparency. Join the elite tier of investors today.
             </p>

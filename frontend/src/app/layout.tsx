@@ -8,7 +8,8 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
   title: "FinSphere AI",
-  description: "Personal finance super-app MVP"
+  description: "Personal finance super-app MVP",
+  icons: "/aplogfi.png"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

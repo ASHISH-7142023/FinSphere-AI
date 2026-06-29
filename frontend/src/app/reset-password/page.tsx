@@ -62,10 +62,8 @@ export default function ResetPasswordPage() {
       <main className="w-full max-w-md p-6 z-10 relative">
         <div className="glass-card p-8 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-2xl space-y-6">
           <div className="text-center">
-            <div className="flex items-center gap-2 mb-2 justify-center">
-              <div className="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-primary-container font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>insights</span>
-              </div>
+            <div className="flex items-center gap-3 mb-2 justify-center">
+              <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-10 h-10 object-contain rounded-xl" />
               <span className="font-heading text-lg font-extrabold text-primary tracking-tight">FinSphere AI</span>
             </div>
             <h2 className="font-heading text-2xl font-bold text-white mt-4">Reset Password</h2>
