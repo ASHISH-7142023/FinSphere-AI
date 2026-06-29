@@ -365,9 +365,9 @@ export default function Home() {
         <div className="mb-10 px-2" style={{ marginBottom: `${Math.max(16, Math.min(48, 40 * scale))}px` }}>
           <button
             onClick={() => setView("dashboard")}
-            className="flex items-start gap-2.5 mb-4 text-left hover:opacity-90 active:scale-[0.98] transition-all focus:outline-none"
+            className="flex items-center gap-2.5 mb-4 text-left hover:opacity-90 active:scale-[0.98] transition-all focus:outline-none"
           >
-            <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-7 h-7 object-contain rounded-lg mt-0.5" />
+            <img src="/aplogfi.png" alt="FinSphere AI Logo" className="w-7 h-7 object-contain rounded-lg" />
             <div className="flex flex-col">
               <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">FinSphere AI |</span>
               <span style={titleStyle} className="font-extrabold font-heading text-primary tracking-tight leading-none transition-all whitespace-nowrap">{headerLines.line1}</span>
