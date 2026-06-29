@@ -35,10 +35,14 @@ export default function ExpensesView({
   const shoppingSum = categorySum["Shopping"] || 18500;
   const billsSum = categorySum["Bills"] || 22000;
 
-  // Filter transactions for the simple list in the Analysis view
-  const filtered = expenses.filter((e) =>
-    e.description.toLowerCase().includes(search.toLowerCase())
-  );
+  // Filter and sort transactions for the simple list in the Analysis view (newest first)
+  const filtered = expenses
+    .filter((e) => e.description.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      const dateCompare = b.date.localeCompare(a.date);
+      if (dateCompare !== 0) return dateCompare;
+      return b.id.localeCompare(a.id);
+    });
 
   return (
     <div className="space-y-6">

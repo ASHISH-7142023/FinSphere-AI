@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
+import fs from "fs";
+import path from "path";
 import type { Budget, CreditProfile, Expense, Goal, Investment } from "./shared/index.js";
 import type { IStore, StoredUser } from "./store.interface.js";
 
@@ -14,9 +16,10 @@ export class InMemoryStore implements IStore {
   private goals: Goal[] = [];
   private investments: Investment[] = [];
   private creditProfiles: CreditProfile[] = [];
+  private dbPath = path.resolve(process.cwd(), "inmemory_db.json");
 
   constructor() {
-    this.seed();
+    this.load();
   }
 
   private seed() {
@@ -30,6 +33,43 @@ export class InMemoryStore implements IStore {
       passwordHash: hashedPassword,
       createdAt: new Date().toISOString()
     });
+  }
+
+  private load() {
+    try {
+      if (fs.existsSync(this.dbPath)) {
+        const raw = fs.readFileSync(this.dbPath, "utf8");
+        const data = JSON.parse(raw);
+        this.users = data.users || [];
+        this.expenses = data.expenses || [];
+        this.budgets = data.budgets || [];
+        this.goals = data.goals || [];
+        this.investments = data.investments || [];
+        this.creditProfiles = data.creditProfiles || [];
+      } else {
+        this.seed();
+        this.save();
+      }
+    } catch (err) {
+      console.error("Failed to load inmemory db file:", err);
+      this.seed();
+    }
+  }
+
+  private save() {
+    try {
+      const data = {
+        users: this.users,
+        expenses: this.expenses,
+        budgets: this.budgets,
+        goals: this.goals,
+        investments: this.investments,
+        creditProfiles: this.creditProfiles
+      };
+      fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 2), "utf8");
+    } catch (err) {
+      console.error("Failed to save inmemory db file:", err);
+    }
   }
 
   async getUserByEmail(email: string): Promise<StoredUser | null> {
@@ -46,6 +86,7 @@ export class InMemoryStore implements IStore {
       createdAt: new Date().toISOString()
     };
     this.users.push(newUser);
+    this.save();
     return newUser;
   }
 
@@ -53,6 +94,7 @@ export class InMemoryStore implements IStore {
     const user = this.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
     if (!user) return null;
     user.passwordHash = passwordHash;
+    this.save();
     return user;
   }
 
@@ -71,6 +113,7 @@ export class InMemoryStore implements IStore {
       ...expense
     };
     this.expenses.push(newExpense);
+    this.save();
     return newExpense;
   }
 
@@ -78,6 +121,7 @@ export class InMemoryStore implements IStore {
     const item = this.expenses.find((x) => x.id === id && x.userId === userId);
     if (!item) return null;
     Object.assign(item, data);
+    this.save();
     return item;
   }
 
@@ -85,6 +129,7 @@ export class InMemoryStore implements IStore {
     const index = this.expenses.findIndex((x) => x.id === id && x.userId === userId);
     if (index === -1) return false;
     this.expenses.splice(index, 1);
+    this.save();
     return true;
   }
 
@@ -98,6 +143,7 @@ export class InMemoryStore implements IStore {
       ...budget
     };
     this.budgets.push(newBudget);
+    this.save();
     return newBudget;
   }
 
@@ -105,6 +151,7 @@ export class InMemoryStore implements IStore {
     const item = this.budgets.find((x) => x.id === id && x.userId === userId);
     if (!item) return null;
     Object.assign(item, data);
+    this.save();
     return item;
   }
 
@@ -112,6 +159,7 @@ export class InMemoryStore implements IStore {
     const index = this.budgets.findIndex((x) => x.id === id && x.userId === userId);
     if (index === -1) return false;
     this.budgets.splice(index, 1);
+    this.save();
     return true;
   }
 
@@ -125,6 +173,7 @@ export class InMemoryStore implements IStore {
       ...goal
     };
     this.goals.push(newGoal);
+    this.save();
     return newGoal;
   }
 
@@ -132,6 +181,7 @@ export class InMemoryStore implements IStore {
     const item = this.goals.find((x) => x.id === id && x.userId === userId);
     if (!item) return null;
     Object.assign(item, data);
+    this.save();
     return item;
   }
 
@@ -139,6 +189,7 @@ export class InMemoryStore implements IStore {
     const index = this.goals.findIndex((x) => x.id === id && x.userId === userId);
     if (index === -1) return false;
     this.goals.splice(index, 1);
+    this.save();
     return true;
   }
 
@@ -152,6 +203,7 @@ export class InMemoryStore implements IStore {
       ...investment
     };
     this.investments.push(newInvestment);
+    this.save();
     return newInvestment;
   }
 
@@ -159,6 +211,7 @@ export class InMemoryStore implements IStore {
     const item = this.investments.find((x) => x.id === id && x.userId === userId);
     if (!item) return null;
     Object.assign(item, data);
+    this.save();
     return item;
   }
 
@@ -166,6 +219,7 @@ export class InMemoryStore implements IStore {
     const index = this.investments.findIndex((x) => x.id === id && x.userId === userId);
     if (index === -1) return false;
     this.investments.splice(index, 1);
+    this.save();
     return true;
   }
 
@@ -177,6 +231,7 @@ export class InMemoryStore implements IStore {
     const existing = this.creditProfiles.find((x) => x.userId === userId);
     if (existing) {
       Object.assign(existing, data);
+      this.save();
       return existing;
     }
     const newProfile: CreditProfile = {
@@ -185,6 +240,7 @@ export class InMemoryStore implements IStore {
       ...data
     };
     this.creditProfiles.push(newProfile);
+    this.save();
     return newProfile;
   }
 }

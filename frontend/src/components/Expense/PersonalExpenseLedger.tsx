@@ -44,12 +44,18 @@ export default function PersonalExpenseLedger({
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [deletingIds, setDeletingIds] = useState<Record<string, boolean>>({});
 
-  // Filter expenses based on search query and category
-  const filteredExpenses = expenses.filter((e) => {
-    const matchesSearch = e.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || e.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Filter and sort expenses based on search query and category (newest first)
+  const filteredExpenses = expenses
+    .filter((e) => {
+      const matchesSearch = e.description.toLowerCase().includes(search.toLowerCase());
+      const matchesCategory = selectedCategory === "All" || e.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      const dateCompare = b.date.localeCompare(a.date);
+      if (dateCompare !== 0) return dateCompare;
+      return b.id.localeCompare(a.id);
+    });
 
   // Calculate total monthly spending based on all loaded expenses
   const totalMonthlySpending = expenses.reduce((sum, e) => sum + e.amount, 0);
