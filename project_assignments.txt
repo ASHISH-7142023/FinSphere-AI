@@ -19,7 +19,7 @@ Person 1- ASHISH RANJAN SINGH - (Project Leader): System Settings, Profile & Glo
 --------------------------------------------------------------------------------
 Frontend Client Assignments
 --------------------------------------------------------------------------------
-Person 2: Authentication Gate, Account Chooser & Auth subpages
+Person 2 - ABHIPSA MISHRA - Authentication Gate, Account Chooser & Auth subpages
 - Primary Responsibilities: Login backdrop overlays, Presets Profile Switcher, signups.
 
 - Files Assigned:
@@ -29,7 +29,7 @@ Person 2: Authentication Gate, Account Chooser & Auth subpages
   * frontend/src/app/reset-password/page.tsx
   * frontend/src/app/verify-otp/page.tsx
 ------------------------------------------------------------------------
-Person 3: Dashboard Overview & Core Workspace Visuals
+Person 3 - ANKAN KUMAR PANJA - Dashboard Overview & Core Workspace Visuals
 - Primary Responsibilities: Dashboard metrics summary grids, syncing indicators, demo watch screens.
 
 - Files Assigned:
@@ -37,7 +37,7 @@ Person 3: Dashboard Overview & Core Workspace Visuals
   * frontend/src/app/portfolio-with-upi-qr/page.tsx
   * frontend/src/app/watch-demo/page.tsx
 ------------------------------------------------------------------------
-Person 4: Interactive AI Chat Advisor UI
+Person 4 - ARUP JYOTI MOHANTY - Interactive AI Chat Advisor UI
 - Primary Responsibilities: Full height advisor chat dialogue, contextual helper prompt chips.
 
 - Files Assigned:
@@ -45,7 +45,7 @@ Person 4: Interactive AI Chat Advisor UI
   * frontend/src/components/AIEngine.tsx
   * frontend/src/components/DemoPlayerView.tsx
 -----------------------------------------------------------------------
-Person 5: Utilities Billing Hub & Feature Explanations
+Person 5 - ADITYA NARAYAN SWAIN - Utilities Billing Hub & Feature Explanations
 - Primary Responsibilities: Tabbed bill categories setups, payment QR clipboard copiers, marketing sliders.
 
 - Files Assigned:
@@ -53,19 +53,19 @@ Person 5: Utilities Billing Hub & Feature Explanations
   * frontend/src/components/BillPaymentDetail.tsx
   * frontend/src/components/FeaturesExplorer.tsx
 ----------------------------------------------------------------------
-Person 6: Credit Card Bill Center & Cashback Router
+Person 6 - SURAJ AGGARWAL - Credit Card Bill Center & Cashback Router
 - Primary Responsibilities: Balance dues panels, swap card optimizer advices, min payment triggers.
 
 - Files Assigned:
   * frontend/src/components/CreditCardBillCenter.tsx
 -------------------------------------------------------------------
-Person 7: Credit Simulator speedometers & FICO Gauge
+Person 7 - SATYA NARAYAN MOHANTY - Credit Simulator speedometers & FICO Gauge
 - Primary Responsibilities: Speedometer SVGs, simulator checkboxes checklist log.
 - Files Assigned:
   * frontend/src/components/CreditView.tsx
   * frontend/src/components/CreditScoreSimulator.tsx
 ------------------------------------------------------------------
-Person 8: Mutual Funds, SIP & Category Budgets
+Person 8 - SAIPRIYA GOUDA - Mutual Funds, SIP & Category Budgets
 - Primary Responsibilities: Compounding calculator sliders, SIP setup forms, budget categories rules.
 
 - Files Assigned:
@@ -73,7 +73,7 @@ Person 8: Mutual Funds, SIP & Category Budgets
   * frontend/src/components/SIPSetupView.tsx
   * frontend/src/components/BudgetsView.tsx
 ------------------------------------------------------------------
-Person 9: Insurance claims, Assets & Savings Goals
+Person 9 - JAYANT KUMAR - Insurance claims, Assets & Savings Goals
 - Primary Responsibilities: Claim submission step checklists, target metrics indicators.
 
 - Files Assigned:
@@ -81,7 +81,7 @@ Person 9: Insurance claims, Assets & Savings Goals
   * frontend/src/components/GoalsView.tsx
   * frontend/src/components/InvestmentsView.tsx
 ------------------------------------------------------------------------------
-Person 10: Small Business Merchant Khata, Ledger & Expenses
+Person 10 - AYUSH BEHERA - Small Business Merchant Khata, Ledger & Expenses
 - Primary Responsibilities: Transactions mapping tables, billing invoice drawers, discount lists.
 - Files Assigned:
   * frontend/src/components/MerchantKhataView.tsx
@@ -94,14 +94,14 @@ Person 10: Small Business Merchant Khata, Ledger & Expenses
 --------------------------------------------------------------------------------
 Visual & Quality Assurance Assignments
 --------------------------------------------------------------------------------
-Person 11: WebGL 3D Hero Scene & Design Tokens
+Person 11 - ABHIPSA MISHRA - WebGL 3D Hero Scene & Design Tokens
 - Primary Responsibilities: Three.js WebGL credit card animation rendering, point lighting, style tokens.
 
 - Files Assigned:
   * frontend/src/components/ThreeJsHeroVisual.tsx
   * src/design-system/tokens.ts
 -------------------------------------------------------
-Person 12: Custom SVG Curves, Client Utils & Playwright E2E Tests
+Person 12 - SAUMIL PATRA - Custom SVG Curves, Client Utils & Playwright E2E Tests
 - Primary Responsibilities: Analytics graphs bezier curves, fetch APIs wrappers, E2E spec suites.
 
 - Files Assigned:
@@ -114,7 +114,7 @@ Person 12: Custom SVG Curves, Client Utils & Playwright E2E Tests
 DevOps, Docker & Database Assignments
 --------------------------------------------------------------------------------
 
-Person 13: Docker Containerization & Express endpoints
+Person 13 - VARUN PANIGRAHI - Docker Containerization & Express endpoints
 - Primary Responsibilities: DevOps docker configuration scripts, backend routes setup, server integration tests.
 
 - Files Assigned:
@@ -124,7 +124,7 @@ Person 13: Docker Containerization & Express endpoints
   * backend/src/app.ts
   * backend/src/app.test.ts
 ----------------------------------------
-Person 14: Database Infrastructure, Schema Design & PostgreSQL Server Administration
+Person 14 - AMRITA PRIYADARSHANI - Database Infrastructure, Schema Design & PostgreSQL Server Administration
 - Primary Responsibilities: DB schema architecture, seeder files scripting, ORM connections pooling setup.
 
 - Files Assigned:
