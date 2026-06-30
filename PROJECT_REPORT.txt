@@ -43,206 +43,164 @@ System Architecture:
 ------------------------------------------------------------------------
 To achieve maximum efficiency, the 15-person team is divided into cross-functional roles. Ashish serves as the Project Lead and Solutions Architect, orchestrating overall integration, review, and architectural governance.
 
-Member Roles and Focus Areas:
-1. Ashish (Project Lead & Solutions Architect)
-   - Domain: Architecture, Schema Design, System Integration, Code Review
-2. Liam Davies (Senior Frontend Developer)
-   - Domain: Hero WebGL, Landing Layout, Pricing Toggle Mechanics
-3. Olivia Taylor (Frontend Developer)
-   - Domain: Auth Gates, Core Workspace Dashboard Shell
-4. Noah Wilson (Frontend Developer)
-   - Domain: Full-Height AI Chat Advisor & Prompt Overlays
-5. Ava Thomas (Frontend Developer)
-   - Domain: Utilities Hub, Bill tab panels, UPI QR simulator
-6. Lucas Martinez (Frontend Developer)
-   - Domain: Credit Card Bill Center, SVG score gauges, Credit Engine
-7. Isabella Anderson (Frontend Developer)
-   - Domain: Mutual Funds / SIP UI, Insurance Hub (Forms & sliders)
-8. Sophia White (Frontend Developer)
-   - Domain: Merchant Khata UI, Settings / Profile Forms UI
-9. James Jackson (Backend Developer)
-   - Domain: User Accounts, JWT Security Loops, Settings APIs
-10. Benjamin Harris (Backend Developer)
-    - Domain: Dashboard overview aggregators, Ledger syncing endpoints
-11. Mia Martin (Backend Developer)
-    - Domain: AI Advisor Prompts & Credit simulator event loggers
-12. Charlotte Garcia (Backend Developer)
-    - Domain: Mutual Fund (XIRR), Utilities bills, Merchant Khata APIs
-13. William Robinson (AI/ML Research Engineer)
-    - Domain: Prompt Context Optimization & AI routing swap advisors
-14. Stephen Strange (AI/ML Research Engineer)
-    - Domain: Predictive rebalancing algorithms, Salary scaling analytics
-15. Alexander Rodriguez (DevOps & Cloud Engineer)
-    - Domain: Supabase/PostgreSQL setups, Docker environments, CI/CD
-16. Amelia Clark (QA / SDET Automation)
-    - Domain: Automated API contract validations & E2E cypress test suites
 
 
 4. EQUAL WORK DISTRIBUTION MATRIX
 ------------------------------------------------------------------------
 To ensure fair contribution and parallel development, the feature scope is broken down into exactly 15 equivalent packages.
 
-Sprint Timeline (8 Weeks):
-* Weeks 1-2: Setup framework, schema, database seeding, configurations.
-* Weeks 3-5: Implement page UI mockups & back-end controller routes in parallel.
-* Weeks 6-7: Integrate AI engines, rebalancers, math curves, and scale algorithms.
-* Week 8: End-to-end testing, bug-fixing, deployment orchestration.
 
 Detailed Module Assignments:
 
-Member 1: Ashish (Project Lead & Solutions Architect)
-* Core Tasks:
-  - Initialize the monorepo architecture and base TypeScript configurations.
-  - Design the unified database schema (prisma.schema) and seed parameters.
-  - Conduct code reviews for all PRs and ensure compliance with glassmorphic style tokens.
-  - Maintain system integrity and verify APIs match designated endpoints.
-* Deliverables: tsconfig.base.json, Prisma configuration, and overall code quality control.
+================================================================================
+                    FinSphere AI Super App - Project Assignments
+================================================================================
+This document lists the official work assignments for all 15 team members,
+mapping every file in the codebase.
 
-Member 2: Liam Davies (Senior Frontend Developer)
-* Core Tasks:
-  - Implement the mouse-reactive 3D FinSphere Credit Card WebGL scene using Three.js (Emerald spheres, specular lighting).
-  - Develop the scroll-linked header menu highlighting mechanism.
-  - Build the interactive subscription tier toggle slider on the landing page.
-* Deliverables: /frontend/src/components/Hero3D.tsx, Landing pages, pricing toggle components.
+--------------------------------------------------------------------------------
+Project Leader Assignment -----
+--------------------------------------------------------------------------------
+Person 1 - ASHISH RANJAN SINGH - (Project Leader): System Settings, Profile & Global Layout
+- Primary Responsibilities: Build settings views, user profile settings, monthly salary input, subscription level overrides.
 
-Member 3: Olivia Taylor (Frontend Developer)
-* Core Tasks:
-  - Build the Split Authentication Gate supporting dynamic login/registration (?signup=true).
-  - Implement the custom Google Account Chooser overlays and Apple ID prompt gates.
-  - Design the Core Dashboard Workspace Shell (Sidebar, mobile-responsive layout).
-* Deliverables: /frontend/src/pages/login.tsx, /frontend/src/components/DashboardLayout.tsx.
+- Files Assigned:
+  * frontend/src/components/SettingsView.tsx
+  * frontend/src/app/layout.tsx
+  * frontend/src/app/globals.css
+  * frontend/src/app/not-found.tsx
 
-Member 4: Noah Wilson (Frontend Developer)
-* Core Tasks:
-  - Develop the Full-Height AI Chat Advisor interface layout.
-  - Create simulated prompt chips (e.g. Q4 Tax planning, SIP reallocations) that auto-inject instructions.
-  - Implement Framer Motion transitions for chat drawer overlays.
-* Deliverables: /frontend/src/components/AIAdvisorView.tsx, chat layout wrapper.
+--------------------------------------------------------------------------------
+Frontend Client Assignments
+--------------------------------------------------------------------------------
+Person 2 - ABHIPSA MISHRA - Authentication Gate, Account Chooser & Auth subpages
+- Primary Responsibilities: Login backdrop overlays, Presets Profile Switcher, signups.
 
-Member 5: Ava Thomas (Frontend Developer)
-* Core Tasks:
-  - Implement the Utilities Hub UI with multi-category tab panels (Mobile, Water, Gas, FASTag, DTH).
-  - Build the UPI QR code simulator popup.
-  - Integrate clipboard API copy functions for simulated payment VPAs.
-* Deliverables: /frontend/src/components/UtilitiesHub.tsx.
-
-Member 6: Lucas Martinez (Frontend Developer)
-* Core Tasks:
-  - Develop the Credit Card Bill Center UI (due dates, card swappers).
-  - Build the SVG credit score speedometer gauge in the Credit Engine.
-  - Implement checklist checkboxes for simulating score events (paying off debt, inquiries).
-* Deliverables: /frontend/src/components/CreditEngine.tsx, /frontend/src/components/CreditCardCenter.tsx.
-
-Member 7: Isabella Anderson (Frontend Developer)
-* Core Tasks:
-  - Create the Mutual Funds & SIP interface.
-  - Draw the custom Bezier performance curves utilizing Recharts.
-  - Integrate the Insurance Hub claim checklist and premium calculator sliders.
-* Deliverables: /frontend/src/components/MutualFundPortfolio.tsx, /frontend/src/components/InsuranceHub.tsx.
-
-Member 8: Sophia White (Frontend Developer)
-* Core Tasks:
-  - Implement the Small Business Merchant Khata ledger logs panel.
-  - Create invoice creation panels with modal overlays and shareable copy link triggers.
-  - Design settings/profile customization pages (salary adjustments, theme toggling).
-* Deliverables: /frontend/src/components/MerchantKhata.tsx, Settings edit views.
-
-Member 9: James Jackson (Backend Developer)
-* Core Tasks:
-  - Write JWT authentication middleware loops.
-  - Develop login, registration, and logout API handlers.
-  - Implement endpoints for retrieving/updating user settings and profile metadata.
-* Deliverables: /backend/src/controllers/auth.ts, /backend/src/routes/authRoutes.ts.
-
-Member 10: Benjamin Harris (Backend Developer)
-* Core Tasks:
-  - Build the Core Workspace Dashboard API (Summary cards aggregation).
-  - Implement endpoints for fetching connected bank institutions and account statuses.
-  - Develop delete/disconnect handlers for synchronized bank institutions.
-* Deliverables: /backend/src/controllers/dashboard.ts, Connected bank routes.
-
-Member 11: Mia Martin (Backend Developer)
-* Core Tasks:
-  - Develop simulated chat response services answering advisor prompts.
-  - Build the Credit Engine check-off route that registers credit score simulated actions.
-  - Write endpoints to save credit log history arrays.
-* Deliverables: /backend/src/controllers/credit.ts, /backend/src/controllers/chat.ts.
-
-Member 12: Charlotte Garcia (Backend Developer)
-* Core Tasks:
-  - Develop backend routers for Mutual Fund calculations, returns projections, and rebalancers.
-  - Write bills endpoints supporting payment simulations.
-  - Implement Small Business Khata REST endpoints for adding ledger logs and shared invoices.
-* Deliverables: /backend/src/controllers/investments.ts, /backend/src/controllers/merchant.ts.
-
-Member 13: William Robinson (AI/ML Research Engineer)
-* Core Tasks:
-  - Design prompt formatting logic for contextual financial queries.
-  - Develop the card routing optimization engine recommendation rules (Card Swapping algorithm).
-  - Collaborate on AI prompt simulator responses with backend engineers.
-* Deliverables: /backend/src/services/aiAdvisorEngine.ts, recommendation rulesets.
-
-Member 14: Stephen Strange (AI/ML Research Engineer)
-* Core Tasks:
-  - Program mathematical formulas for Bezier curves, mutual fund rebalancing (growth-debt transitions), and premium rates scaling.
-  - Develop the Salary-Based Scaling metric formulas (scales pre-approvals, loans, card limits).
-  - Optimize returns simulation calculators for long-term compound wealth projection.
-* Deliverables: /backend/src/services/mathModels.ts, scaling configuration file.
-
-Member 15: Alexander Rodriguez (DevOps & Cloud Engineer)
-* Core Tasks:
-  - Setup monorepo workspace scripts and configure Docker Compose profiles.
-  - Write migrations for production databases (Supabase wireframes/Postgres).
-  - Implement CI/CD pipeline triggers (Github Actions) for formatting, testing, and deployment.
-* Deliverables: docker-compose.yml, GitHub Workflow files, database migration scripts.
-
-Member 16: Amelia Clark (QA / SDET Automation)
-* Core Tasks:
-  - Perform integration tests on the backend controllers.
-  - Write automated end-to-end user flows verifying auth routes and payment steps.
-  - Maintain the postman test collections for the dev branch integrations.
-* Deliverables: Postman collection configurations, Cypress/Playwright integration tests.
-
-
-5. RACI MATRIX (RESPONSIBILITY ASSIGNMENT)
+- Files Assigned:
+  * frontend/src/components/LandingPageView.tsx
+  * frontend/src/app/login/page.tsx
+  * frontend/src/app/forgot-password/page.tsx
+  * frontend/src/app/reset-password/page.tsx
+  * frontend/src/app/verify-otp/page.tsx
 ------------------------------------------------------------------------
-Activity Roles Mapping:
-R = Responsible, A = Accountable, C = Consulted, I = Informed
+Person 3 - ANKAN KUMAR PANJA - Dashboard Overview & Core Workspace Visuals
+- Primary Responsibilities: Dashboard metrics summary grids, syncing indicators, demo watch screens.
 
-* System Architecture: Ashish (A/R), FE Team (C), BE Team (C), AI Team (I), DevOps (C), QA (I)
-* Database Schema: Ashish (A/R), FE Team (I), BE Team (R), AI Team (C), DevOps (C), QA (I)
-* UI Components: Ashish (A), FE Team (R), BE Team (I), AI Team (I), DevOps (I), QA (C)
-* API Endpoints: Ashish (A), FE Team (C), BE Team (R), AI Team (C), DevOps (I), QA (C)
-* AI Routing & Math Models: Ashish (A), FE Team (I), BE Team (C), AI Team (R), DevOps (I), QA (I)
-* Database Migrations: Ashish (A), FE Team (I), BE Team (C), AI Team (I), DevOps (R), QA (I)
-* E2E Automation Testing: Ashish (A), FE Team (C), BE Team (C), AI Team (I), DevOps (I), QA (R/A)
-* Deployment Pipelines: Ashish (A), FE Team (I), BE Team (I), AI Team (I), DevOps (R/A), QA (I)
-
-
-6. COMMUNICATION & COLLABORATION PROTOCOLS
+- Files Assigned:
+  * frontend/src/app/page.tsx
+  * frontend/src/app/portfolio-with-upi-qr/page.tsx
+  * frontend/src/app/watch-demo/page.tsx
 ------------------------------------------------------------------------
-A. Git Workflow & Branching Strategy
-* Main Branch: main (only holds stable, tested production code).
-* Development Branch: dev (integration branch for current sprint features).
-* Feature Branches: Named as feature/member-name/description (e.g., feature/liam/webgl-card).
-* Pull Requests (PRs):
-  - Must target the dev branch.
-  - Must satisfy lint validations and pass unit tests.
-  - Requires approval from Ashish (Project Lead) and at least one peer.
+Person 4 - ARUP JYOTI MOHANTY - Interactive AI Chat Advisor UI
+- Primary Responsibilities: Full height advisor chat dialogue, contextual helper prompt chips.
 
-B. Standups & Progress Checkpoints
-* Daily Sync (15 mins): Text-based slack/teams updates or short standup focusing on task progress and blockers.
-* Weekly Demo (Saturdays): Screen-share session led by Ashish demonstrating integrated components.
+- Files Assigned:
+  * frontend/src/components/AIAdvisorView.tsx
+  * frontend/src/components/AIEngine.tsx
+  * frontend/src/components/DemoPlayerView.tsx
+-----------------------------------------------------------------------
+Person 5 - ADITYA NARAYAN SWAIN - Utilities Billing Hub & Feature Explanations
+- Primary Responsibilities: Tabbed bill categories setups, payment QR clipboard copiers, marketing sliders.
 
+- Files Assigned:
+  * frontend/src/components/UtilitiesHubView.tsx
+  * frontend/src/components/BillPaymentDetail.tsx
+  * frontend/src/components/FeaturesExplorer.tsx
+----------------------------------------------------------------------
+Person 6 - SURAJ AGGARWAL - Credit Card Bill Center & Cashback Router
+- Primary Responsibilities: Balance dues panels, swap card optimizer advices, min payment triggers.
 
-7. QUALITY ASSURANCE & VERIFICATION PLAN
-------------------------------------------------------------------------
-Automated Test Strategy:
-* Unit & Component Testing: Jest (backend controller tests) and React Testing Library (frontend component mounts).
-* API Verification: Postman collections mapping auth loops, settings scales, and transaction additions.
-* E2E Testing: Cypress/Playwright suites validating user flow: Login -> Dashboard -> Card Center.
+- Files Assigned:
+  * frontend/src/components/CreditCardBillCenter.tsx
+-------------------------------------------------------------------
+Person 7 - SATYA NARAYAN MOHANTY - Credit Simulator speedometers & FICO Gauge
+- Primary Responsibilities: Speedometer SVGs, simulator checkboxes checklist log.
+- Files Assigned:
+  * frontend/src/components/CreditView.tsx
+  * frontend/src/components/CreditScoreSimulator.tsx
+------------------------------------------------------------------
+Person 8 - SAIPRIYA GOUDA - Mutual Funds, SIP & Category Budgets
+- Primary Responsibilities: Compounding calculator sliders, SIP setup forms, budget categories rules.
 
-Manual Verification:
-1. Deployment Verification: Testing the Docker build locally and checking Supabase connectivity.
-2. Salary-Scaling Visual Check: Verify that increasing the Monthly Salary in the profile page correctly increases max card limits, utility bill baselines, and premium slider starting bounds.
-========================================================================
+- Files Assigned:
+  * frontend/src/components/MutualFundPortfolio.tsx
+  * frontend/src/components/SIPSetupView.tsx
+  * frontend/src/components/BudgetsView.tsx
+------------------------------------------------------------------
+Person 9 - JAYANT KUMAR - Insurance claims, Assets & Savings Goals
+- Primary Responsibilities: Claim submission step checklists, target metrics indicators.
+
+- Files Assigned:
+  * frontend/src/components/InsuranceHubView.tsx
+  * frontend/src/components/GoalsView.tsx
+  * frontend/src/components/InvestmentsView.tsx
+------------------------------------------------------------------------------
+Person 10 - AYUSH BEHERA - Small Business Merchant Khata, Ledger & Expenses
+- Primary Responsibilities: Transactions mapping tables, billing invoice drawers, discount lists.
+- Files Assigned:
+  * frontend/src/components/MerchantKhataView.tsx
+  * frontend/src/components/Expense/ExpensesView.tsx
+  * frontend/src/components/Expense/PersonalExpenseLedger.tsx
+  * frontend/src/components/RewardsOffersView.tsx
+  * frontend/src/components/PricingView.tsx
+  * frontend/src/components/ui.tsx
+
+--------------------------------------------------------------------------------
+Visual & Quality Assurance Assignments
+--------------------------------------------------------------------------------
+Person 11 - ABHIPSA MISHRA - WebGL 3D Hero Scene & Design Tokens
+- Primary Responsibilities: Three.js WebGL credit card animation rendering, point lighting, style tokens.
+
+- Files Assigned:
+  * frontend/src/components/ThreeJsHeroVisual.tsx
+  * src/design-system/tokens.ts
+-------------------------------------------------------
+Person 12 - SAUMIL PATRA - Custom SVG Curves, Client Utils & Playwright E2E Tests
+- Primary Responsibilities: Analytics graphs bezier curves, fetch APIs wrappers, E2E spec suites.
+
+- Files Assigned:
+  * frontend/src/components/ReportsView.tsx
+  * frontend/src/lib/api.ts
+  * frontend/src/lib/utils.ts
+  * frontend/tests/mvp.spec.ts
+
+--------------------------------------------------------------------------------
+DevOps, Docker & Database Assignments
+--------------------------------------------------------------------------------
+
+Person 13 - VARUN PANIGRAHI - Docker Containerization & Express endpoints
+- Primary Responsibilities: DevOps docker configuration scripts, backend routes setup, server integration tests.
+
+- Files Assigned:
+  * docker-compose.yml
+  * backend/Dockerfile
+  * frontend/Dockerfile
+  * backend/src/app.ts
+  * backend/src/app.test.ts
+----------------------------------------
+Person 14 - AMRITA PRIYADARSHANI - Database Infrastructure, Schema Design & PostgreSQL Server Administration
+- Primary Responsibilities: DB schema architecture, seeder files scripting, ORM connections pooling setup.
+
+- Files Assigned:
+  * backend/prisma/schema.prisma
+  * backend/prisma/seed.ts
+  * backend/src/store-prisma.ts
+  * backend/src/store.interface.ts
+  * backend/src/auth.ts
+-------------------------------------------
+Person 15: Express API Core Router, Memory Fallback Store & Shared typings
+- Primary Responsibilities: Server express routes configs, local dev memory database adapters, index exports, zod validation rules, typings definitions.
+
+- Files Assigned:
+  * backend/src/server.ts
+  * backend/src/store-inmemory.ts
+  * frontend/src/shared/finance.ts
+  * backend/src/shared/finance.ts
+  * frontend/src/shared/index.ts
+  * backend/src/shared/index.ts
+  * frontend/src/shared/schemas.ts
+  * backend/src/shared/schemas.ts
+  * frontend/src/shared/types.ts
+  * backend/src/shared/types.ts
+
+================================================================================
