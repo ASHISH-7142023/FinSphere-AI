@@ -5,6 +5,11 @@ import helmet from "helmet";
 import morgan from "morgan";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const EMAIL_LOG_PATH = path.resolve(__dirname, "../../sent_emails.log");
 import {
   budgetSchema,
   calculateBudgetUsage,
@@ -85,7 +90,7 @@ Warm regards,
 FinSphere AI Welcome & Onboarding Team
 ================================================================================
 \n`;
-      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      const logPath = EMAIL_LOG_PATH;
       fs.appendFileSync(logPath, emailTemplate, "utf8");
     } catch (err) {
       console.error("Failed to write mock email log:", err);
@@ -135,7 +140,7 @@ Warm regards,
 FinSphere AI Security & Systems Team
 ================================================================================
 \n`;
-      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      const logPath = EMAIL_LOG_PATH;
       fs.appendFileSync(logPath, emailTemplate, "utf8");
     } catch (err) {
       console.error("Failed to write mock email log:", err);
@@ -182,7 +187,7 @@ Warm regards,
 FinSphere AI Security & Systems Team
 ================================================================================
 \n`;
-      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      const logPath = EMAIL_LOG_PATH;
       fs.appendFileSync(logPath, emailTemplate, "utf8");
     } catch (err) {
       console.error("Failed to write mock email log:", err);
@@ -244,7 +249,7 @@ Warm regards,
 FinSphere AI Security & Systems Team
 ================================================================================
 \n`;
-      const logPath = path.resolve(process.cwd(), "../sent_emails.log");
+      const logPath = EMAIL_LOG_PATH;
       fs.appendFileSync(logPath, emailTemplate, "utf8");
     } catch (err) {
       console.error("Failed to write mock email log:", err);
