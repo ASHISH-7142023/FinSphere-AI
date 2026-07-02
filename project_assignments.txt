@@ -134,7 +134,7 @@ Person 14 - AMRITA PRIYADARSHANI - Database Infrastructure, Schema Design & Post
   * backend/src/store.interface.ts
   * backend/src/auth.ts
 -------------------------------------------
-Person 15: Express API Core Router, Memory Fallback Store & Shared typings
+Person 15 - ADITYA VERMA - Express API Core Router, Memory Fallback Store & Shared typings
 - Primary Responsibilities: Server express routes configs, local dev memory database adapters, index exports, zod validation rules, typings definitions.
 
 - Files Assigned:
