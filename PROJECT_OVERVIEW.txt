@@ -100,5 +100,5 @@ Setup & Run Steps:
 
 3. Presenter Sandbox Credentials:
    * Email Address: demo@finsphere.ai
-   * Password: Demo@12345
+   * Password: Demo@12345 
 ========================================================================
