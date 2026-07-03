@@ -34,6 +34,17 @@ export default function SIPSetupView() {
       selected: false,
       logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuCflWazHKfj6F2P0l0Ai5FeNxKFuE0-gsfsaqL5SNt0oCy7Z9cOqnKnUbesNBZzmqj1SSoY1Q5wACeyMRmI_C0gFl3viRJGHnPXVTC_XMtHCVeTjaKI1EEjOgPiVMw5rY2B0FBC5aF2ZZ88J22Z4EXEdjwIejloKQdyxkaRj-YTopHH4V-DQHGeNmJY_tt14BxeVqriCfck3uLwdTLOyxIK7zU5CqwPdLY2oq4yRYVh-NAhl_gKmLGJBEE_h5ISxognS5GnDr5vx_ik",
     },
+    {
+
+      id: "2",
+      name: "Techno-Focus Direct Plan",
+      category: "Equity",
+      risk: "Sectoral / Technology",
+      returns: "21.2% p.a.",
+      selected: false,
+      logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuCflWazHKfj6F2P0l0Ai5FeNxKFuE0-gsfsaqL5SNt0oCy7Z9cOqnKnUbesNBZzmqj1SSoY1Q5wACeyMRmI_C0gFl3viRJGHnPXVTC_XMtHCVeTjaKI1EEjOgPiVMw5rY2B0FBC5aF2ZZ88J22Z4EXEdjwIejloKQdyxkaRj-YTopHH4V-DQHGeNmJY_tt14BxeVqriCfck3uLwdTLOyxIK7zU5CqwPdLY2oq4yRYVh-NAhl_gKmLGJBEE_h5ISxognS5GnDr5vx_ik",
+
+    }
   ]);
 
   const [monthlyAmount, setMonthlyAmount] = useState(5000);

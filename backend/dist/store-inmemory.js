@@ -1,4 +1,7 @@
+import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
+import fs from "fs";
+import path from "path";
 export function makeId(prefix) {
     return `${prefix}_${nanoid(10)}`;
 }
@@ -9,11 +12,59 @@ export class InMemoryStore {
     goals = [];
     investments = [];
     creditProfiles = [];
+    dbPath = path.resolve(process.cwd(), "inmemory_db.json");
     constructor() {
-        this.seed();
+        this.load();
     }
     seed() {
-        // Start with a clean database/store with no pre-populated records or users.
+        // Seed default demo user for seamless local development fallback
+        const hashedPassword = bcrypt.hashSync("Demo@12345", 10);
+        this.users.push({
+            id: "user_demo",
+            name: "Demo User",
+            email: "demo@finsphere.ai",
+            monthlyIncome: 150000,
+            passwordHash: hashedPassword,
+            createdAt: new Date().toISOString()
+        });
+    }
+    load() {
+        try {
+            if (fs.existsSync(this.dbPath)) {
+                const raw = fs.readFileSync(this.dbPath, "utf8");
+                const data = JSON.parse(raw);
+                this.users = data.users || [];
+                this.expenses = data.expenses || [];
+                this.budgets = data.budgets || [];
+                this.goals = data.goals || [];
+                this.investments = data.investments || [];
+                this.creditProfiles = data.creditProfiles || [];
+            }
+            else {
+                this.seed();
+                this.save();
+            }
+        }
+        catch (err) {
+            console.error("Failed to load inmemory db file:", err);
+            this.seed();
+        }
+    }
+    save() {
+        try {
+            const data = {
+                users: this.users,
+                expenses: this.expenses,
+                budgets: this.budgets,
+                goals: this.goals,
+                investments: this.investments,
+                creditProfiles: this.creditProfiles
+            };
+            fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 2), "utf8");
+        }
+        catch (err) {
+            console.error("Failed to save inmemory db file:", err);
+        }
     }
     async getUserByEmail(email) {
         return this.users.find((u) => u.email.toLowerCase() === email.toLowerCase()) || null;
@@ -27,7 +78,16 @@ export class InMemoryStore {
             createdAt: new Date().toISOString()
         };
         this.users.push(newUser);
+        this.save();
         return newUser;
+    }
+    async updateUserPassword(email, passwordHash) {
+        const user = this.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+        if (!user)
+            return null;
+        user.passwordHash = passwordHash;
+        this.save();
+        return user;
     }
     async getExpenses(userId, filter) {
         return this.expenses.filter((item) => {
@@ -46,6 +106,7 @@ export class InMemoryStore {
             ...expense
         };
         this.expenses.push(newExpense);
+        this.save();
         return newExpense;
     }
     async updateExpense(id, userId, data) {
@@ -53,6 +114,7 @@ export class InMemoryStore {
         if (!item)
             return null;
         Object.assign(item, data);
+        this.save();
         return item;
     }
     async deleteExpense(id, userId) {
@@ -60,6 +122,7 @@ export class InMemoryStore {
         if (index === -1)
             return false;
         this.expenses.splice(index, 1);
+        this.save();
         return true;
     }
     async getBudgets(userId) {
@@ -71,6 +134,7 @@ export class InMemoryStore {
             ...budget
         };
         this.budgets.push(newBudget);
+        this.save();
         return newBudget;
     }
     async updateBudget(id, userId, data) {
@@ -78,6 +142,7 @@ export class InMemoryStore {
         if (!item)
             return null;
         Object.assign(item, data);
+        this.save();
         return item;
     }
     async deleteBudget(id, userId) {
@@ -85,6 +150,7 @@ export class InMemoryStore {
         if (index === -1)
             return false;
         this.budgets.splice(index, 1);
+        this.save();
         return true;
     }
     async getGoals(userId) {
@@ -96,6 +162,7 @@ export class InMemoryStore {
             ...goal
         };
         this.goals.push(newGoal);
+        this.save();
         return newGoal;
     }
     async updateGoal(id, userId, data) {
@@ -103,6 +170,7 @@ export class InMemoryStore {
         if (!item)
             return null;
         Object.assign(item, data);
+        this.save();
         return item;
     }
     async deleteGoal(id, userId) {
@@ -110,6 +178,7 @@ export class InMemoryStore {
         if (index === -1)
             return false;
         this.goals.splice(index, 1);
+        this.save();
         return true;
     }
     async getInvestments(userId) {
@@ -121,6 +190,7 @@ export class InMemoryStore {
             ...investment
         };
         this.investments.push(newInvestment);
+        this.save();
         return newInvestment;
     }
     async updateInvestment(id, userId, data) {
@@ -128,6 +198,7 @@ export class InMemoryStore {
         if (!item)
             return null;
         Object.assign(item, data);
+        this.save();
         return item;
     }
     async deleteInvestment(id, userId) {
@@ -135,6 +206,7 @@ export class InMemoryStore {
         if (index === -1)
             return false;
         this.investments.splice(index, 1);
+        this.save();
         return true;
     }
     async getCreditProfile(userId) {
@@ -144,6 +216,7 @@ export class InMemoryStore {
         const existing = this.creditProfiles.find((x) => x.userId === userId);
         if (existing) {
             Object.assign(existing, data);
+            this.save();
             return existing;
         }
         const newProfile = {
@@ -152,6 +225,7 @@ export class InMemoryStore {
             ...data
         };
         this.creditProfiles.push(newProfile);
+        this.save();
         return newProfile;
     }
 }

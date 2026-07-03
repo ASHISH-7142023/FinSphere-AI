@@ -63,6 +63,25 @@ export class PrismaStore {
             createdAt: dbUser.createdAt.toISOString()
         };
     }
+    async updateUserPassword(email, passwordHash) {
+        try {
+            const user = await this.prisma.user.update({
+                where: { email: email.toLowerCase() },
+                data: { passwordHash }
+            });
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                monthlyIncome: Number(user.monthlyIncome),
+                passwordHash: user.passwordHash,
+                createdAt: user.createdAt.toISOString()
+            };
+        }
+        catch {
+            return null;
+        }
+    }
     async getExpenses(userId, filter) {
         const where = { userId };
         if (filter?.category) {
