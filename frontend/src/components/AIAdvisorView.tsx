@@ -26,8 +26,231 @@ export default function AIAdvisorView({ session, onRefreshData }: { session?: an
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+  const [executingId, setExecutingId] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    const saved = localStorage.getItem("finsphere.chat.history");
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse chat history:", e);
+      }
+    } else {
+      setMessages([
+        {
+          id: "init_1",
+          sender: "advisor",
+          text: "Hello! I am your FinSphere AI Strategist. Ask me about your budgets, emergency goals, investments, or how you can save tax this month.",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        }
+      ]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("finsphere.chat.history", JSON.stringify(messages));
+    }
+  }, [messages]);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 3500);
+  };
+
+  const handleClearHistory = () => {
+    setMessages([
+      {
+        id: "init_1",
+        sender: "advisor",
+        text: "Hello! I am your FinSphere AI Strategist. Ask me about your budgets, emergency goals, investments, or how you can save tax this month.",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      }
+    ]);
+    localStorage.removeItem("finsphere.chat.history");
+    showToast("Conversation history cleared.");
+  };
+
+  const handleExecuteAction = async (msgId: string, action: { type: string; payload: any }) => {
+    if (!session?.token) {
+      showToast("Session token is required to execute actions.");
+      return;
+    }
+    setExecutingId(msgId);
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+      
+      if (action.type === "SHIFT_BUDGET") {
+        const { category, limitAmount } = action.payload;
+        const listRes = await fetch(`${apiBase}/budgets`, {
+          headers: { "Authorization": `Bearer ${session.token}` }
+        });
+        const listData = await listRes.json();
+        const existing = listData?.budgets?.find((b: any) => b.category === category);
+        
+        let url = `${apiBase}/budgets`;
+        let method = "POST";
+        let body: any = { category, limitAmount: Number(limitAmount), month: new Date().toISOString().slice(0, 7) };
+        
+        if (existing) {
+          url = `${apiBase}/budgets/${existing.id}`;
+          method = "PUT";
+        }
+        
+        const executeRes = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify(body)
+        });
+        if (!executeRes.ok) throw new Error("Failed to execute budget action");
+        showToast(`Successfully updated ${category} budget to ₹${limitAmount.toLocaleString()}!`);
+      } 
+      else if (action.type === "ADD_EXPENSE") {
+        const { amount, category, description } = action.payload;
+        const executeRes = await fetch(`${apiBase}/expenses`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify({
+            amount: Number(amount),
+            category,
+            description,
+            date: new Date().toISOString().split("T")[0]
+          })
+        });
+        if (!executeRes.ok) throw new Error("Failed to record transaction");
+        showToast(`Logged transaction: ${description} (₹${amount})`);
+      } 
+      else if (action.type === "CREATE_GOAL") {
+        const { title, targetAmount, currentAmount, targetDate } = action.payload;
+        const executeRes = await fetch(`${apiBase}/goals`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify({
+            title,
+            targetAmount: Number(targetAmount),
+            currentAmount: Number(currentAmount),
+            targetDate
+          })
+        });
+        if (!executeRes.ok) throw new Error("Failed to set savings goal");
+        showToast(`Created savings goal: ${title} for ₹${targetAmount.toLocaleString()}!`);
+      } 
+      else if (action.type === "MUTUAL_FUND_REBALANCE") {
+        const listRes = await fetch(`${apiBase}/investments`, {
+          headers: { "Authorization": `Bearer ${session.token}` }
+        });
+        const listData = await listRes.json();
+        const investments = listData?.investments || [];
+        
+        const equityInv = investments.find((i: any) => i.assetType === "MutualFund" || i.name.toLowerCase().includes("equity"));
+        if (equityInv) {
+          const newCurrentValue = Math.max(0, Number(equityInv.currentValue) - 10000);
+          const newInvestedAmount = Math.max(0, Number(equityInv.investedAmount) - 10000);
+          await fetch(`${apiBase}/investments/${equityInv.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+              assetType: equityInv.assetType,
+              name: equityInv.name,
+              investedAmount: newInvestedAmount,
+              currentValue: newCurrentValue
+            })
+          });
+        }
+        
+        const debtInv = investments.find((i: any) => i.assetType === "SIP" || i.name.toLowerCase().includes("debt"));
+        if (debtInv) {
+          await fetch(`${apiBase}/investments/${debtInv.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+              assetType: debtInv.assetType,
+              name: debtInv.name,
+              investedAmount: Number(debtInv.investedAmount) + 10000,
+              currentValue: Number(debtInv.currentValue) + 10000
+            })
+          });
+        } else {
+          await fetch(`${apiBase}/investments`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+              assetType: "SIP",
+              name: "Dynamic Debt Shield",
+              investedAmount: 10000,
+              currentValue: 10000
+            })
+          });
+        }
+        showToast("Rebalanced ₹10,000 to low-volatility Debt Shield!");
+      }
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === msgId && m.action
+            ? { ...m, action: { ...m.action, executed: true } }
+            : m
+        )
+      );
+
+      if (onRefreshData) {
+        await onRefreshData();
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Error executing transaction action.");
+    } finally {
+      setExecutingId(null);
+    }
+  };
+
+  const handleDownloadChat = () => {
+    if (messages.length === 0) {
+      showToast("No conversation history to download.");
+      return;
+    }
+    const logText = messages
+      .map(
+        (m) =>
+          `[${m.timestamp}] ${m.sender === "user" ? "User" : "AI Advisor"}:\n${m.text}${
+            m.insight
+              ? `\nInsight [${m.insight.label}]: ${m.insight.value} - ${m.insight.title} (${m.insight.subtitle})`
+              : ""
+          }`
+      )
+      .join("\n\n========================================\n\n");
+    const blob = new Blob([logText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `finsphere_ai_chat_log_${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+>>>>>>> 722711a (Changes Made To AI Advisor and Landing Page Components.)
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
