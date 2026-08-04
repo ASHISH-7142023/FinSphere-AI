@@ -1,7 +1,4 @@
-"use client";
-
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import type { Expense } from "@/shared";
 
 export default function CreditCardBillCenter({
@@ -54,90 +51,39 @@ export default function CreditCardBillCenter({
     .filter(e => e.description.toLowerCase().includes("amex") && e.description.toLowerCase().includes("bill"))
     .reduce((sum, e) => sum + e.amount, 0);
 
-  const paidEmerald = expenses
-    .filter(e => e.description.toLowerCase().includes("emerald") && e.description.toLowerCase().includes("bill"))
-    .reduce((sum, e) => sum + e.amount, 0);
+  const [hdfcBalance, setHdfcBalance] = useState(Math.round(income * 0.952)); // e.g. 142850 for 150000 salary
+  const [amexBalance, setAmexBalance] = useState(Math.round(income * 0.547)); // e.g. 82100 for 150000 salary
+  const [timeline, setTimeline] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const hdfcDue = new Date("2026-10-28");
+    hdfcDue.setHours(0, 0, 0, 0);
+    const hDiff = Math.ceil((hdfcDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    const amexDue = new Date("2026-11-05");
+    amexDue.setHours(0, 0, 0, 0);
+    const aDiff = Math.ceil((amexDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-  const hdfcBalance = Math.max(0, Math.round(income * 0.952) - paidHdfc);
-  const amexBalance = Math.max(0, Math.round(income * 0.547) - paidAmex);
-  const emeraldBalance = Math.max(0, Math.round(income * 0.324) - paidEmerald);
+    const hText = hDiff < 0 ? `Overdue by ${Math.abs(hDiff)} days` : hDiff === 0 ? "Due Today" : `Due in ${hDiff} days`;
+    const aText = aDiff < 0 ? `Overdue by ${Math.abs(aDiff)} days` : aDiff === 0 ? "Due Today" : `Due in ${aDiff} days`;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    return [
+      { id: 1, title: "HDFC Regalia Gold Bill Due", desc: hText, amount: Math.round(income * 0.952), type: "upcoming", color: "border-emerald-500" },
+      { id: 2, title: "Amex Platinum Bill Generation", desc: aText, amount: Math.round(income * 0.547), type: "scheduled", color: "border-white/5" },
+      { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: Math.round(income * 0.082), type: "settled", color: "border-white/5" },
+    ];
+  });
+  const [toastMsg, setToastMsg] = useState("");
 
-  const hdfcDue = new Date("2026-10-28");
-  const hDiff = Math.ceil((hdfcDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-  const amexDue = new Date("2026-11-05");
-  const aDiff = Math.ceil((amexDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-  const emeraldDue = new Date("2026-11-12");
-  const eDiff = Math.ceil((emeraldDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-  const hText = hdfcBalance === 0 ? "Paid Full" : hDiff < 0 ? `Overdue by ${Math.abs(hDiff)} days` : hDiff === 0 ? "Due Today" : `Due in ${hDiff} days`;
-  const aText = amexBalance === 0 ? "Paid Full" : aDiff < 0 ? `Overdue by ${Math.abs(aDiff)} days` : aDiff === 0 ? "Due Today" : `Due in ${aDiff} days`;
-  const eText = emeraldBalance === 0 ? "Paid Full" : eDiff < 0 ? `Overdue by ${Math.abs(eDiff)} days` : eDiff === 0 ? "Due Today" : `Due in ${eDiff} days`;
-
-  const cards = [
-    {
-      id: "hdfc",
-      brand: "HDFC REGALIA GOLD",
-      number: "4421  7281  9012  4890",
-      holder: "ALEX STERLING",
-      expiry: "10/29",
-      tier: "GOLD MULTIPLIER",
-      balance: hdfcBalance,
-      dueDate: "Oct 28, 2026",
-      daysText: getDaysRemainingText("2026-10-28"),
-      diffDays: hDiff,
-      colorClass: "from-[#080d0a] via-[#15271e] to-[#244233]",
-      accentColor: "#ffd700",
-      textColor: "text-[#ffd700]",
-      glowColor: "rgba(0, 200, 150, 0.2)"
-    },
-    {
-      id: "amex",
-      brand: "AMEX PLATINUM",
-      number: "3759  8765  4321  9005",
-      holder: "ALEX STERLING",
-      expiry: "11/30",
-      tier: "PLATINUM ELITE",
-      balance: amexBalance,
-      dueDate: "Nov 05, 2026",
-      daysText: getDaysRemainingText("2026-11-05"),
-      diffDays: aDiff,
-      colorClass: "from-[#11161d] via-[#242d38] to-[#3a4756]",
-      accentColor: "#e5e7eb",
-      textColor: "text-white",
-      glowColor: "rgba(229, 231, 235, 0.15)"
-    },
-    {
-      id: "emerald",
-      brand: "FINSPHERE EMERALD",
-      number: "4820  1028  9302  1182",
-      holder: "ALEX STERLING",
-      expiry: "12/32",
-      tier: "NEURAL MEMBERSHIP",
-      balance: emeraldBalance,
-      dueDate: "Nov 12, 2026",
-      daysText: getDaysRemainingText("2026-11-12"),
-      diffDays: eDiff,
-      colorClass: "from-[#031d10] via-[#053d20] to-[#0a6635]",
-      accentColor: "#10b981",
-      textColor: "text-[#00c896]",
-      glowColor: "rgba(16, 185, 129, 0.3)"
+  const handlePayFull = (card: "hdfc" | "amex", amount: number) => {
+    if (card === "hdfc") {
+      setHdfcBalance(0);
+      setTimeline(timeline.map(t => t.id === 1 ? { ...t, desc: "Paid Full", type: "settled" } : t));
+    } else {
+      setAmexBalance(0);
+      setTimeline(timeline.map(t => t.id === 2 ? { ...t, desc: "Paid Full", type: "settled" } : t));
     }
-  ];
-
-  const activeCard = (cards[activeCardIndex] || cards[0]) as typeof cards[number];
-
-  const timeline = [
-    { id: 1, title: "HDFC Regalia Gold Bill Due", desc: hText, amount: Math.round(income * 0.952), type: hdfcBalance === 0 ? "settled" : "upcoming" },
-    { id: 2, title: "Amex Platinum Bill Generation", desc: aText, amount: Math.round(income * 0.547), type: amexBalance === 0 ? "settled" : "upcoming" },
-    { id: 3, title: "FinSphere Emerald Dues Target", desc: eText, amount: Math.round(income * 0.324), type: emeraldBalance === 0 ? "settled" : "upcoming" }
-  ];
-
-  const handlePayFull = (cardId: string, amount: number) => {
     setToastMsg(`Successfully paid ₹${amount.toLocaleString()} via FinSphere Pay!`);
     setTimeout(() => setToastMsg(""), 3500);
 
