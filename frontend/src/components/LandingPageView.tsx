@@ -285,7 +285,7 @@ export default function LandingPageView({ onSession }: { onSession: (session: Se
                           id="email"
                           type="email"
                           className="input-glass w-full pl-11 pr-4 py-3 rounded-xl text-white text-sm"
-                          placeholder="demo@finsphere.ai"
+                          placeholder="your.email@example.com"
                           required
                         />
                       </div>

@@ -44,4 +44,24 @@ describe("finance modules", () => {
     expect(response.status).toBe(200);
     expect(response.body.financialHealthScore).toBeGreaterThan(0);
   });
+
+  it("rejects advisor chat route without token", async () => {
+    const store = new InMemoryStore();
+    const app = createApp(store);
+    const response = await request(app).post("/api/advisor/chat").send({ messages: [{ sender: "user", text: "hello" }] });
+    expect(response.status).toBe(401);
+  });
+
+  it("returns advisor response with local rule fallback", async () => {
+    const { app, token } = await login();
+    const response = await request(app)
+      .post("/api/advisor/chat")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ messages: [{ sender: "user", text: "Analyze my portfolio risk" }] });
+    
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBeTruthy();
+    expect(response.body.message.text).toContain("portfolio");
+    expect(response.body.message.action.type).toBe("MUTUAL_FUND_REBALANCE");
+  });
 });

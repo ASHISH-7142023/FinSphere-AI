@@ -20,9 +20,9 @@ function LoginCardContent() {
 
   const [customGoogleEmail, setCustomGoogleEmail] = useState("");
   const [customGoogleName, setCustomGoogleName] = useState("");
-  const [isCustomGoogle, setIsCustomGoogle] = useState(false);
-  const [appleEmail, setAppleEmail] = useState("apple.user@icloud.com");
-  const [appleName, setAppleName] = useState("Apple Investor");
+  const [isCustomGoogle, setIsCustomGoogle] = useState(true);
+  const [appleEmail, setAppleEmail] = useState("");
+  const [appleName, setAppleName] = useState("");
 
   useEffect(() => {
     if (signupParam) {
@@ -87,11 +87,11 @@ function LoginCardContent() {
   const handleOAuthLogin = (provider: "google" | "apple") => {
     setOauthSimulation(provider);
     setOauthLoading(false);
-    setIsCustomGoogle(false);
+    setIsCustomGoogle(true);
     setCustomGoogleEmail("");
     setCustomGoogleName("");
-    setAppleEmail("apple.user@icloud.com");
-    setAppleName("Apple Investor");
+    setAppleEmail("");
+    setAppleName("");
     setError("");
   };
 

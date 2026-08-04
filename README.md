@@ -29,6 +29,13 @@ Over the course of the project, we implemented several major feature updates:
 7. **Connected Institutions & Settings**:
    - Built the connected institutions ledger showing sync status loops, refreshes, and delete hooks.
    - Created the Settings Panel to manage profile details, theme visual palettes, notification rules, and sandbox REST credentials.
+8. **Interactive AI Advisor Chat Backend & Execution**:
+   - Implemented secure JWT-authenticated `/api/advisor/chat` endpoint mapping live user financials (income, budgets, goals).
+   - Integrated Google Gemini API with offline local fallback rule calculations.
+   - Built frontend one-click **"Approve & Execute"** adjustment cards that run updates on the server and sync metrics instantly.
+9. **Advanced Unique Settings Security**:
+   - Replaced static credentials with dynamic generation of unique 2FA Base32 configuration keys and copyable recovery codes.
+   - Built a high-fidelity TouchID/FaceID scanner simulator with progress loaders and unique WebAuthn Key IDs.
 
 ---
 
@@ -340,6 +347,6 @@ npm install
 # Run dev server
 npm run dev
 ```
-- Frontend: `http://localhost:3000`
+- Frontend: `http://localhost:7000`
 - API: `http://localhost:4000`
-- Seed Account: `demo@finsphere.ai` / `Demo@12345`
+- Accounts: Create a custom account instantly using the sign-up forms or mock OAuth integrations.

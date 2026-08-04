@@ -783,7 +783,7 @@ export default function Home() {
           )}
 
           {view === "ai-advisor" && (
-            <AIAdvisorView />
+            <AIAdvisorView session={session} onRefreshData={refreshAll} />
           )}
 
           {view === "utilities" && (

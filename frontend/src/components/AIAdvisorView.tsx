@@ -14,37 +14,214 @@ interface Message {
     title: string;
     subtitle: string;
   };
+  action?: {
+    type: string;
+    payload: any;
+    executed?: boolean;
+  };
 }
 
-export default function AIAdvisorView() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      sender: "user",
-      text: "How can I save more for my Emergency Fund goal?",
-      timestamp: "10:24 AM",
-    },
-    {
-      id: "2",
-      sender: "advisor",
-      text: "Based on your current spending, I recommend shifting ₹3,000 from your Entertainment budget to your Savings.",
-      timestamp: "10:24 AM",
-      insight: {
-        label: "Impact Analysis",
-        value: "-2 Months",
-        title: "Target Deadline",
-        subtitle: "Estimated: Nov 2024",
-      },
-    },
-  ]);
+export default function AIAdvisorView({ session, onRefreshData }: { session?: any; onRefreshData?: () => Promise<void> }) {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+  const [executingId, setExecutingId] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("finsphere.chat.history");
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse chat history:", e);
+      }
+    } else {
+      setMessages([
+        {
+          id: "init_1",
+          sender: "advisor",
+          text: "Hello! I am your FinSphere AI Strategist. Ask me about your budgets, emergency goals, investments, or how you can save tax this month.",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        }
+      ]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem("finsphere.chat.history", JSON.stringify(messages));
+    }
+  }, [messages]);
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
     setTimeout(() => setToastMsg(""), 3500);
+  };
+
+  const handleClearHistory = () => {
+    setMessages([
+      {
+        id: "init_1",
+        sender: "advisor",
+        text: "Hello! I am your FinSphere AI Strategist. Ask me about your budgets, emergency goals, investments, or how you can save tax this month.",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      }
+    ]);
+    localStorage.removeItem("finsphere.chat.history");
+    showToast("Conversation history cleared.");
+  };
+
+  const handleExecuteAction = async (msgId: string, action: { type: string; payload: any }) => {
+    if (!session?.token) {
+      showToast("Session token is required to execute actions.");
+      return;
+    }
+    setExecutingId(msgId);
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+      
+      if (action.type === "SHIFT_BUDGET") {
+        const { category, limitAmount } = action.payload;
+        const listRes = await fetch(`${apiBase}/budgets`, {
+          headers: { "Authorization": `Bearer ${session.token}` }
+        });
+        const listData = await listRes.json();
+        const existing = listData?.budgets?.find((b: any) => b.category === category);
+        
+        let url = `${apiBase}/budgets`;
+        let method = "POST";
+        let body: any = { category, limitAmount: Number(limitAmount), month: new Date().toISOString().slice(0, 7) };
+        
+        if (existing) {
+          url = `${apiBase}/budgets/${existing.id}`;
+          method = "PUT";
+        }
+        
+        const executeRes = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify(body)
+        });
+        if (!executeRes.ok) throw new Error("Failed to execute budget action");
+        showToast(`Successfully updated ${category} budget to ₹${limitAmount.toLocaleString()}!`);
+      } 
+      else if (action.type === "ADD_EXPENSE") {
+        const { amount, category, description } = action.payload;
+        const executeRes = await fetch(`${apiBase}/expenses`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify({
+            amount: Number(amount),
+            category,
+            description,
+            date: new Date().toISOString().split("T")[0]
+          })
+        });
+        if (!executeRes.ok) throw new Error("Failed to record transaction");
+        showToast(`Logged transaction: ${description} (₹${amount})`);
+      } 
+      else if (action.type === "CREATE_GOAL") {
+        const { title, targetAmount, currentAmount, targetDate } = action.payload;
+        const executeRes = await fetch(`${apiBase}/goals`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify({
+            title,
+            targetAmount: Number(targetAmount),
+            currentAmount: Number(currentAmount),
+            targetDate
+          })
+        });
+        if (!executeRes.ok) throw new Error("Failed to set savings goal");
+        showToast(`Created savings goal: ${title} for ₹${targetAmount.toLocaleString()}!`);
+      } 
+      else if (action.type === "MUTUAL_FUND_REBALANCE") {
+        const listRes = await fetch(`${apiBase}/investments`, {
+          headers: { "Authorization": `Bearer ${session.token}` }
+        });
+        const listData = await listRes.json();
+        const investments = listData?.investments || [];
+        
+        const equityInv = investments.find((i: any) => i.assetType === "MutualFund" || i.name.toLowerCase().includes("equity"));
+        if (equityInv) {
+          const newCurrentValue = Math.max(0, Number(equityInv.currentValue) - 10000);
+          const newInvestedAmount = Math.max(0, Number(equityInv.investedAmount) - 10000);
+          await fetch(`${apiBase}/investments/${equityInv.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+              assetType: equityInv.assetType,
+              name: equityInv.name,
+              investedAmount: newInvestedAmount,
+              currentValue: newCurrentValue
+            })
+          });
+        }
+        
+        const debtInv = investments.find((i: any) => i.assetType === "SIP" || i.name.toLowerCase().includes("debt"));
+        if (debtInv) {
+          await fetch(`${apiBase}/investments/${debtInv.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+              assetType: debtInv.assetType,
+              name: debtInv.name,
+              investedAmount: Number(debtInv.investedAmount) + 10000,
+              currentValue: Number(debtInv.currentValue) + 10000
+            })
+          });
+        } else {
+          await fetch(`${apiBase}/investments`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+              assetType: "SIP",
+              name: "Dynamic Debt Shield",
+              investedAmount: 10000,
+              currentValue: 10000
+            })
+          });
+        }
+        showToast("Rebalanced ₹10,000 to low-volatility Debt Shield!");
+      }
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === msgId && m.action
+            ? { ...m, action: { ...m.action, executed: true } }
+            : m
+        )
+      );
+
+      if (onRefreshData) {
+        await onRefreshData();
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Error executing transaction action.");
+    } finally {
+      setExecutingId(null);
+    }
   };
 
   const handleDownloadChat = () => {
@@ -79,7 +256,7 @@ export default function AIAdvisorView() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = (textToSend = inputText) => {
+  const handleSend = async (textToSend = inputText) => {
     if (!textToSend.trim()) return;
 
     const userMsg: Message = {
@@ -89,15 +266,51 @@ export default function AIAdvisorView() {
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const nextMessages = [...messages, userMsg];
+    setMessages(nextMessages);
     setInputText("");
     setIsTyping(true);
 
-    // Simulate AI Advisor reply
+    if (session?.token) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api"}/advisor/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.token}`
+          },
+          body: JSON.stringify({ messages: nextMessages })
+        });
+        
+        if (!response.ok) {
+          throw new Error("Chat request failed");
+        }
+
+        const data = await response.json();
+        setIsTyping(false);
+        if (data?.message) {
+          const advisorMsg: Message = {
+            id: (Date.now() + 1).toString(),
+            sender: "advisor",
+            text: data.message.text,
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            insight: data.message.insight || undefined,
+            action: data.message.action || undefined,
+          };
+          setMessages((prev) => [...prev, advisorMsg]);
+          return;
+        }
+      } catch (err) {
+        console.error("Backend chat failed, falling back to local fallback:", err);
+      }
+    }
+
+    // Local simulation fallback
     setTimeout(() => {
       setIsTyping(false);
       let replyText = "I've analyzed your financial query. Let's optimize your tax brackets and allocation mix.";
       let insightData;
+      let actionData;
 
       const lower = textToSend.toLowerCase();
       if (lower.includes("portfolio") || lower.includes("stock") || lower.includes("invest")) {
@@ -132,6 +345,7 @@ export default function AIAdvisorView() {
         text: replyText,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         insight: insightData,
+        action: actionData,
       };
 
       setMessages((prev) => [...prev, advisorReply]);
@@ -163,7 +377,7 @@ export default function AIAdvisorView() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-white transition-colors" title="Clear History" onClick={() => setMessages([])}>
+          <button className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-white transition-colors" title="Clear History" onClick={handleClearHistory}>
             <span className="material-symbols-outlined text-[20px]">delete</span>
           </button>
           <button className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-white transition-colors" title="Download Report" onClick={handleDownloadChat}>
@@ -236,6 +450,56 @@ export default function AIAdvisorView() {
                           <p className="font-semibold text-on-surface">{msg.insight.title}</p>
                           <p className="text-[10px] text-on-surface-variant">{msg.insight.subtitle}</p>
                         </div>
+                      </div>
+                    )}
+
+                    {msg.action && (
+                      <div className="glass-card rounded-xl p-4 border border-white/10 flex flex-col gap-3 bg-white/5 mt-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-primary text-[18px]">
+                              {msg.action.type === "SHIFT_BUDGET" ? "rule" : msg.action.type === "ADD_EXPENSE" ? "receipt_long" : msg.action.type === "MUTUAL_FUND_REBALANCE" ? "balance" : "stars"}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                              AI Suggested Optimization
+                            </p>
+                            <p className="text-xs text-on-surface">
+                              {msg.action.type === "SHIFT_BUDGET" && `Shift budget limit for ${msg.action.payload.category}`}
+                              {msg.action.type === "ADD_EXPENSE" && `Record target savings offset transaction`}
+                              {msg.action.type === "CREATE_GOAL" && `Commit to target goal: ${msg.action.payload.title}`}
+                              {msg.action.type === "MUTUAL_FUND_REBALANCE" && "Rebalance portfolio allocations"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => handleExecuteAction(msg.id, msg.action!)}
+                          disabled={msg.action.executed || executingId === msg.id}
+                          className={`w-full py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                            msg.action.executed
+                              ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-default"
+                              : "bg-primary text-on-primary hover:bg-primary/90 hover:scale-[1.01] active:scale-[0.99]"
+                          }`}
+                        >
+                          {executingId === msg.id ? (
+                            <>
+                              <span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" />
+                              Executing...
+                            </>
+                          ) : msg.action.executed ? (
+                            <>
+                              <span className="material-symbols-outlined text-sm">check_circle</span>
+                              Executed & Synced
+                            </>
+                          ) : (
+                            <>
+                              <span className="material-symbols-outlined text-sm">bolt</span>
+                              Approve & Execute Optimization
+                            </>
+                          )}
+                        </button>
                       </div>
                     )}
                   </div>

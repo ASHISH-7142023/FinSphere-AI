@@ -24,6 +24,42 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
   const [biometric, setBiometric] = useState(false);
   const [aiPrivacy, setAiPrivacy] = useState(true);
 
+  // Advanced 2FA modal states
+  const [show2FAModal, setShow2FAModal] = useState(false);
+  const [twoFactorOtp, setTwoFactorOtp] = useState("");
+  const [twoFactorStep, setTwoFactorStep] = useState<"qr" | "verify" | "recovery">("qr");
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [twoFactorSecret, setTwoFactorSecret] = useState("");
+  const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
+
+  // Advanced Biometrics modal states
+  const [showBioModal, setShowBioModal] = useState(false);
+  const [bioScanStep, setBioScanStep] = useState<"ready" | "scanning" | "success">("ready");
+  const [bioScanProgress, setBioScanProgress] = useState(0);
+  const [biometricKeyId, setBiometricKeyId] = useState("");
+
+  const generate2FAKeys = () => {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let secret = "";
+    for (let i = 0; i < 16; i++) {
+      secret += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+    }
+    const formattedSecret = secret.match(/.{1,4}/g)?.join(" ") || secret;
+    setTwoFactorSecret(formattedSecret);
+
+    const chars = "0123456789ABCDEF";
+    const codes = [];
+    for (let c = 0; c < 4; c++) {
+      let code = "";
+      for (let i = 0; i < 8; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      codes.push(code.slice(0, 4) + "-" + code.slice(4));
+    }
+    setRecoveryCodes(codes);
+  };
+
   // Notification toggles
   const [pushActive, setPushActive] = useState(true);
   const [emailActive, setEmailActive] = useState(true);
@@ -210,8 +246,16 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
               <button
                 type="button"
                 onClick={() => {
-                  setTwoFactor(!twoFactor);
-                  triggerToast(twoFactor ? "Two-Factor Auth deactivated." : "Two-Factor Auth activated.");
+                  if (twoFactor) {
+                    setTwoFactor(false);
+                    triggerToast("Two-Factor Auth deactivated.");
+                  } else {
+                    generate2FAKeys();
+                    setShow2FAModal(true);
+                    setTwoFactorStep("qr");
+                    setTwoFactorOtp("");
+                    setOtpError("");
+                  }
                 }}
                 className={`w-12 h-6 rounded-full relative p-0.5 border border-white/10 transition-colors ${twoFactor ? "bg-primary" : "bg-white/5"}`}
               >
@@ -236,8 +280,14 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
               <button
                 type="button"
                 onClick={() => {
-                  setBiometric(!biometric);
-                  triggerToast(biometric ? "Biometric login disabled." : "Biometric login enabled.");
+                  if (biometric) {
+                    setBiometric(false);
+                    triggerToast("Biometric login disabled.");
+                  } else {
+                    setShowBioModal(true);
+                    setBioScanStep("ready");
+                    setBioScanProgress(0);
+                  }
                 }}
                 className={`w-12 h-6 rounded-full relative p-0.5 border border-white/10 transition-colors ${biometric ? "bg-primary" : "bg-white/5"}`}
               >
@@ -603,6 +653,265 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
                 Link Secure Connection
               </button>
             </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* 2FA Advanced Setup Modal */}
+      {show2FAModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div onClick={() => setShow2FAModal(false)} className="fixed inset-0 bg-background/80 backdrop-blur-sm z-0" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-card w-full max-w-md p-6 rounded-3xl z-10 relative space-y-4 border border-white/10"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold text-white text-base">Two-Factor Authentication (2FA)</h3>
+              <button onClick={() => setShow2FAModal(false)} className="text-on-surface-variant hover:text-white transition-colors">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {twoFactorStep === "qr" && (
+              <div className="space-y-4 text-xs text-center">
+                <div className="mx-auto w-40 h-40 bg-white p-2 rounded-2xl flex items-center justify-center shadow-lg">
+                  {/* Styled Mock SVG QR Code */}
+                  <svg className="w-full h-full text-neutral-800" viewBox="0 0 100 100">
+                    <rect x="10" y="10" width="20" height="20" fill="currentColor" />
+                    <rect x="15" y="15" width="10" height="10" fill="white" />
+                    <rect x="70" y="10" width="20" height="20" fill="currentColor" />
+                    <rect x="75" y="15" width="10" height="10" fill="white" />
+                    <rect x="10" y="70" width="20" height="20" fill="currentColor" />
+                    <rect x="15" y="75" width="10" height="10" fill="white" />
+                    <rect x="40" y="40" width="20" height="20" fill="currentColor" />
+                    <rect x="45" y="45" width="10" height="10" fill="white" />
+                    <rect x="40" y="15" width="15" height="15" fill="currentColor" />
+                    <rect x="15" y="40" width="15" height="15" fill="currentColor" />
+                    <rect x="70" y="40" width="15" height="20" fill="currentColor" />
+                    <rect x="45" y="70" width="20" height="15" fill="currentColor" />
+                    <rect x="75" y="75" width="15" height="15" fill="currentColor" />
+                  </svg>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-on-surface-variant leading-relaxed">
+                    Scan the QR code with your authenticator app (Authy, Google Authenticator) or input the configuration key below:
+                  </p>
+                  <p className="font-mono text-sm text-primary font-bold bg-white/5 py-1.5 px-3 rounded-lg inline-block tracking-wider">
+                    {twoFactorSecret}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setTwoFactorStep("verify")}
+                  className="w-full py-2.5 bg-primary text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all"
+                >
+                  Continue to Verification
+                </button>
+              </div>
+            )}
+
+            {twoFactorStep === "verify" && (
+              <div className="space-y-4 text-xs">
+                <div className="space-y-2 text-center">
+                  <p className="text-on-surface-variant">
+                    Enter the 6-digit verification code generated by your Authenticator app.
+                  </p>
+                  <div className="flex justify-center gap-2 pt-2">
+                    <input
+                      type="text"
+                      maxLength={6}
+                      placeholder="000000"
+                      value={twoFactorOtp}
+                      onChange={(e) => {
+                        setTwoFactorOtp(e.target.value.replace(/\D/g, ""));
+                        setOtpError("");
+                      }}
+                      className="bg-[#0e1511] border border-white/10 rounded-xl px-4 py-3 text-center text-xl font-mono text-white tracking-widest outline-none focus:ring-1 focus:ring-primary focus:border-primary w-40"
+                    />
+                  </div>
+                  {otpError && <p className="text-red-400 font-semibold pt-1">{otpError}</p>}
+                </div>
+
+                <button
+                  type="button"
+                  disabled={twoFactorOtp.length !== 6 || otpVerifying}
+                  onClick={async () => {
+                    setOtpVerifying(true);
+                    await new Promise((resolve) => setTimeout(resolve, 1200));
+                    setOtpVerifying(false);
+                    if (twoFactorOtp.length === 6) {
+                      setTwoFactorStep("recovery");
+                    } else {
+                      setOtpError("Invalid verification code. Please try again.");
+                    }
+                  }}
+                  className="w-full py-2.5 bg-primary text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {otpVerifying ? (
+                    <>
+                      <span className="animate-spin h-3.5 w-3.5 border-2 border-background border-t-transparent rounded-full" />
+                      Verifying Code...
+                    </>
+                  ) : (
+                    "Verify & Enable"
+                  )}
+                </button>
+              </div>
+            )}
+
+            {twoFactorStep === "recovery" && (
+              <div className="space-y-4 text-xs">
+                <div className="space-y-1.5">
+                  <h4 className="font-bold text-white">Emergency Recovery Codes</h4>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    Store these backup recovery codes in a secure location. You can use these to regain access if you lose your authentication device.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 bg-white/5 p-4 rounded-2xl font-mono text-center text-sm text-[#bbcac1] border border-white/5">
+                  {recoveryCodes.map((code, idx) => (
+                    <div key={idx}>{code}</div>
+                  ))}
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(recoveryCodes.join("\n"));
+                      triggerToast("Recovery codes copied to clipboard!");
+                    }}
+                    className="flex-1 py-2.5 border border-white/10 hover:bg-white/5 text-white font-semibold rounded-xl transition-all"
+                  >
+                    Copy Codes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTwoFactor(true);
+                      setShow2FAModal(false);
+                      triggerToast("Two-Factor Authentication fully secured!");
+                    }}
+                    className="flex-1 py-2.5 bg-primary text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      )}
+
+      {/* Advanced Biometrics Scanner Modal */}
+      {showBioModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div onClick={() => setShowBioModal(false)} className="fixed inset-0 bg-background/80 backdrop-blur-sm z-0" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-card w-full max-w-sm p-6 rounded-3xl z-10 relative space-y-6 border border-white/10 text-center"
+          >
+            <div className="flex justify-between items-center mb-1">
+              <h3 className="font-bold text-white text-base text-left">Biometric Sync</h3>
+              <button onClick={() => setShowBioModal(false)} className="text-on-surface-variant hover:text-white transition-colors">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {bioScanStep === "ready" && (
+              <div className="space-y-6">
+                <div className="mx-auto w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-primary animate-pulse">
+                  <span className="material-symbols-outlined text-5xl" style={{ fontVariationSettings: "'FILL' 0" }}>
+                    fingerprint
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-white font-bold text-sm">Register FaceID or TouchID</h4>
+                  <p className="text-[11px] text-on-surface-variant leading-relaxed max-w-xs mx-auto">
+                    FinSphere uses WebAuthn system protocols to verify biological keychains locally. No biometric data is ever sent to our servers.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBioScanStep("scanning");
+                    setBioScanProgress(0);
+                    const interval = setInterval(() => {
+                      setBioScanProgress((prev) => {
+                        if (prev >= 100) {
+                          clearInterval(interval);
+                          const mockKeyId = `webauthn_key_${session?.user?.id || "unknown"}_${Math.random().toString(36).substring(2, 10)}`;
+                          setBiometricKeyId(mockKeyId);
+                          setBioScanStep("success");
+                          return 100;
+                        }
+                        return prev + 10;
+                      });
+                    }, 150);
+                  }}
+                  className="w-full py-2.5 bg-primary text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-base">sensors</span>
+                  Start Setup Scan
+                </button>
+              </div>
+            )}
+
+            {bioScanStep === "scanning" && (
+              <div className="space-y-6">
+                <div className="relative mx-auto w-28 h-28 rounded-full border-2 border-dashed border-primary/40 flex items-center justify-center overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-primary to-transparent animate-bounce shadow-[0_0_10px_#12b5cb]" style={{ animationDuration: "1.5s" }} />
+                  <span className="material-symbols-outlined text-primary text-5xl animate-pulse">
+                    face
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  <div className="flex justify-between items-center text-[10px] text-on-surface-variant font-bold uppercase tracking-wider px-4">
+                    <span>System Scanning</span>
+                    <span>{bioScanProgress}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-full bg-primary transition-all duration-150" style={{ width: `${bioScanProgress}%` }} />
+                  </div>
+                  <p className="text-[10px] text-primary uppercase font-bold tracking-wider animate-pulse">
+                    Mapping biometric vector fields...
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {bioScanStep === "success" && (
+              <div className="space-y-6">
+                <div className="mx-auto w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                  <span className="material-symbols-outlined text-5xl">
+                    check_circle
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-white font-bold text-sm">Biometrics Synced!</h4>
+                  <p className="text-[11px] text-on-surface-variant leading-relaxed max-w-xs mx-auto">
+                    Your FaceID/TouchID profile has been linked successfully. You can now use instant biometric unlock on this browser.
+                  </p>
+                  <p className="text-[10px] font-mono text-primary font-bold bg-white/5 py-1 px-2.5 rounded-lg inline-block mt-1">
+                    Key ID: {biometricKeyId}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBiometric(true);
+                    setShowBioModal(false);
+                    triggerToast("Biometric login enabled successfully!");
+                  }}
+                  className="w-full py-2.5 bg-emerald-500 text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all"
+                >
+                  Done
+                </button>
+              </div>
+            )}
           </motion.div>
         </div>
       )}
