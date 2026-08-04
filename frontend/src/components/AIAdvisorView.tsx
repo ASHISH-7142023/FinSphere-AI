@@ -25,7 +25,37 @@ export default function AIAdvisorView({ session, onRefreshData }: { session?: an
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 3500);
+  };
+
+  const handleDownloadChat = () => {
+    if (messages.length === 0) {
+      showToast("No conversation history to download.");
+      return;
+    }
+    const logText = messages
+      .map(
+        (m) =>
+          `[${m.timestamp}] ${m.sender === "user" ? "User" : "AI Advisor"}:\n${m.text}${
+            m.insight
+              ? `\nInsight [${m.insight.label}]: ${m.insight.value} - ${m.insight.title} (${m.insight.subtitle})`
+              : ""
+          }`
+      )
+      .join("\n\n========================================\n\n");
+    const blob = new Blob([logText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `finsphere_ai_chat_log_${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

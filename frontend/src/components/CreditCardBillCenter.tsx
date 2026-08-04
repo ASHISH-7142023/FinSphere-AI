@@ -51,39 +51,39 @@ export default function CreditCardBillCenter({
     .filter(e => e.description.toLowerCase().includes("amex") && e.description.toLowerCase().includes("bill"))
     .reduce((sum, e) => sum + e.amount, 0);
 
-  const [hdfcBalance, setHdfcBalance] = useState(Math.round(income * 0.952)); // e.g. 142850 for 150000 salary
-  const [amexBalance, setAmexBalance] = useState(Math.round(income * 0.547)); // e.g. 82100 for 150000 salary
-  const [timeline, setTimeline] = useState(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const hdfcDue = new Date("2026-10-28");
-    hdfcDue.setHours(0, 0, 0, 0);
-    const hDiff = Math.ceil((hdfcDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-    
-    const amexDue = new Date("2026-11-05");
-    amexDue.setHours(0, 0, 0, 0);
-    const aDiff = Math.ceil((amexDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  // Derive balances dynamically based on payment transactions in database expenses
+  const paidHdfc = expenses
+    .filter(e => e.description.toLowerCase().includes("hdfc") && e.description.toLowerCase().includes("bill"))
+    .reduce((sum, e) => sum + e.amount, 0);
 
-    const hText = hDiff < 0 ? `Overdue by ${Math.abs(hDiff)} days` : hDiff === 0 ? "Due Today" : `Due in ${hDiff} days`;
-    const aText = aDiff < 0 ? `Overdue by ${Math.abs(aDiff)} days` : aDiff === 0 ? "Due Today" : `Due in ${aDiff} days`;
+  const paidAmex = expenses
+    .filter(e => e.description.toLowerCase().includes("amex") && e.description.toLowerCase().includes("bill"))
+    .reduce((sum, e) => sum + e.amount, 0);
 
-    return [
-      { id: 1, title: "HDFC Regalia Gold Bill Due", desc: hText, amount: Math.round(income * 0.952), type: "upcoming", color: "border-emerald-500" },
-      { id: 2, title: "Amex Platinum Bill Generation", desc: aText, amount: Math.round(income * 0.547), type: "scheduled", color: "border-white/5" },
-      { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: Math.round(income * 0.082), type: "settled", color: "border-white/5" },
-    ];
-  });
+  const hdfcBalance = Math.max(0, Math.round(income * 0.952) - paidHdfc);
+  const amexBalance = Math.max(0, Math.round(income * 0.547) - paidAmex);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const hdfcDue = new Date("2026-10-28");
+  const hDiff = Math.ceil((hdfcDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+  const amexDue = new Date("2026-11-05");
+  const aDiff = Math.ceil((amexDue.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+  const hText = hdfcBalance === 0 ? "Paid Full" : hDiff < 0 ? `Overdue by ${Math.abs(hDiff)} days` : hDiff === 0 ? "Due Today" : `Due in ${hDiff} days`;
+  const aText = amexBalance === 0 ? "Paid Full" : aDiff < 0 ? `Overdue by ${Math.abs(aDiff)} days` : aDiff === 0 ? "Due Today" : `Due in ${aDiff} days`;
+
+  const timeline = [
+    { id: 1, title: "HDFC Regalia Gold Bill Due", desc: hText, amount: Math.round(income * 0.952), type: hdfcBalance === 0 ? "settled" : "upcoming", color: "border-emerald-500" },
+    { id: 2, title: "Amex Platinum Bill Generation", desc: aText, amount: Math.round(income * 0.547), type: amexBalance === 0 ? "settled" : "scheduled", color: "border-white/5" },
+    { id: 3, title: "SBI Cashback Settled", desc: "Paid Full", amount: Math.round(income * 0.082), type: "settled", color: "border-white/5" },
+  ];
+
   const [toastMsg, setToastMsg] = useState("");
 
   const handlePayFull = (card: "hdfc" | "amex", amount: number) => {
-    if (card === "hdfc") {
-      setHdfcBalance(0);
-      setTimeline(timeline.map(t => t.id === 1 ? { ...t, desc: "Paid Full", type: "settled" } : t));
-    } else {
-      setAmexBalance(0);
-      setTimeline(timeline.map(t => t.id === 2 ? { ...t, desc: "Paid Full", type: "settled" } : t));
-    }
     setToastMsg(`Successfully paid ₹${amount.toLocaleString()} via FinSphere Pay!`);
     setTimeout(() => setToastMsg(""), 3500);
 
