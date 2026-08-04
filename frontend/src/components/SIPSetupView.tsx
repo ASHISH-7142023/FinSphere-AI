@@ -14,7 +14,7 @@ interface Fund {
   logo: string;
 }
 
-export default function SIPSetupView() {
+export default function SIPSetupView({ onAddInvestment }: { onAddInvestment?: (name: string, assetType: "Stock" | "MutualFund" | "SIP" | "Gold" | "Crypto" | "Other", amount: number) => Promise<void> }) {
   const [funds, setFunds] = useState<Fund[]>([
     {
       id: "1",
@@ -77,8 +77,22 @@ export default function SIPSetupView() {
     setMonthlyAmount((prev) => prev + amt);
   };
 
-  const handleCreateSIP = () => {
-    setIsSetupSuccess(true);
+  const [saving, setSaving] = useState(false);
+
+  const handleCreateSIP = async () => {
+    if (onAddInvestment) {
+      setSaving(true);
+      try {
+        await onAddInvestment(activeFund.name, "SIP", monthlyAmount);
+        setIsSetupSuccess(true);
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Failed to setup SIP");
+      } finally {
+        setSaving(false);
+      }
+    } else {
+      setIsSetupSuccess(true);
+    }
   };
 
   const handleReset = () => {
@@ -299,9 +313,10 @@ export default function SIPSetupView() {
 
               <button
                 onClick={handleCreateSIP}
-                className="w-full py-3.5 btn-emerald-gradient rounded-xl font-bold text-xs hover:brightness-110 active:scale-95 transition-all"
+                disabled={saving}
+                className="w-full py-3.5 btn-emerald-gradient rounded-xl font-bold text-xs hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
               >
-                Activate Automated SIP
+                {saving ? "Activating..." : "Activate Automated SIP"}
               </button>
             </div>
 

@@ -1,4 +1,4 @@
-import type { Budget, CreditProfile, Expense, Goal, Investment, User } from "./shared/index.js";
+import type { Budget, CreditProfile, Expense, Goal, Investment, User, KhataContact, KhataEntry } from "./shared/index.js";
 
 export interface StoredUser extends User {
   passwordHash: string;
@@ -38,4 +38,13 @@ export interface IStore {
   // Credit Profile
   getCreditProfile(userId: string): Promise<CreditProfile | null>;
   upsertCreditProfile(userId: string, data: Omit<CreditProfile, "id" | "userId">): Promise<CreditProfile>;
+
+  // Users
+  updateUser(id: string, data: Partial<Omit<User, "id" | "createdAt">>): Promise<StoredUser | null>;
+
+  // Khata Ledger
+  getKhataContacts(userId: string): Promise<KhataContact[]>;
+  createKhataContact(userId: string, data: { name: string; type: "get" | "give" }): Promise<KhataContact>;
+  createKhataEntry(contactId: string, data: { type: "get" | "give"; amount: number; remarks: string }): Promise<KhataEntry>;
+  settleKhataContact(contactId: string, userId: string): Promise<boolean>;
 }

@@ -25,7 +25,13 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}, tok
   });
   if (!response.ok) {
     if (response.status === 401) {
-      if (typeof window !== "undefined") {
+      if (
+        typeof window !== "undefined" &&
+        !window.location.pathname.includes("/login") &&
+        !window.location.pathname.includes("/forgot-password") &&
+        !window.location.pathname.includes("/verify-otp") &&
+        !window.location.pathname.includes("/reset-password")
+      ) {
         localStorage.removeItem("finsphere.session");
         window.location.reload();
       }

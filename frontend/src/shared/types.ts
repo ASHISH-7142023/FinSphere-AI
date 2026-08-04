@@ -82,3 +82,23 @@ export interface DashboardSummary {
   categoryBreakdown: Array<{ category: ExpenseCategory; amount: number }>;
   monthlyTrend: Array<{ month: string; income: number; expenses: number; savings: number }>;
 }
+
+export interface KhataEntry {
+  id: string;
+  contactId: string;
+  type: "get" | "give";
+  amount: number;
+  remarks: string;
+  date: string;
+}
+
+export interface KhataContact {
+  id: string;
+  userId: string;
+  name: string;
+  type: "get" | "give";
+  amount: number;
+  lastActive: string;
+  entries: KhataEntry[];
+}
+

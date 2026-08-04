@@ -38,3 +38,12 @@ export const creditProfileSchema = z.object({
     paymentHistory: z.coerce.number().min(0).max(100),
     creditAge: z.coerce.number().min(0).max(40)
 });
+export const khataContactSchema = z.object({
+    name: z.string().min(2).max(80),
+    type: z.enum(["get", "give"])
+});
+export const khataEntrySchema = z.object({
+    type: z.enum(["get", "give"]),
+    amount: z.coerce.number().positive(),
+    remarks: z.string().max(200).default("No remarks")
+});

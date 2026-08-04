@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { currency } from "@/lib/utils";
 import type { Goal } from "@/shared";
 
@@ -10,7 +11,36 @@ interface GoalsViewProps {
 }
 
 export default function GoalsView({ goals, onOpenAddModal }: GoalsViewProps) {
-  const totalSaved = goals.reduce((acc, g) => acc + g.currentAmount, 0);
+  const [poolAmount, setPoolAmount] = useState(124000);
+  const [teslaAmount, setTeslaAmount] = useState(88800);
+  const [roundupsAmount, setRoundupsAmount] = useState(4210.88);
+  const [activeDeadlineDays, setActiveDeadlineDays] = useState(142);
+  const [showContribute, setShowContribute] = useState(false);
+  const [contribAmount, setContribAmount] = useState("5000");
+  const [toastMsg, setToastMsg] = useState("");
+
+  const teslaRatio = Math.round((teslaAmount / 120000) * 100);
+  const poolRatio = Math.round((poolAmount / 250000) * 100);
+
+  const handleAcceptOptimization = () => {
+    setTeslaAmount(prev => Math.min(120000, prev + 4200));
+    setRoundupsAmount(prev => prev + 4200);
+    setActiveDeadlineDays(prev => Math.max(30, prev - 18));
+    setToastMsg("AI Optimization Accepted! ₹4,200 allocated to Tesla Plaid, shortening deadline by 18 days.");
+    setTimeout(() => setToastMsg(""), 4000);
+  };
+
+  const handlePoolSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const amt = Number(contribAmount);
+    if (isNaN(amt) || amt <= 0) return;
+    setPoolAmount(prev => Math.min(250000, prev + amt));
+    setShowContribute(false);
+    setToastMsg(`Successfully contributed ${currency(amt)} to the Europe 2025 Tour pool!`);
+    setTimeout(() => setToastMsg(""), 4000);
+  };
+
+  const totalSaved = goals.reduce((acc, g) => acc + g.currentAmount, 0) + poolAmount + teslaAmount;
 
   return (
     <div className="space-y-6">
@@ -67,16 +97,16 @@ export default function GoalsView({ goals, onOpenAddModal }: GoalsViewProps) {
               <div className="space-y-3">
                 <div className="flex justify-between items-end text-xs">
                   <span className="text-on-surface-variant font-semibold">Progress</span>
-                  <span className="text-primary font-bold text-sm">74%</span>
+                  <span className="text-primary font-bold text-sm">{teslaRatio}%</span>
                 </div>
                 <div className="h-3.5 w-full bg-white/5 rounded-full p-0.5 border border-white/5">
                   <div
                     className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full relative shadow-[0_0_15px_rgba(66,229,176,0.3)] transition-all"
-                    style={{ width: "74%" }}
+                    style={{ width: `${teslaRatio}%` }}
                   ></div>
                 </div>
                 <div className="flex justify-between text-xs pt-1">
-                  <span className="text-on-surface-variant font-semibold">₹88,800.00 saved</span>
+                  <span className="text-on-surface-variant font-semibold">{currency(teslaAmount)} saved</span>
                   <span className="text-on-surface font-semibold">₹1,20,000.00 target</span>
                 </div>
               </div>
@@ -88,15 +118,15 @@ export default function GoalsView({ goals, onOpenAddModal }: GoalsViewProps) {
                   <span className="material-symbols-outlined text-primary text-base">schedule</span>
                   <span className="text-on-surface-variant uppercase font-semibold">Time Horizon</span>
                 </div>
-                <p className="font-headline-md text-lg font-bold text-white">142 Days</p>
-                <p className="text-on-surface-variant text-[10px] mt-0.5 font-medium">On track for Oct 2024</p>
+                <p className="font-headline-md text-lg font-bold text-white">{activeDeadlineDays} Days</p>
+                <p className="text-on-surface-variant text-[10px] mt-0.5 font-medium">On track for {activeDeadlineDays === 142 ? "Oct 2024" : "Sep 2024"}</p>
               </div>
               <div className="bg-surface-container-high/60 p-4 rounded-2xl border border-white/5">
                 <div className="flex items-center gap-1.5 mb-1 text-xs">
                   <span className="material-symbols-outlined text-primary text-base">bolt</span>
                   <span className="text-on-surface-variant uppercase font-semibold">AI Roundups</span>
                 </div>
-                <p className="font-headline-md text-lg font-bold emerald-gradient-text">+₹4,210.88</p>
+                <p className="font-headline-md text-lg font-bold emerald-gradient-text">+{currency(roundupsAmount)}</p>
                 <p className="text-on-surface-variant text-[10px] mt-0.5 font-medium">Smart round-ups this quarter</p>
               </div>
             </div>
@@ -148,15 +178,15 @@ export default function GoalsView({ goals, onOpenAddModal }: GoalsViewProps) {
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold text-on-surface-variant">
                 <span>Pool Progress</span>
-                <span className="text-primary">49%</span>
+                <span className="text-primary">{poolRatio}%</span>
               </div>
               <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                <div className="h-full bg-primary rounded-full animate-progress" style={{ width: "49.6%" }}></div>
+                <div className="h-full bg-primary rounded-full animate-progress" style={{ width: `${poolRatio}%` }}></div>
               </div>
             </div>
           </div>
 
-          <button className="w-full mt-4 py-2 border border-white/10 rounded-xl text-xs font-bold text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors flex items-center justify-center gap-1.5">
+          <button onClick={() => setShowContribute(true)} className="w-full mt-4 py-2 border border-white/10 rounded-xl text-xs font-bold text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors flex items-center justify-center gap-1.5">
             <span className="material-symbols-outlined text-sm">payments</span>
             Contribute to Pool
           </button>
@@ -219,15 +249,67 @@ export default function GoalsView({ goals, onOpenAddModal }: GoalsViewProps) {
             </p>
           </div>
           <div className="flex gap-4">
-            <button className="px-5 py-2.5 bg-primary text-background font-bold text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all">
+            <button onClick={handleAcceptOptimization} className="px-5 py-2.5 bg-primary text-background font-bold text-xs rounded-xl hover:brightness-110 active:scale-95 transition-all">
               Accept Optimization
             </button>
-            <button className="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-on-surface font-semibold text-xs rounded-xl transition-all">
+            <button onClick={() => setToastMsg(`Current trajectory: ${activeDeadlineDays} days to target. Increasing savings by ₹4,200/mo reduces it by 18 days.`)} className="px-5 py-2.5 border border-white/10 hover:bg-white/5 text-on-surface font-semibold text-xs rounded-xl transition-all">
               Review Impact
             </button>
           </div>
         </div>
       </section>
+
+      {/* Contribution Modal */}
+      {showContribute && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
+          <div className="glass-panel w-full max-w-sm rounded-3xl p-6 border border-white/10 conic-border text-left">
+            <h3 className="font-headline-md text-lg text-white font-bold mb-4">Contribute to Europe Pool</h3>
+            <form onSubmit={handlePoolSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-on-surface-variant mb-2">Contribution Amount (₹)</label>
+                <input
+                  type="number"
+                  value={contribAmount}
+                  onChange={(e) => setContribAmount(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-primary/45 outline-none"
+                  min="1"
+                  max="100000"
+                  required
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowContribute(false)}
+                  className="flex-1 py-2.5 rounded-xl bg-white/5 text-xs font-bold text-on-surface-variant hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 btn-emerald-gradient text-xs font-bold text-on-primary rounded-xl"
+                >
+                  Contribute
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <AnimatePresence>
+        {toastMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 px-5 py-3 rounded-xl bg-surface-container-highest/95 border border-primary/30 text-xs font-semibold text-primary shadow-2xl flex items-center gap-2 backdrop-blur-md z-[120] max-w-md text-left"
+          >
+            <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+            <span>{toastMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

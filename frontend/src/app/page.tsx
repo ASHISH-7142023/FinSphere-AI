@@ -331,6 +331,18 @@ export default function Home() {
     await refreshAll();
   };
 
+  const handleUpdateUser = async (updatedFields: Record<string, any>) => {
+    if (!session?.token) return;
+    const res = await apiRequest<{ user: Session["user"] }>("/auth/profile", {
+      method: "PUT",
+      body: JSON.stringify(updatedFields)
+    }, session.token);
+    const nextSession = { ...session, user: res.user };
+    setSession(nextSession);
+    localStorage.setItem("finsphere.session", JSON.stringify(nextSession));
+    await refreshAll(session.token);
+  };
+
 
   const scale = sidebarWidth / 256;
   const buttonStyle = {
@@ -775,15 +787,15 @@ export default function Home() {
           )}
 
           {view === "utilities" && (
-            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} user={session?.user} onAddExpense={handleAddExpenseDirect} />
+            <UtilitiesHubView initialTab={utilityTab} key={utilityTab} user={session?.user} onAddExpense={handleAddExpenseDirect} expenses={expenses} />
           )}
 
           {view === "credit-card-center" && (
-            <CreditCardBillCenter onAddExpense={handleAddExpenseDirect} />
+            <CreditCardBillCenter onAddExpense={handleAddExpenseDirect} expenses={expenses} session={session} />
           )}
 
           {view === "mutual-funds" && (
-            <MutualFundPortfolio />
+            <MutualFundPortfolio investments={investments} onBuyHolding={handleBuyHolding} />
           )}
 
           {view === "features" && (
@@ -811,7 +823,7 @@ export default function Home() {
           )}
 
           {view === "merchant-khata" && (
-            <MerchantKhataView />
+            <MerchantKhataView token={session.token} />
           )}
 
           {view === "rewards" && (
@@ -819,11 +831,11 @@ export default function Home() {
           )}
 
           {view === "sip-setup" && (
-            <SIPSetupView />
+            <SIPSetupView onAddInvestment={handleBuyHolding} />
           )}
 
           {view === "insurance" && (
-            <InsuranceHubView />
+            <InsuranceHubView expenses={expenses} onAddExpense={handleAddExpenseDirect} />
           )}
 
           {view === "demo" && (
@@ -833,9 +845,7 @@ export default function Home() {
           {view === "settings" && (
             <SettingsView
               session={session}
-              onUpdateUser={(updatedUser) => {
-                setSession((prev) => prev ? { ...prev, user: updatedUser } : null);
-              }}
+              onUpdateUser={handleUpdateUser}
             />
           )}
         </section>
@@ -1275,6 +1285,12 @@ function DashboardView({
           </div>
           <div className="flex-1 w-full relative">
             <svg className="w-full h-full" viewBox="0 0 1000 260" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#42e5b0" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#42e5b0" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
               <path d={areaPoints ? `M ${areaPoints}` : ""} fill="url(#chartGradient)"></path>
               <path d={pointsActual ? `M ${pointsActual}` : ""} fill="none" stroke="#42e5b0" strokeLinecap="round" strokeWidth="3" className="chart-path"></path>
               {trendData.map((d, i) => {

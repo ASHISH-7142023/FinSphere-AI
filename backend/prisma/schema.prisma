@@ -41,6 +41,7 @@ model User {
   investments      Investment[]
   creditProfile    CreditProfile?
   financialHealth  FinancialHealth?
+  khataContacts    KhataContact[]
 }
 
 model Expense {
@@ -114,4 +115,31 @@ model FinancialHealth {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model KhataContact {
+  id         String       @id @default(uuid())
+  userId     String
+  name       String
+  type       String
+  amount     Decimal      @default(0)
+  lastActive String       @default("Created now")
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries    KhataEntry[]
+
+  @@unique([userId, name])
+}
+
+model KhataEntry {
+  id         String       @id @default(uuid())
+  contactId  String
+  type       String
+  amount     Decimal
+  remarks    String
+  date       DateTime     @default(now())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  contact    KhataContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 }

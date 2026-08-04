@@ -17,9 +17,10 @@ interface UtilitiesHubViewProps {
     upiQr?: string;
   } | null;
   onAddExpense?: (amount: number, category: string, description: string) => Promise<void>;
+  expenses?: any[];
 }
 
-export default function UtilitiesHubView({ initialTab = "mobile", user, onAddExpense }: UtilitiesHubViewProps) {
+export default function UtilitiesHubView({ initialTab = "mobile", user, onAddExpense, expenses = [] }: UtilitiesHubViewProps) {
   const [session] = useState(() => {
     if (typeof window !== "undefined") {
       const raw = localStorage.getItem("finsphere.session");
@@ -60,14 +61,20 @@ export default function UtilitiesHubView({ initialTab = "mobile", user, onAddExp
   // Water Bill State
   const [waterProvider, setWaterProvider] = useState("Delhi Jal Board (DJB)");
   const [waterConsumerId, setWaterConsumerId] = useState("");
-  const [waterDue] = useState(Math.round(income * 0.0163)); // e.g. 2450 for 150000 salary
+  const paidWater = expenses
+    .filter((e: any) => e.category === "Bills" && (e.description.toLowerCase().includes("water") || e.description.toLowerCase().includes("jal board")))
+    .reduce((sum: number, e: any) => sum + e.amount, 0);
+  const waterDue = Math.max(0, Math.round(income * 0.0163) - paidWater);
   const [waterVerified, setWaterVerified] = useState(false);
   const [waterAutoPay, setWaterAutoPay] = useState(true);
 
   // Electricity State
   const [elecProvider, setElecProvider] = useState("BESCOM (Bengaluru)");
   const [elecConsumerId, setElecConsumerId] = useState("");
-  const [elecDue] = useState(Math.round(income * 0.0326)); // e.g. 4890 for 150000 salary
+  const paidElectricity = expenses
+    .filter((e: any) => e.category === "Bills" && (e.description.toLowerCase().includes("electricity") || e.description.toLowerCase().includes("bescom")))
+    .reduce((sum: number, e: any) => sum + e.amount, 0);
+  const elecDue = Math.max(0, Math.round(income * 0.0326) - paidElectricity);
   const [elecVerified, setElecVerified] = useState(false);
 
   // Mobile Recharge State

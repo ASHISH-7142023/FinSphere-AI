@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { currency } from "@/lib/utils";
+import { apiRequest } from "@/lib/api";
 
 interface Contact {
   id: string;
@@ -12,6 +13,7 @@ interface Contact {
   type: "get" | "give";
   amount: number;
   lastActive: string;
+  entries?: Entry[];
 }
 
 interface Entry {
@@ -23,41 +25,48 @@ interface Entry {
   date: string;
 }
 
-export default function MerchantKhataView() {
-  const [contacts, setContacts] = useState<Contact[]>([
-    {
-      id: "1",
-      name: "Vardhman Textiles Ltd.",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCXNGRlAf8HTSGEjwn1O4758fMZGru56Iftsgeju8KvmcNRaP18HCjgoMQKh8haR9QYW2PcRi_FIXeFEuCzxuOH1lZr_ReZzf95FxDHclfPtn_o8XQAbeIxdiBpi7t1dZWnOu6uHZe6IasNCHdx8ofYuOA4FgQPz35Y0kA9Q44V9qpcGvmg4P0_iFkVHwAq1XcPa1ooMtJ38t0PhC4Se6MiJodfefSChN1nafVc3CmerqlF24DvnUvbN0qzb_-0itQDSZRrhJVS0wXc",
-      type: "get",
-      amount: 45200,
-      lastActive: "2 hours ago",
-    },
-    {
-      id: "2",
-      name: "Rajesh Khanna (Logistics)",
-      initials: "RK",
-      type: "give",
-      amount: 12850,
-      lastActive: "Yesterday",
-    },
-    {
-      id: "3",
-      name: "Apex Packaging Corp",
-      initials: "AP",
-      type: "get",
-      amount: 18500,
-      lastActive: "3 days ago",
-    },
-  ]);
+export default function MerchantKhataView({ token }: { token?: string }) {
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [activeContactId, setActiveContactId] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
-  const [entries, setEntries] = useState<Entry[]>([
-    { id: "101", contactId: "1", type: "get", amount: 30000, remarks: "Yarn delivery batch 4", date: "2026-06-23" },
-    { id: "102", contactId: "1", type: "get", amount: 15200, remarks: "Transport charges reimbursed", date: "2026-06-24" },
-    { id: "103", contactId: "2", type: "give", amount: 12850, remarks: "Settle logistics invoice #99", date: "2026-06-22" },
-  ]);
+  const handleExportReport = () => {
+    if (contacts.length === 0) {
+      alert("No contact records available to export.");
+      return;
+    }
 
-  const [activeContactId, setActiveContactId] = useState<string>("1");
+    let reportText = "========================================\n";
+    reportText += "FINSPHERE AI - MERCHANT KHATA STATEMENT\n";
+    reportText += `Generated on: ${new Date().toLocaleString()}\n`;
+    reportText += "========================================\n\n";
+
+    contacts.forEach((contact) => {
+      reportText += `Contact: ${contact.name}\n`;
+      reportText += `Current Balance: ${currency(contact.amount)} (${contact.type === "get" ? "You will Get" : "You will Give"})\n`;
+      reportText += `Last Activity: ${new Date(contact.lastActive).toLocaleDateString()}\n`;
+      reportText += "Entries:\n";
+      
+      const entries = contact.entries || [];
+      if (entries.length === 0) {
+        reportText += "  - No entries recorded\n";
+      } else {
+        entries.forEach((e) => {
+          reportText += `  - [${new Date(e.date).toLocaleDateString()}] ${e.type === "get" ? "You Got" : "You Gave"} ${currency(e.amount)} - ${e.remarks}\n`;
+        });
+      }
+      reportText += "----------------------------------------\n\n";
+    });
+
+    const blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `finsphere_khata_statement_${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const [formData, setFormData] = useState({
     amount: "",
     remarks: "",
@@ -68,6 +77,27 @@ export default function MerchantKhataView() {
   const [newContactType, setNewContactType] = useState<"get" | "give">("get");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
 
+  const refreshKhata = async () => {
+    if (!token) return;
+    setLoading(true);
+    try {
+      const res = await apiRequest<{ contacts: Contact[] }>("/khata/contacts", {}, token);
+      setContacts(res.contacts);
+      const first = res.contacts[0];
+      if (first && !activeContactId) {
+        setActiveContactId(first.id);
+      }
+    } catch (err) {
+      console.error("Failed to load Khata:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshKhata();
+  }, [token]);
+
   // Compute totals
   const totalGet = contacts.filter((c) => c.type === "get").reduce((acc, curr) => acc + curr.amount, 0);
   const totalGive = contacts.filter((c) => c.type === "give").reduce((acc, curr) => acc + curr.amount, 0);
@@ -77,81 +107,65 @@ export default function MerchantKhataView() {
     setActiveContactId(id);
   };
 
-  const handleAddEntry = (e: React.FormEvent) => {
+  const handleAddEntry = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.amount || isNaN(Number(formData.amount))) return;
+    if (!formData.amount || isNaN(Number(formData.amount)) || !activeContactId) return;
 
     const amt = Number(formData.amount);
-    const newEntry: Entry = {
-      id: Date.now().toString(),
-      contactId: activeContactId,
-      type: formData.type,
-      amount: amt,
-      remarks: formData.remarks || "No remarks",
-      date: new Date().toISOString().split("T")[0] || "",
-    };
-
-    setEntries((prev) => [newEntry, ...prev]);
-
-    // Update contacts list totals
-    setContacts((prev) =>
-      prev.map((c) => {
-        if (c.id === activeContactId) {
-          let finalAmount = c.amount;
-          if (c.type === formData.type) {
-            finalAmount += amt;
-          } else {
-            finalAmount -= amt;
-            if (finalAmount < 0) {
-              c.type = c.type === "get" ? "give" : "get";
-              finalAmount = Math.abs(finalAmount);
-            }
-          }
-          return { ...c, amount: finalAmount, lastActive: "Just now" };
-        }
-        return c;
-      })
-    );
-
-    setFormData({ amount: "", remarks: "", type: "get" });
+    if (token) {
+      try {
+        await apiRequest(`/khata/contacts/${activeContactId}/entries`, {
+          method: "POST",
+          body: JSON.stringify({
+            type: formData.type,
+            amount: amt,
+            remarks: formData.remarks || "No remarks",
+          }),
+        }, token);
+        await refreshKhata();
+        setFormData({ amount: "", remarks: "", type: "get" });
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Failed to add entry");
+      }
+    }
   };
 
-  const handleAddContact = () => {
+  const handleAddContact = async () => {
     if (!newContactName.trim()) return;
-    const newContact: Contact = {
-      id: Date.now().toString(),
-      name: newContactName,
-      initials: newContactName
-        .split(" ")
-        .map((x) => x[0])
-        .join("")
-        .toUpperCase()
-        .substring(0, 2),
-      type: newContactType,
-      amount: 0,
-      lastActive: "Created now",
-    };
-
-    setContacts((prev) => [...prev, newContact]);
-    setActiveContactId(newContact.id);
-    setNewContactName("");
-    setShowAddContactModal(false);
+    if (token) {
+      try {
+        const res = await apiRequest<{ contact: Contact }>("/khata/contacts", {
+          method: "POST",
+          body: JSON.stringify({
+            name: newContactName,
+            type: newContactType,
+          }),
+        }, token);
+        await refreshKhata();
+        setActiveContactId(res.contact.id);
+        setNewContactName("");
+        setShowAddContactModal(false);
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Failed to add contact");
+      }
+    }
   };
 
-  const handleSettleUp = (contactId: string) => {
-    setContacts((prev) =>
-      prev.map((c) => {
-        if (c.id === contactId) {
-          return { ...c, amount: 0, lastActive: "Settled up just now" };
-        }
-        return c;
-      })
-    );
-    setEntries((prev) => prev.filter((e) => e.contactId !== contactId));
+  const handleSettleUp = async (contactId: string) => {
+    if (token) {
+      try {
+        await apiRequest(`/khata/contacts/${contactId}/settle`, {
+          method: "POST",
+        }, token);
+        await refreshKhata();
+      } catch (err) {
+        alert(err instanceof Error ? err.message : "Failed to settle connection");
+      }
+    }
   };
 
   const activeContact = contacts.find((c) => c.id === activeContactId);
-  const activeEntries = entries.filter((e) => e.contactId === activeContactId);
+  const activeEntries = activeContact?.entries || [];
 
   return (
     <div className="space-y-6">
@@ -163,7 +177,7 @@ export default function MerchantKhataView() {
           <p className="text-on-surface-variant text-base">Manage credit relations with real-time balance reconciliation.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-semibold text-xs hover:bg-surface-variant transition-all">
+          <button onClick={handleExportReport} className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-semibold text-xs hover:bg-surface-variant transition-all">
             <span className="material-symbols-outlined text-[18px]">download</span> Export Report
           </button>
           <button
@@ -202,7 +216,10 @@ export default function MerchantKhataView() {
         {/* Left Side: Contact List */}
         <div className="col-span-12 lg:col-span-7 space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-bold text-sm text-white">Active Contacts</h4>
+            <h4 className="font-bold text-sm text-white flex items-center gap-2">
+              Active Contacts
+              {loading && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+            </h4>
             <span className="text-xs text-on-surface-variant">Click name to view history</span>
           </div>
           
@@ -221,7 +238,7 @@ export default function MerchantKhataView() {
                     <img className="w-12 h-12 rounded-full object-cover border border-white/10" src={contact.avatar} alt={contact.name} />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center font-bold text-sm text-on-surface-variant">
-                      {contact.initials}
+                      {contact.initials || contact.name.split(" ").map((x) => x[0]).join("").toUpperCase().substring(0, 2)}
                     </div>
                   )}
                   

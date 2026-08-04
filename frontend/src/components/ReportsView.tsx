@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { currency } from "@/lib/utils";
 import type { DashboardSummary } from "@/shared";
 
@@ -14,6 +15,22 @@ interface ReportsViewProps {
 }
 
 export default function ReportsView({ report, summary }: ReportsViewProps) {
+  const [toastMsg, setToastMsg] = useState("");
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setToastMsg("Dashboard report link copied to clipboard!");
+      setTimeout(() => setToastMsg(""), 3500);
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* View Header */}
@@ -23,10 +40,10 @@ export default function ReportsView({ report, summary }: ReportsViewProps) {
           <p className="text-on-surface-variant text-base mt-1">Generated Real-time • Elite Tier Analytics</p>
         </div>
         <div className="flex gap-3 self-end">
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-semibold text-xs hover:bg-surface-variant transition-all">
+          <button onClick={handleDownloadPDF} className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-semibold text-xs hover:bg-surface-variant transition-all">
             <span className="material-symbols-outlined text-[18px]">download</span> Download PDF
           </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-semibold text-xs hover:bg-surface-variant transition-all">
+          <button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass-card text-on-surface font-semibold text-xs hover:bg-surface-variant transition-all">
             <span className="material-symbols-outlined text-[18px]">share</span> Share
           </button>
         </div>
@@ -97,12 +114,46 @@ export default function ReportsView({ report, summary }: ReportsViewProps) {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div className="relative flex justify-center">
-                {/* Simulated Donut Chart */}
-                <div className="w-52 h-52 rounded-full border-[16px] border-surface-container-highest relative flex items-center justify-center">
-                  <div className="absolute inset-[-16px] rounded-full border-[16px] border-primary border-r-transparent border-b-transparent transform rotate-45"></div>
-                  <div className="absolute inset-[-16px] rounded-full border-[16px] border-secondary-container border-l-transparent border-t-transparent border-r-transparent transform -rotate-12"></div>
-                  <div className="absolute inset-[-16px] rounded-full border-[16px] border-tertiary-container border-l-transparent border-t-transparent border-r-transparent transform rotate-[140deg]"></div>
-                  <div className="text-center">
+                {/* Dynamic SVG Donut Chart */}
+                <div className="w-52 h-52 relative flex items-center justify-center">
+                  <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    {/* Base Track */}
+                    <circle cx="50" cy="50" fill="none" r="40" stroke="rgba(255,255,255,0.05)" strokeWidth="10"></circle>
+                    {/* Equity Slice (62%) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      fill="none"
+                      r="40"
+                      stroke="#42e5b0"
+                      strokeDasharray="251.3"
+                      strokeDashoffset="0"
+                      strokeWidth="10"
+                    ></circle>
+                    {/* Debt Slice (24%) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      fill="none"
+                      r="40"
+                      stroke="#6366f1"
+                      strokeDasharray="251.3"
+                      strokeDashoffset="-155.8"
+                      strokeWidth="10"
+                    ></circle>
+                    {/* Gold Slice (14%) */}
+                    <circle
+                      cx="50"
+                      cy="50"
+                      fill="none"
+                      r="40"
+                      stroke="#eab308"
+                      strokeDasharray="251.3"
+                      strokeDashoffset="-216.1"
+                      strokeWidth="10"
+                    ></circle>
+                  </svg>
+                  <div className="absolute text-center">
                     <span className="text-on-surface-variant text-[10px] font-semibold uppercase">Diversify</span>
                     <div className="text-xl font-bold text-on-surface">94/100</div>
                   </div>
@@ -248,12 +299,28 @@ export default function ReportsView({ report, summary }: ReportsViewProps) {
                 </div>
               </div>
             </div>
-            <button className="w-full mt-6 py-2.5 btn-emerald-gradient rounded-xl font-bold text-xs text-on-primary">
+            <button className="w-full mt-6 py-2.5 btn-emerald-gradient rounded-xl font-bold text-xs text-on-primary" onClick={() => {
+              setToastMsg("Executing rebalancing plan: transferring ₹20k from Cash reserves to Liquid Mutual Funds.");
+              setTimeout(() => setToastMsg(""), 4000);
+            }}>
               Execute Rebalancing Plan
             </button>
           </section>
         </div>
       </div>
+      <AnimatePresence>
+        {toastMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 px-5 py-3 rounded-xl bg-surface-container-highest/95 border border-primary/30 text-xs font-semibold text-primary shadow-2xl flex items-center gap-2 backdrop-blur-md z-[120] max-w-md text-left"
+          >
+            <span className="material-symbols-outlined text-primary text-base">info</span>
+            <span>{toastMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

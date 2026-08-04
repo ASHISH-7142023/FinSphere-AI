@@ -6,10 +6,11 @@ import morgan from "morgan";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { z } from "zod";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const EMAIL_LOG_PATH = path.resolve(__dirname, "../../sent_emails.log");
-import { budgetSchema, calculateBudgetUsage, calculateFinancialHealth, creditProfileSchema, expenseSchema, getOverspendingAlerts, goalSchema, investmentSchema, loginSchema, registerSchema, simulateCreditScore } from "./shared/index.js";
+import { budgetSchema, calculateBudgetUsage, calculateFinancialHealth, creditProfileSchema, expenseSchema, getOverspendingAlerts, goalSchema, investmentSchema, loginSchema, registerSchema, simulateCreditScore, khataContactSchema, khataEntrySchema } from "./shared/index.js";
 import { authMiddleware, signToken } from "./auth.js";
 import { makeId } from "./store-inmemory.js";
 function generateUpiDetails(user) {
@@ -456,6 +457,63 @@ FinSphere AI Transactions Team
             })),
             expenses
         });
+    });
+    app.put("/api/auth/profile", requireAuth, async (req, res) => {
+        const profileSchema = z.object({
+            name: z.string().min(2).optional(),
+            email: z.email().optional(),
+            monthlyIncome: z.coerce.number().positive().optional()
+        });
+        const parsed = profileSchema.safeParse(req.body);
+        if (!parsed.success)
+            return res.status(400).json({ message: "Invalid profile data", issues: parsed.error.issues });
+        if (parsed.data.email && parsed.data.email !== res.locals.user.email) {
+            const existing = await store.getUserByEmail(parsed.data.email);
+            if (existing) {
+                return res.status(409).json({ message: "Email already in use" });
+            }
+        }
+        const updated = await store.updateUser(res.locals.user.id, parsed.data);
+        if (!updated)
+            return res.status(404).json({ message: "User not found" });
+        const { passwordHash: _passwordHash, ...baseUser } = updated;
+        const safeUser = { ...baseUser, ...generateUpiDetails(updated) };
+        return res.json({ user: safeUser });
+    });
+    app.get("/api/khata/contacts", requireAuth, async (_req, res) => {
+        const contacts = await store.getKhataContacts(res.locals.user.id);
+        return res.json({ contacts });
+    });
+    app.post("/api/khata/contacts", requireAuth, async (req, res) => {
+        const parsed = khataContactSchema.safeParse(req.body);
+        if (!parsed.success)
+            return res.status(400).json({ message: "Invalid contact data", issues: parsed.error.issues });
+        const contact = await store.createKhataContact(res.locals.user.id, parsed.data);
+        return res.status(201).json({ contact });
+    });
+    app.post("/api/khata/contacts/:contactId/entries", requireAuth, async (req, res) => {
+        const { contactId } = req.params;
+        if (typeof contactId !== "string")
+            return res.status(400).json({ message: "Invalid contact ID" });
+        const parsed = khataEntrySchema.safeParse(req.body);
+        if (!parsed.success)
+            return res.status(400).json({ message: "Invalid entry data", issues: parsed.error.issues });
+        try {
+            const entry = await store.createKhataEntry(contactId, parsed.data);
+            return res.status(201).json({ entry });
+        }
+        catch (err) {
+            return res.status(404).json({ message: err instanceof Error ? err.message : "Not found" });
+        }
+    });
+    app.post("/api/khata/contacts/:contactId/settle", requireAuth, async (req, res) => {
+        const { contactId } = req.params;
+        if (typeof contactId !== "string")
+            return res.status(400).json({ message: "Invalid contact ID" });
+        const success = await store.settleKhataContact(contactId, res.locals.user.id);
+        if (!success)
+            return res.status(404).json({ message: "Contact not found" });
+        return res.json({ success: true });
     });
     return app;
 }

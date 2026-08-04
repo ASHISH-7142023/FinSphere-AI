@@ -39,7 +39,37 @@ export default function AIAdvisorView() {
   ]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 3500);
+  };
+
+  const handleDownloadChat = () => {
+    if (messages.length === 0) {
+      showToast("No conversation history to download.");
+      return;
+    }
+    const logText = messages
+      .map(
+        (m) =>
+          `[${m.timestamp}] ${m.sender === "user" ? "User" : "AI Advisor"}:\n${m.text}${
+            m.insight
+              ? `\nInsight [${m.insight.label}]: ${m.insight.value} - ${m.insight.title} (${m.insight.subtitle})`
+              : ""
+          }`
+      )
+      .join("\n\n========================================\n\n");
+    const blob = new Blob([logText], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `finsphere_ai_chat_log_${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -136,7 +166,7 @@ export default function AIAdvisorView() {
           <button className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-white transition-colors" title="Clear History" onClick={() => setMessages([])}>
             <span className="material-symbols-outlined text-[20px]">delete</span>
           </button>
-          <button className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-white transition-colors" title="Download Report">
+          <button className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-white transition-colors" title="Download Report" onClick={handleDownloadChat}>
             <span className="material-symbols-outlined text-[20px]">download</span>
           </button>
         </div>
@@ -265,7 +295,7 @@ export default function AIAdvisorView() {
 
           {/* Chat text input prompt box */}
           <div className="glass-card rounded-2xl p-1.5 flex items-center gap-2 shadow-2xl focus-within:ring-1 focus-within:ring-primary/40 transition-all bg-background/45 border-white/5">
-            <button className="p-2.5 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center">
+            <button className="p-2.5 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" onClick={() => showToast("Attachment upload is limited to PDF/CSV in Elite tier.")}>
               <span className="material-symbols-outlined text-[20px]">attach_file</span>
             </button>
             <input
@@ -278,7 +308,7 @@ export default function AIAdvisorView() {
               placeholder="Ask about your investments, taxes, or budget..."
               type="text"
             />
-            <button className="p-2.5 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center">
+            <button className="p-2.5 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" onClick={() => showToast("Microphone voice recognition requires Pro Tier access.")}>
               <span className="material-symbols-outlined text-[20px]">mic</span>
             </button>
             <button
@@ -290,6 +320,19 @@ export default function AIAdvisorView() {
           </div>
         </div>
       </div>
+      <AnimatePresence>
+        {toastMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="absolute bottom-24 left-1/2 transform -translate-x-1/2 px-5 py-3 rounded-xl bg-surface-container-highest/90 border border-primary/30 text-xs font-semibold text-primary shadow-2xl flex items-center gap-2 backdrop-blur-md z-50 text-center max-w-sm"
+          >
+            <span className="material-symbols-outlined text-primary text-base">info</span>
+            <span>{toastMsg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

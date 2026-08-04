@@ -45,18 +45,26 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
     setTimeout(() => setToastMsg(""), 3500);
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (onUpdateUser && session) {
-      onUpdateUser({
-        ...session.user,
-        name,
-        email,
-        monthlyIncome: Number(monthlyIncome),
-      });
+      setSavingProfile(true);
+      try {
+        await onUpdateUser({
+          name,
+          email,
+          monthlyIncome: Number(monthlyIncome),
+        });
+        setIsEditingDetails(false);
+        triggerToast("Profile details updated successfully!");
+      } catch (err) {
+        triggerToast(err instanceof Error ? err.message : "Failed to update profile details.");
+      } finally {
+        setSavingProfile(false);
+      }
     }
-    setIsEditingDetails(false);
-    triggerToast("Profile details updated successfully!");
   };
 
   const handleAddInstitution = (e: React.FormEvent) => {
@@ -551,9 +559,10 @@ export default function SettingsView({ session, onUpdateUser }: { session: any; 
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-primary text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all"
+                disabled={savingProfile}
+                className="w-full py-2.5 bg-primary text-background font-bold rounded-xl hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
               >
-                Save Details
+                {savingProfile ? "Saving..." : "Save Details"}
               </button>
             </form>
           </motion.div>

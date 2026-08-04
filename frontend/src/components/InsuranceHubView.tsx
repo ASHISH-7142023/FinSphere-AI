@@ -16,7 +16,13 @@ interface Policy {
   bgUrl: string;
 }
 
-export default function InsuranceHubView() {
+export default function InsuranceHubView({
+  expenses = [],
+  onAddExpense
+}: {
+  expenses?: any[];
+  onAddExpense?: (amount: number, category: string, description: string) => Promise<void>;
+}) {
   const [session] = useState(() => {
     if (typeof window !== "undefined") {
       const raw = localStorage.getItem("finsphere.session");
@@ -27,14 +33,14 @@ export default function InsuranceHubView() {
 
   const income = session?.user?.monthlyIncome || 150000;
 
-  const [policies, setPolicies] = useState<Policy[]>([
+  const dynamicPolicies: Policy[] = [
     {
       id: "1",
       title: "Global Elite Health Plan",
       provider: "BlueShield Prestige",
       premium: Math.round(income * 0.00826), // e.g. 1240 for 150000 salary
       policyNo: "FS-HL-88291",
-      renewalDate: "2026-10-14",
+      renewalDate: expenses.some((e: any) => e.description.includes("Insurance Renewal: Global Elite Health Plan")) ? "2027-10-14" : "2026-10-14",
       deductible: Math.round(income * 0.0033), // e.g. 500 for 150000 salary
       type: "Health",
       status: "Active",
@@ -46,13 +52,13 @@ export default function InsuranceHubView() {
       provider: "MetLife Prime",
       premium: Math.round(income * 0.00413), // e.g. 620 for 150000 salary
       policyNo: "FS-LF-77289",
-      renewalDate: "2026-11-20",
+      renewalDate: expenses.some((e: any) => e.description.includes("Insurance Renewal: Prestige Term Life Shield")) ? "2027-11-20" : "2026-11-20",
       deductible: 0,
       type: "Life",
       status: "Active",
       bgUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuAMGKPRlA81g8p6kohS8NN6F1_cJV5X0AxOZNlPmLIes8e95BnDQ96VkMNBoEokIkatMf2uH8O9YqZ6Lz5lnS7oRQYqXwUcFGDiKz7kAMUekvekRRpzNvdO8PLygj2RtmvL87iweib7dyAKZGNtRXpp7o7OLqXzb-772hLiqge-dkG6g6xXoqi7VDgkMR89E3kfnLi5EyhTr_4iVzf_2IeSh5mbRA88u4_5GIP_jHCcvJsV_p5lm0CJT7AYmmjxAvNKn26ZVoaw3v5N",
     },
-  ]);
+  ];
 
   const [activeTab, setActiveTab] = useState<"all" | "Health" | "Life" | "Motor">("all");
   const [calculatorState, setCalculatorState] = useState({
@@ -66,7 +72,7 @@ export default function InsuranceHubView() {
   const [claimSuccess, setClaimSuccess] = useState(false);
   const [calculatedPremium, setCalculatedPremium] = useState<number | null>(null);
 
-  const filteredPolicies = activeTab === "all" ? policies : policies.filter((p) => p.type === activeTab);
+  const filteredPolicies = activeTab === "all" ? dynamicPolicies : dynamicPolicies.filter((p) => p.type === activeTab);
 
   const handleClaimSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,17 +97,12 @@ export default function InsuranceHubView() {
     setCalculatedPremium(Math.round(base / 12));
   };
 
-  const handleRenew = (id: string) => {
-    setPolicies((prev) =>
-      prev.map((p) => {
-        if (p.id === id) {
-          const nextYear = new Date(p.renewalDate);
-          nextYear.setFullYear(nextYear.getFullYear() + 1);
-          return { ...p, renewalDate: nextYear.toISOString().split("T")[0] || "" };
-        }
-        return p;
-      })
-    );
+  const handleRenew = async (id: string) => {
+    const policy = dynamicPolicies.find((p) => p.id === id);
+    if (policy && onAddExpense) {
+      await onAddExpense(policy.premium, "Health", `Insurance Renewal: ${policy.title}`);
+      alert(`Policy "${policy.title}" successfully renewed!`);
+    }
   };
 
   return (

@@ -12,6 +12,8 @@ export class InMemoryStore {
     goals = [];
     investments = [];
     creditProfiles = [];
+    khataContacts = [];
+    khataEntries = [];
     dbPath = path.resolve(process.cwd(), "inmemory_db.json");
     constructor() {
         this.load();
@@ -39,6 +41,8 @@ export class InMemoryStore {
                 this.goals = data.goals || [];
                 this.investments = data.investments || [];
                 this.creditProfiles = data.creditProfiles || [];
+                this.khataContacts = data.khataContacts || [];
+                this.khataEntries = data.khataEntries || [];
             }
             else {
                 this.seed();
@@ -58,7 +62,9 @@ export class InMemoryStore {
                 budgets: this.budgets,
                 goals: this.goals,
                 investments: this.investments,
-                creditProfiles: this.creditProfiles
+                creditProfiles: this.creditProfiles,
+                khataContacts: this.khataContacts,
+                khataEntries: this.khataEntries
             };
             fs.writeFileSync(this.dbPath, JSON.stringify(data, null, 2), "utf8");
         }
@@ -227,5 +233,79 @@ export class InMemoryStore {
         this.creditProfiles.push(newProfile);
         this.save();
         return newProfile;
+    }
+    async updateUser(id, data) {
+        const user = this.users.find((u) => u.id === id);
+        if (!user)
+            return null;
+        if (data.name !== undefined)
+            user.name = data.name;
+        if (data.email !== undefined)
+            user.email = data.email;
+        if (data.monthlyIncome !== undefined)
+            user.monthlyIncome = data.monthlyIncome;
+        this.save();
+        return user;
+    }
+    async getKhataContacts(userId) {
+        const contacts = this.khataContacts.filter((c) => c.userId === userId);
+        return contacts.map((c) => ({
+            ...c,
+            entries: this.khataEntries.filter((e) => e.contactId === c.id)
+        }));
+    }
+    async createKhataContact(userId, data) {
+        const contact = {
+            id: makeId("cont"),
+            userId,
+            name: data.name,
+            type: data.type,
+            amount: 0,
+            lastActive: "Created now",
+            entries: []
+        };
+        this.khataContacts.push(contact);
+        this.save();
+        return contact;
+    }
+    async createKhataEntry(contactId, data) {
+        const contact = this.khataContacts.find((c) => c.id === contactId);
+        if (!contact)
+            throw new Error("Contact not found");
+        const entry = {
+            id: makeId("kentry"),
+            contactId,
+            type: data.type,
+            amount: data.amount,
+            remarks: data.remarks,
+            date: new Date().toISOString().split("T")[0]
+        };
+        this.khataEntries.push(entry);
+        let finalAmount = contact.amount;
+        if (contact.type === data.type) {
+            finalAmount += data.amount;
+        }
+        else {
+            finalAmount -= data.amount;
+            if (finalAmount < 0) {
+                contact.type = contact.type === "get" ? "give" : "get";
+                finalAmount = Math.abs(finalAmount);
+            }
+        }
+        contact.amount = finalAmount;
+        contact.lastActive = "Just now";
+        this.save();
+        return entry;
+    }
+    async settleKhataContact(contactId, userId) {
+        const contactIdx = this.khataContacts.findIndex((c) => c.id === contactId && c.userId === userId);
+        if (contactIdx === -1)
+            return false;
+        const contact = this.khataContacts[contactIdx];
+        contact.amount = 0;
+        contact.lastActive = "Settled up just now";
+        this.khataEntries = this.khataEntries.filter((e) => e.contactId !== contactId);
+        this.save();
+        return true;
     }
 }

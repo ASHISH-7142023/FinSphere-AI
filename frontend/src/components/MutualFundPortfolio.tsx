@@ -1,8 +1,32 @@
 "use client";
 
 import React, { useState } from "react";
+import type { Investment } from "@/shared";
+import { currency } from "@/lib/utils";
 
-export default function MutualFundPortfolio() {
+export default function MutualFundPortfolio({
+  investments = [],
+  onBuyHolding: _onBuyHolding
+}: {
+  investments?: Investment[];
+  onBuyHolding?: (name: string, assetType: "Stock" | "MutualFund" | "SIP" | "Gold" | "Crypto" | "Other", amount: number) => Promise<void>;
+}) {
+  const mfAssets = investments.filter(
+    (i) => i.assetType === "Mutual Fund" || i.assetType === "SIP"
+  );
+
+  const defaultMfAssets: Investment[] = [
+    { id: "def_1", name: "Vanguard S&P 500 Index", assetType: "Mutual Fund", investedAmount: 120000, currentValue: 148200, userId: "demo" },
+    { id: "def_2", name: "Fidelity Blue Chip Growth", assetType: "Mutual Fund", investedAmount: 85000, currentValue: 112400, userId: "demo" },
+    { id: "def_3", name: "PIMCO Income Fund", assetType: "Mutual Fund", investedAmount: 50000, currentValue: 54100, userId: "demo" },
+    { id: "def_4", name: "FinSphere Bluechip Growth Fund", assetType: "SIP", investedAmount: 40000, currentValue: 45000, userId: "demo" }
+  ];
+
+  const activeMfAssets = mfAssets.length > 0 ? mfAssets : defaultMfAssets;
+
+  const totalInvested = activeMfAssets.reduce((sum, item) => sum + item.investedAmount, 0);
+  const totalValue = activeMfAssets.reduce((sum, item) => sum + item.currentValue, 0);
+  const xirr = totalInvested > 0 ? ((totalValue - totalInvested) / totalInvested) * 100 : 24.8;
   const [isRebalanced, setIsRebalanced] = useState(false);
   const [techWeight, setTechWeight] = useState(42);
 
@@ -23,12 +47,12 @@ export default function MutualFundPortfolio() {
         <div className="flex gap-4">
           <div className="glass-card px-6 py-3 rounded-2xl flex flex-col justify-center">
             <span className="font-label-sm text-on-surface-variant text-[11px] uppercase tracking-wider font-semibold">Portfolio Value</span>
-            <span className="font-headline-lg text-2xl font-bold text-on-surface mt-0.5">₹4,82,904.50</span>
+            <span className="font-headline-lg text-2xl font-bold text-on-surface mt-0.5">{currency(totalValue)}</span>
           </div>
           <div className="glass-card px-6 py-3 rounded-2xl flex flex-col justify-center border border-primary/20">
             <span className="font-label-sm text-primary text-[11px] uppercase tracking-wider font-semibold">Current XIRR</span>
             <div className="flex items-center gap-1 mt-0.5">
-              <span className="font-headline-lg text-2xl font-bold text-primary">24.8%</span>
+              <span className="font-headline-lg text-2xl font-bold text-primary">{xirr.toFixed(1)}%</span>
               <span className="material-symbols-outlined text-primary text-sm font-bold animate-bounce">trending_up</span>
             </div>
           </div>
@@ -164,72 +188,36 @@ export default function MutualFundPortfolio() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              <tr className="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors cursor-pointer">
-                <td className="py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary border border-white/5 text-xs">V</div>
-                    <div>
-                      <p className="font-bold text-on-surface">Vanguard S&P 500 Index</p>
-                      <p className="text-[11px] text-on-surface-variant">Growth • Large Cap</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 text-on-surface-variant">Equity</td>
-                <td className="py-4 text-on-surface">₹1,20,000</td>
-                <td className="py-4 text-on-surface">₹1,48,200</td>
-                <td className="py-4 text-primary font-bold">+23.5%</td>
-                <td className="py-4 text-right">
-                  <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-                      <path d="M0 25 Q 10 5, 20 20 T 40 10 T 60 25 T 80 5 T 100 15" fill="none" stroke="#00c896" strokeWidth="2.5"></path>
-                    </svg>
-                  </div>
-                </td>
-              </tr>
-              <tr className="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors cursor-pointer">
-                <td className="py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-secondary border border-white/5 text-xs">F</div>
-                    <div>
-                      <p className="font-bold text-on-surface">Fidelity Blue Chip Growth</p>
-                      <p className="text-[11px] text-on-surface-variant">Aggressive • Large Cap</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 text-on-surface-variant">Equity</td>
-                <td className="py-4 text-on-surface">₹85,000</td>
-                <td className="py-4 text-on-surface">₹1,12,400</td>
-                <td className="py-4 text-primary font-bold">+32.2%</td>
-                <td className="py-4 text-right">
-                  <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-                      <path d="M0 28 L 20 15 L 40 22 L 60 5 L 80 12 L 100 2" fill="none" stroke="#00c896" strokeWidth="2.5"></path>
-                    </svg>
-                  </div>
-                </td>
-              </tr>
-              <tr className="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors cursor-pointer">
-                <td className="py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-on-surface-variant border border-white/5 text-xs">P</div>
-                    <div>
-                      <p className="font-bold text-on-surface">PIMCO Income Fund</p>
-                      <p className="text-[11px] text-on-surface-variant">Conservative • Debt</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 text-on-surface-variant">Fixed Income</td>
-                <td className="py-4 text-on-surface">₹50,000</td>
-                <td className="py-4 text-on-surface">₹54,100</td>
-                <td className="py-4 text-on-surface-variant font-bold">+8.2%</td>
-                <td className="py-4 text-right">
-                  <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-                      <path d="M0 20 L 100 15" fill="none" stroke="#bbcac1" strokeWidth="2.5"></path>
-                    </svg>
-                  </div>
-                </td>
-              </tr>
+              {activeMfAssets.map((item) => {
+                const gainPercent = item.investedAmount > 0 ? ((item.currentValue - item.investedAmount) / item.investedAmount) * 100 : 0;
+                const initialLetter = item.name[0] ?? "M";
+                return (
+                  <tr key={item.id} className="group border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors cursor-pointer">
+                    <td className="py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-primary border border-white/5 text-xs">
+                          {initialLetter}
+                        </div>
+                        <div>
+                          <p className="font-bold text-on-surface">{item.name}</p>
+                          <p className="text-[11px] text-on-surface-variant">{item.assetType} • Managed Asset</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 text-on-surface-variant">{item.assetType}</td>
+                    <td className="py-4 text-on-surface">{currency(item.investedAmount)}</td>
+                    <td className="py-4 text-on-surface">{currency(item.currentValue)}</td>
+                    <td className="py-4 text-primary font-bold">+{gainPercent.toFixed(1)}%</td>
+                    <td className="py-4 text-right">
+                      <div className="inline-block w-24 h-6 opacity-60 group-hover:opacity-100 transition-opacity">
+                        <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
+                          <path d="M0 25 Q 10 5, 20 20 T 40 10 T 60 25 T 80 5 T 100 15" fill="none" stroke="#00c896" strokeWidth="2.5"></path>
+                        </svg>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
