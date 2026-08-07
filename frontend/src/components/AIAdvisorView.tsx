@@ -29,8 +29,6 @@ export default function AIAdvisorView({ session, onRefreshData }: { session?: an
   const [executingId, setExecutingId] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-<<<<<<< HEAD
-=======
   useEffect(() => {
     const saved = localStorage.getItem("finsphere.chat.history");
     if (saved) {
@@ -250,7 +248,6 @@ export default function AIAdvisorView({ session, onRefreshData }: { session?: an
     URL.revokeObjectURL(url);
   };
 
->>>>>>> 722711a (Changes Made To AI Advisor and Landing Page Components.)
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
