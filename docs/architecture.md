@@ -2,12 +2,12 @@
 
 ```mermaid
 flowchart LR
-  User["User Browser"] --> Web["Next.js 15 Web App"]
-  Web --> API["Express API"]
-  API --> Auth["JWT Auth Middleware"]
-  API --> Logic["Shared Finance Logic + Zod Schemas"]
-  API --> Repo["MVP In-Memory Repository"]
-  API -. production .-> DB["PostgreSQL / Supabase via Prisma"]
+  User[User Browser] --> Web[Next.js 15 Web App]
+  Web --> API[Express API]
+  API --> Auth[JWT Auth Middleware]
+  API --> Logic[Shared Finance Logic and Zod Schemas]
+  API --> Repo[MVP In-Memory Repository]
+  API -. production .-> DB[PostgreSQL or Supabase via Prisma]
 ```
 
 ## Folder Structure
