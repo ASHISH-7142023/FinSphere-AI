@@ -57,12 +57,11 @@ The application uses a modern, highly-integrated TypeScript stack spanning clien
 
 ```mermaid
 flowchart TD
-    %% Styling
     classDef default fill:#F0FDF4,stroke:#16A34A,stroke-width:1px,color:#064E3B;
     classDef actor fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,font-weight:bold,color:#1E3A8A;
     classDef system fill:#FEF2F2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
 
-    subgraph User Workflow
+    subgraph User_Workflow [User Workflow]
         U_Start([User Auth / Login]) --> U_Dash[Workspace Dashboard]
         U_Dash --> U_Credit[Credit Score Simulator & Optimizer]
         U_Dash --> U_Invest[Investment & Mutual Fund Tracking]
