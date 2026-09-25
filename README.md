@@ -1,7 +1,6 @@
 <div align="center">
   <img src="frontend/public/aplogfi.png" alt="FinSphere AI Logo" width="120" style="max-width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); margin-bottom: 20px;" />
   <br/>
-  <img src="frontend/public/hero-finsphere.png" alt="FinSphere AI Banner" width="480" style="max-width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); margin-bottom: 20px;" />
   
   # ✨ FinSphere AI Super App ✨
   
@@ -55,32 +54,9 @@ The application uses a modern, highly-integrated TypeScript stack spanning clien
 
 ## 🔄 Core Workflows & Logic
 
-```mermaid
-flowchart TD
-    classDef default fill:#F0FDF4,stroke:#16A34A,stroke-width:1px,color:#064E3B;
-    classDef actor fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,font-weight:bold,color:#1E3A8A;
-    classDef system fill:#FEF2F2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
-
-    subgraph User_Workflow [User Workflow]
-        U_Start([User Auth / Login]) --> U_Dash[Workspace Dashboard]
-        U_Dash --> U_Credit[Credit Score Simulator & Optimizer]
-        U_Dash --> U_Invest[Investment & Mutual Fund Tracking]
-        U_Dash --> U_Chat[AI Advisor Chat]
-        
-        U_Credit --> U_Update[Adjust Sliders / Resolve Checklist]
-        U_Invest --> U_Rebalance[AI Portfolio Rebalance]
-        U_Chat --> U_Approve[One-Click Approve & Execute Server Actions]
-        
-        U_Update --> U_Sync[Sync State to Prisma / Memory DB]
-        U_Rebalance --> U_Sync
-        U_Approve --> U_Sync
-        
-        U_Sync --> U_Notify[UI Alerts & Updates]
-    end
-
-    class U_Start actor;
-    class U_Sync system;
-```
+<div align="center">
+  <img src="FinSphere%20Super%20App-2026-09-25-213750.png" alt="FinSphere AI Visual Workflow" style="max-width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); margin: 20px 0;" />
+</div>
 
 ---
 
