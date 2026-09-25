@@ -70,7 +70,7 @@ flowchart TD
         
         U_Credit --> U_Update[Adjust Sliders / Resolve Checklist]
         U_Invest --> U_Rebalance[AI Portfolio Rebalance]
-        U_Chat --> U_Approve[One-Click "Approve & Execute" Server Actions]
+        U_Chat --> U_Approve[One-Click Approve & Execute Server Actions]
         
         U_Update --> U_Sync[Sync State to Prisma / Memory DB]
         U_Rebalance --> U_Sync
