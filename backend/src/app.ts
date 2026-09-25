@@ -508,8 +508,7 @@ FinSphere AI Transactions Team
     });
   });
 
-<<<<<<< HEAD
-=======
+
   app.put("/api/auth/profile", requireAuth, async (req, res) => {
     const profileSchema = z.object({
       name: z.string().min(2).optional(),
@@ -760,6 +759,5 @@ Include the "insight" and "action" fields only if you are recommending a specifi
     });
   });
 
->>>>>>> 722711a (Changes Made To AI Advisor and Landing Page Components.)
   return app;
 }
